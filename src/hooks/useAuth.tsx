@@ -1,6 +1,13 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { fetchSessionUser, submitLogout } from '@/lib/auth';
-import { User, AuthContextType } from '@/lib/types';
+import { User } from '@/lib/api-types';
+
+export type AuthContextType = {
+  user: User | null;
+  loading: boolean;
+  logout: () => Promise<void>;
+  isAuthenticated: boolean;
+};
 
 const AuthContext = createContext<AuthContextType | null>(null);
 

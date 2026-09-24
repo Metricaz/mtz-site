@@ -35,25 +35,6 @@ export const SERVICE_ICON_OPTIONS = [
   { value: 'signal', label: 'Sinal & Métrica', icon: Activity },
 ] as const;
 
-export type ServiceIconName = (typeof SERVICE_ICON_OPTIONS)[number]['value'];
-
 export const getServiceIcon = (iconName?: string) => {
   return SERVICE_ICON_OPTIONS.find((option) => option.value === iconName)?.icon || Sparkles;
 };
-
-export const getServiceIconLabel = (iconName?: string) => {
-  return SERVICE_ICON_OPTIONS.find((option) => option.value === iconName)?.label || 'Serviço';
-};
-
-export const DEFAULT_SERVICE_CONTENT = `
-<h2>Visão geral</h2>
-<p>Descreva aqui o que esse serviço resolve, para quem ele existe e qual transformação ele entrega.</p>
-<h3>O que entregamos</h3>
-<ul>
-  <li>Diagnóstico do cenário atual</li>
-  <li>Plano de ação priorizado</li>
-  <li>Implementação e acompanhamento</li>
-</ul>
-<h3>Como trabalhamos</h3>
-<p>Combine estratégia, execução e acompanhamento contínuo para sustentar resultados reais no tempo.</p>
-`;

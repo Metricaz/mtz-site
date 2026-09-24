@@ -94,3 +94,37 @@ export type WhatsAppSettings = {
 // Which flag a list of team members / testimonials is filtered by (?placement=).
 export type TeamPlacement = 'home' | 'about';
 export type TestimonialPlacement = 'client_panel' | 'testimonials' | 'about';
+
+// Django auth.User, as returned by /api/auth/me/
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+};
+
+// Received from visitors (staff-only reads)
+export type ContactSubmission = {
+  id: number;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  message: string;
+  source_page: string;
+  source_context: string;
+  status: 'queued' | 'sent' | 'failed';
+  email_message_id: string;
+  error_message: string;
+  payload: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WhatsAppClick = {
+  id: number;
+  page_path: string;
+  button_context: string;
+  target_number: string;
+  message_text: string;
+  clicked_at: string;
+};
