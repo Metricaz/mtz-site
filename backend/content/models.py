@@ -192,7 +192,11 @@ class Case(RichTextModel):
 class ContentImage(models.Model):
     """Image uploaded from the rich-text editor, referenced in HTML as <img data-image-id="ID">."""
 
-    image = models.ImageField("imagem", upload_to="content/")
+    # width/height are filled in by Django on upload; they only tell the browser the aspect ratio
+    # (the displayed size always comes from the CSS of the block).
+    image = models.ImageField("imagem", upload_to="content/", width_field="width", height_field="height")
+    width = models.PositiveIntegerField("largura", null=True, blank=True, editable=False)
+    height = models.PositiveIntegerField("altura", null=True, blank=True, editable=False)
     uploaded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="enviada por",

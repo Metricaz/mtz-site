@@ -199,7 +199,15 @@ class RichTextApiTests(ApiTestCase):
 
         served = self.client.get("/api/services/").json()[0]["content_html"]
         self.assertIn(f'<img src="http://testserver/media/content/', served)
+        self.assertIn('width="4" height="4"', served)  # aspect ratio for the browser (avoids layout shift)
         self.assertIn(f'data-image-id="{image_id}"', served)
+
+    def test_editor_sent_size_is_not_stored(self):
+        self.login()
+        image_id = self.client.post("/api/content-images/", {"image": png()}, format="multipart", **self.csrf).json()["id"]
+        self.service(f'<img data-image-id="{image_id}" width="999" height="1">')
+        self.assertEqual(Service.objects.get().content_html, f'<img data-image-id="{image_id}">')
+        self.assertIn('width="4" height="4"', self.client.get("/api/services/").json()[0]["content_html"])
 
     def test_unknown_image_id_is_rejected(self):
         self.login()
