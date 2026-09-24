@@ -2,18 +2,24 @@ import {
   Activity,
   BarChart3,
   BadgeCheck,
+  Briefcase,
   Blocks,
   Brain,
   Bug,
   Code2,
+  Compass,
   Cpu,
   LayoutDashboard,
   LineChart,
   MousePointerClick,
+  Radio,
   Rocket,
   Search,
   ShieldCheck,
   Sparkles,
+  Target,
+  TrendingUp,
+  Users,
   Workflow,
 } from 'lucide-react';
 
@@ -33,6 +39,12 @@ export const SERVICE_ICON_OPTIONS = [
   { value: 'testing', label: 'Testes', icon: Bug },
   { value: 'growth', label: 'Growth', icon: Rocket },
   { value: 'signal', label: 'Sinal & Métrica', icon: Activity },
+  { value: 'compass', label: 'Bússola', icon: Compass },
+  { value: 'target', label: 'Alvo', icon: Target },
+  { value: 'radio', label: 'Sinal de rádio', icon: Radio },
+  { value: 'users', label: 'Pessoas', icon: Users },
+  { value: 'briefcase', label: 'Maleta', icon: Briefcase },
+  { value: 'trending-up', label: 'Tendência de alta', icon: TrendingUp },
 ] as const;
 
 export const getServiceIcon = (iconName?: string) => {

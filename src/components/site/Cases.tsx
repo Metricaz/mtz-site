@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCases } from "@/hooks/useCases";
+import { OptionText } from "@/components/site/OptionText";
 
 const spans = [
   "md:col-span-8 aspect-[16/10]",
@@ -22,12 +23,13 @@ export const Cases = () => {
       <div className="container-x">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
           <div>
-            <div className="eyebrow">{"// Cases selecionados"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-8xl">
-              Projetos que{" "}
-              <span className="editorial-italic text-primary">movem</span>{" "}
-              <span className="editorial-italic">negócios.</span>
-            </h2>
+            <OptionText k="cases.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="cases.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-8xl"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
           <a href="#contato" className="mono-tag text-muted-foreground hover:text-primary inline-flex items-center gap-2 self-start md:self-end">
             Todos os cases <span>→</span>

@@ -1,52 +1,43 @@
-import { Compass, Target, Rocket, LineChart } from "lucide-react";
+import { OptionText } from "@/components/site/OptionText";
+import { useApiList } from "@/hooks/useApiList";
+import { MethodStep } from "@/lib/api-types";
+import { getServiceIcon } from "@/lib/service-icons";
 
 export const Method = () => {
-  const steps = [
-    {
-      n: "01",
-      icon: Compass,
-      t: "Diagnóstico",
-      d: "Auditoria de stack, dados e funil. Identificamos os gargalos reais antes de propor qualquer ação.",
-      tags: ["Stack audit", "Data quality", "Funnel review"],
-    },
-    {
-      n: "02",
-      icon: Target,
-      t: "Estratégia",
-      d: "Roadmap priorizado por impacto, com hipóteses, KPIs claros e responsabilidades definidas.",
-      tags: ["Roadmap", "OKRs", "Hipóteses"],
-    },
-    {
-      n: "03",
-      icon: Rocket,
-      t: "Execução",
-      d: "Times integrados executando em sprints, com rituais de QA e governança técnica.",
-      tags: ["Sprints", "QA", "Governança"],
-    },
-    {
-      n: "04",
-      icon: LineChart,
-      t: "Mensuração",
-      d: "Dashboards vivos, leitura de resultados e iteração contínua sobre o que importa.",
-      tags: ["Dashboards", "Iteração", "Insights"],
-    },
-  ];
+  const { items } = useApiList<MethodStep>("/method-steps/");
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  // Number shown = position in the list (01, 02…); tags are comma-separated in the admin.
+  const steps = items.map((step, index) => ({
+    n: String(index + 1).padStart(2, "0"),
+    icon: getServiceIcon(step.icon_name),
+    t: step.title,
+    d: step.text,
+    tags: step.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+  }));
 
   return (
     <section id="metodo" className="surface-cream relative py-24 md:py-36">
       <div className="container-x">
         <div className="grid md:grid-cols-12 gap-10 items-end mb-16 md:mb-20">
           <div className="md:col-span-8">
-            <div className="eyebrow">{"// Método"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-8xl text-cream-foreground">
-              Um workflow{" "}
-              <span className="editorial-italic text-primary">simples e estratégico.</span>
-            </h2>
+            <OptionText k="method.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="method.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-8xl text-cream-foreground"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
-          <p className="md:col-span-4 text-lg leading-relaxed" style={{ color: "hsl(248 14% 38%)" }}>
-            Conformidade com LGPD, governança e um método transparente. Você sabe sempre o que
-            está sendo medido, como e por quê.
-          </p>
+          <OptionText
+            k="method.description"
+            as="p"
+            className="md:col-span-4 text-lg leading-relaxed"
+            style={{ color: "hsl(248 14% 38%)" }}
+          />
         </div>
 
         <div className="border-t border-cream-foreground/15">
@@ -94,7 +85,7 @@ export const Method = () => {
 
         <div className="mt-12 flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-primary pulse-dot" />
-          <span className="mono-tag text-cream-foreground">LGPD · Consent Mode v2 · Server-side</span>
+          <OptionText k="method.footnote" className="mono-tag text-cream-foreground" />
         </div>
       </div>
     </section>

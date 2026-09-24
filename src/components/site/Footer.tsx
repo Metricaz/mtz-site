@@ -2,6 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import logoMetricaz from "../../assets/logo-metricaz.webp";
 import { api } from "@/lib/api";
+import { OptionText } from "@/components/site/OptionText";
+import { useApiList } from "@/hooks/useApiList";
+import { SocialLink } from "@/lib/api-types";
 
 interface FooterProps {
   useHomeSectionLinks?: boolean;
@@ -19,6 +22,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
   const homeBase = import.meta.env.BASE_URL;
   const resolveHref = (hash: string) => (useHomeSectionLinks ? `${homeBase}${hash}` : hash);
   const [subscribing, setSubscribing] = useState(false);
+  const { items: socialLinks } = useApiList<SocialLink>("/social-links/");
 
   // Newsletter: only stores the e-mail (sending is done later, outside the site).
   const onSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,10 +51,12 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
             <a href={resolveHref("#top")} className="flex items-center gap-2.5">
               <img src={logoMetricaz} alt="Metricaz" width={394} height={103} className="h-8 w-auto" />
             </a>
-            <p className="editorial text-3xl md:text-5xl mt-10 max-w-md leading-tight">
-              Transformamos dados em{" "}
-              <span className="editorial-italic text-primary">conhecimento</span>, ações e resultados.
-            </p>
+            <OptionText
+              k="footer.tagline"
+              as="p"
+              className="editorial text-3xl md:text-5xl mt-10 max-w-md leading-tight"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
 
           <div className="md:col-span-3">
@@ -63,10 +69,8 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
           </div>
 
           <div className="md:col-span-4">
-            <div className="eyebrow mb-6">{"// Newsletter"}</div>
-            <p className="text-muted-foreground mb-5 text-sm leading-relaxed">
-              Boas práticas em SEO, CRO e Analytics direto no seu e-mail. Sem spam.
-            </p>
+            <OptionText k="footer.newsletter_eyebrow" as="div" className="eyebrow mb-6" />
+            <OptionText k="footer.newsletter_text" as="p" className="text-muted-foreground mb-5 text-sm leading-relaxed" />
             <form onSubmit={onSubscribe} className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
               <input
                 type="email"
@@ -87,12 +91,25 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
         </div>
 
         <div className="pt-8 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mono-tag text-muted-foreground">
-          <span>© 2026 Metricaz · Todos os direitos reservados</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-primary transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-primary transition-colors">Instagram</a>
-            <a href="#" className="hover:text-primary transition-colors">Privacidade</a>
-          </div>
+          <OptionText k="footer.copyright" />
+          {socialLinks.length > 0 && (
+            <div className="flex gap-6">
+              {socialLinks.map((link) => {
+                // External links (https://…) open in a new tab; site paths stay in the same tab.
+                const external = /^https?:\/\//.test(link.url);
+                return (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    className="hover:text-primary transition-colors"
+                    {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </footer>

@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SiteOptionsProvider } from "@/components/SiteOptionsProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import { WhatsAppFloatingButton } from "@/components/site/WhatsAppFloatingButton";
@@ -67,6 +68,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+        <SiteOptionsProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter basename={import.meta.env.BASE_URL}>
@@ -95,6 +97,7 @@ const App = () => (
           </Suspense>
           <WhatsAppFloatingButton />
         </BrowserRouter>
+        </SiteOptionsProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

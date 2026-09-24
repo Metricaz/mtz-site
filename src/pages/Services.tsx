@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { useServices } from '@/hooks/useServices';
+import { OptionText } from '@/components/site/OptionText';
 import { getServiceIcon } from '@/lib/service-icons';
 import { ArrowRight } from 'lucide-react';
 
@@ -16,12 +17,15 @@ const ServicesPage = () => {
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
         <div className="container-x">
           <div className="mb-6">
-            <span className="mono-tag rounded-full bg-primary/15 px-3 py-1.5 text-primary">Metricaz / Serviços</span>
+            <OptionText k="servicespage.eyebrow" className="mono-tag rounded-full bg-primary/15 px-3 py-1.5 text-primary" />
           </div>
-          <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">O que fazemos</h1>
-          <p className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg">
-            Estruturamos serviços de marketing e tecnologia para conectar estratégia, mensuração e execução de forma consistente.
-          </p>
+          <OptionText
+            k="servicespage.title"
+            as="h1"
+            className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]"
+            accentClassName="editorial-italic text-primary"
+          />
+          <OptionText k="servicespage.description" as="p" className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg" />
         </div>
       </section>
 
@@ -30,12 +34,15 @@ const ServicesPage = () => {
         <div className="container-x">
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="eyebrow">Serviços disponíveis</p>
-              <h2 className="editorial mt-4 text-4xl md:text-6xl">Escolha a frente de trabalho</h2>
+              <OptionText k="servicespage.list_eyebrow" as="p" className="eyebrow" />
+              <OptionText
+                k="servicespage.list_title"
+                as="h2"
+                className="editorial mt-4 text-4xl md:text-6xl"
+                accentClassName="editorial-italic text-primary"
+              />
             </div>
-            <p className="max-w-xl text-sm text-muted-foreground md:text-base">
-              Cada serviço possui sua própria página para detalhar escopo, entregas e conteúdo de apoio.
-            </p>
+            <OptionText k="servicespage.list_description" as="p" className="max-w-xl text-sm text-muted-foreground md:text-base" />
           </div>
 
           {loading && services.length === 0 ? (

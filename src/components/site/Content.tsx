@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { OptionText } from "@/components/site/OptionText";
 
 const posts = [
   {
@@ -49,11 +50,13 @@ export const Content = () => {
       <div className="container-x">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 md:mb-20">
           <div>
-            <div className="eyebrow mb-4 text-xs tracking-widest">{"// INSIGHTS & IDEIAS"}</div>
-            <h2 className="editorial text-4xl md:text-6xl leading-tight">
-              Onde estratégia encontra<br />
-              <span className="editorial-italic text-primary">imaginação</span>.
-            </h2>
+            <OptionText k="content.eyebrow" as="div" className="eyebrow mb-4 text-xs tracking-widest" />
+            <OptionText
+              k="content.title"
+              as="h2"
+              className="editorial text-4xl md:text-6xl leading-tight"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
         </div>
 

@@ -129,3 +129,47 @@ export type WhatsAppClick = {
   message_text: string;
   clicked_at: string;
 };
+
+export type SiteImage = {
+  key: string;
+  image: string;
+  alt: string;
+  description: string;
+  updated_at: string;
+};
+
+export type MethodStep = Ordered & {
+  title: string;
+  text: string;
+  icon_name: string;
+  tags: string;
+};
+
+export type EngagementModel = Ordered & {
+  title: string;
+  text: string;
+  icon_name: string;
+};
+
+export type Capability = Ordered & {
+  label: string;
+  icon_name: string;
+};
+
+export type AboutPillar = Ordered & {
+  tag: string;
+  title: string;
+  text: string;
+  image: string;
+  image_alt: string;
+};
+
+export type AboutHighlight = Ordered & {
+  title: string;
+  text: string;
+};
+
+export type SocialLink = Ordered & {
+  label: string;
+  url: string;
+};

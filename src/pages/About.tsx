@@ -4,56 +4,19 @@ import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 import { useTeam } from "@/hooks/useTeam";
 import { useTestimonials } from "@/hooks/useTestimonials";
-import heroArt from "@/assets/esc-mtz.webp";
-import case1 from "@/assets/case-1.jpg";
-import case2 from "@/assets/case-2.jpg";
-import case3 from "@/assets/case-3.jpg";
+import { OptionText } from "@/components/site/OptionText";
+import { useApiList } from "@/hooks/useApiList";
+import { useSiteImage } from "@/hooks/useSiteImage";
+import { useSiteOptions } from "@/hooks/useSiteOptions";
+import { AboutHighlight, AboutPillar } from "@/lib/api-types";
+import { buildStats } from "@/lib/stats";
 
-const highlights = [
-  {
-    title: "SEO técnico de verdade",
-    text: "Estruturamos arquitetura, rastreabilidade e performance para escalar crescimento orgânico sem fragilidade.",
-  },
-  {
-    title: "Analytics orientado a decisão",
-    text: "Dados limpos, governança e painéis acionáveis para liderança operar com clareza de margem e receita.",
-  },
-  {
-    title: "CRO com método",
-    text: "Experimentação contínua com hipótese, priorização e leitura estatística para crescimento previsível.",
-  },
-  {
-    title: "Time sênior no projeto",
-    text: "Sem repasse. Você fala com quem planeja, executa e mede. Menos ruído, mais velocidade com qualidade.",
-  },
-];
-
-const stats = [
-  { value: "+80", label: "Marcas atendidas" },
-  { value: "12 anos", label: "De prática data-driven" },
-  { value: "+300%", label: "Média de ganho em projetos estratégicos" },
-  { value: "99.8%", label: "Confiabilidade de coleta em setups críticos" },
-];
-
-const whatWeDo = [
-  {
-    img: case1,
-    tag: "Planejamento",
-    title: "Mapeamento de alavancas",
-    text: "Diagnóstico técnico e de negócio para priorizar o que realmente move resultado.",
-  },
-  {
-    img: case2,
-    tag: "Execução",
-    title: "Operação multidisciplinar",
-    text: "SEO, CRO, Analytics e Dev em uma mesma esteira para reduzir ruído e acelerar entregas.",
-  },
-  {
-    img: case3,
-    tag: "Evolução",
-    title: "Crescimento contínuo",
-    text: "Ritual de melhoria permanente com indicadores, experimentos e ajustes de alta velocidade.",
-  },
+// Numbers grid: numbers from "Opções do site" (value = number, text = its label).
+const ABOUT_STATS = [
+  { key: "marcasatendidas", prefix: "+" },
+  { key: "idade", suffix: " anos" },
+  { key: "ganhoprojetos", prefix: "+", suffix: "%" },
+  { key: "confiabilidadecoleta", suffix: "%" },
 ];
 
 const About = () => {
@@ -61,6 +24,11 @@ const About = () => {
   // Only one testimonial is shown here: the first flagged "destaque do Quem Somos", by position.
   const { testimonials } = useTestimonials({ placement: "about" });
   const highlightedTestimonial = testimonials[0];
+  const { items: whatWeDo } = useApiList<AboutPillar>("/about-pillars/");
+  const { items: highlights } = useApiList<AboutHighlight>("/about-highlights/");
+  const whyImage = useSiteImage("about.why_image");
+  const { options, labels } = useSiteOptions();
+  const stats = buildStats(ABOUT_STATS, options, labels);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -69,15 +37,14 @@ const About = () => {
       <section className="relative overflow-hidden border-b border-border bg-ink-deep pb-16 pt-28 md:pb-20 md:pt-36">
         <div className="pointer-events-none absolute inset-0 bg-gradient-radial" />
         <div className="container-x relative">
-          <p className="mono-tag text-muted-foreground">Quem Somos</p>
-          <h1 className="editorial mt-6 text-[clamp(2.5rem,7vw,6rem)] leading-[0.94]">
-            Somos uma consultoria de performance que mistura
-            <span className="editorial-italic text-primary"> estratégia, dados e execução.</span>
-          </h1>
-          <p className="mt-6 max-w-3xl text-base text-foreground/80 md:text-lg">
-            A Metricaz nasceu para resolver o intervalo entre intenção e resultado: menos vaidade, mais impacto real em
-            receita, eficiência e previsibilidade.
-          </p>
+          <OptionText k="about.eyebrow" as="p" className="mono-tag text-muted-foreground" />
+          <OptionText
+            k="about.title"
+            as="h1"
+            className="editorial mt-6 text-[clamp(2.5rem,7vw,6rem)] leading-[0.94]"
+            accentClassName="editorial-italic text-primary"
+          />
+          <OptionText k="about.description" as="p" className="mt-6 max-w-3xl text-base text-foreground/80 md:text-lg" />
         </div>
       </section>
 
@@ -85,21 +52,24 @@ const About = () => {
         <div className="container-x relative">
           <div className="mb-12 flex items-end justify-between gap-6">
             <div>
-              <div className="eyebrow">// O que fazemos</div>
-              <h2 className="editorial mt-4 text-4xl md:text-6xl">
-                Crescimento sustentável com
-                <span className="editorial-italic text-primary"> método e precisão.</span>
-              </h2>
+              <OptionText k="about.whatwedo_eyebrow" as="div" className="eyebrow" />
+              <OptionText
+                k="about.whatwedo_title"
+                as="h2"
+                className="editorial mt-4 text-4xl md:text-6xl"
+                accentClassName="editorial-italic text-primary"
+              />
             </div>
           </div>
 
+          {whatWeDo.length > 0 && (
           <div className="flex flex-col gap-4 md:h-[430px] md:flex-row">
             {whatWeDo.map((item) => (
               <article
-                key={item.title}
+                key={item.id}
                 className="group relative min-h-[320px] overflow-hidden rounded-3xl border border-border bg-card md:flex-1 md:transition-all md:duration-500 md:ease-out md:hover:flex-[1.45]"
               >
-                <img src={item.img} alt={item.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={item.image} alt={item.image_alt || item.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/35 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   <p className="mono-tag text-primary">{item.tag}</p>
@@ -109,37 +79,44 @@ const About = () => {
               </article>
             ))}
           </div>
+          )}
 
+          {stats.length > 0 && (
           <div className="mt-10 grid gap-4 md:grid-cols-4">
             {stats.map((item) => (
-              <div key={item.label} className="rounded-2xl border border-border/80 bg-card/55 p-5">
+              <div key={item.key} className="rounded-2xl border border-border/80 bg-card/55 p-5">
                 <p className="editorial text-4xl text-primary md:text-5xl">{item.value}</p>
                 <p className="mt-2 text-sm text-muted-foreground">{item.label}</p>
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
       <section className="surface-cream py-20 text-cream-foreground md:py-28">
-        <div className="container-x grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-cream">
-            <img src={heroArt} alt="Metricaz" className="h-full min-h-[320px] w-full object-cover" />
-          </div>
+        <div className={`container-x grid gap-8 lg:items-center ${whyImage ? "lg:grid-cols-[1.1fr_1fr]" : ""}`}>
+          {whyImage && (
+            <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-cream">
+              <img src={whyImage.image} alt={whyImage.alt} className="h-full min-h-[320px] w-full object-cover" />
+            </div>
+          )}
 
           <div>
-            <div className="eyebrow">// Por que escolher a Metricaz</div>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-cream-foreground md:text-6xl">
-              Nosso diferencial é unir técnica profunda com leitura de negócio.
-            </h2>
-            <p className="mt-5 max-w-xl text-base text-cream-foreground/80 md:text-lg">
-              Não entregamos só relatório. Entregamos direção, decisão e execução para transformar dados em lucro.
-            </p>
+            <OptionText k="about.why_eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="about.why_title"
+              as="h2"
+              className="mt-4 font-display text-4xl font-semibold leading-tight text-cream-foreground md:text-6xl"
+              accentClassName="editorial-italic text-primary"
+            />
+            <OptionText k="about.why_description" as="p" className="mt-5 max-w-xl text-base text-cream-foreground/80 md:text-lg" />
 
+            {highlights.length > 0 && (
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {highlights.map((item) => (
                 <article
-                  key={item.title}
+                  key={item.id}
                   className="group relative overflow-hidden rounded-2xl border border-border bg-white/70 p-4 shadow-cream backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-white hover:shadow-[0_24px_50px_-28px_rgba(17,16,25,0.35)]"
                 >
                   <div className="pointer-events-none absolute right-3 top-3 h-2 w-2 rounded-full bg-primary/40 transition-all duration-300 group-hover:scale-125 group-hover:bg-primary" />
@@ -148,6 +125,7 @@ const About = () => {
                 </article>
               ))}
             </div>
+            )}
           </div>
         </div>
       </section>
@@ -157,11 +135,13 @@ const About = () => {
         <div className="container-x relative">
           <div className="mb-12">
             <div>
-              <div className="eyebrow">// Heads da operação</div>
-              <h2 className="editorial mt-4 text-4xl md:text-6xl">
-                Lideranças que constroem o
-                <span className="editorial-italic text-primary"> resultado com você.</span>
-              </h2>
+              <OptionText k="about.leads_eyebrow" as="div" className="eyebrow" />
+              <OptionText
+                k="about.leads_title"
+                as="h2"
+                className="editorial mt-4 text-4xl md:text-6xl"
+                accentClassName="editorial-italic text-primary"
+              />
             </div>
           </div>
 
@@ -215,7 +195,7 @@ const About = () => {
       {highlightedTestimonial && (
       <section className="surface-cream py-20 md:py-28">
         <div className="container-x text-center">
-          <div className="eyebrow">// O que nossos clientes dizem</div>
+          <OptionText k="about.testimonial_eyebrow" as="div" className="eyebrow" />
           <blockquote className="mx-auto mt-6 max-w-4xl text-balance font-display text-3xl leading-tight text-cream-foreground md:text-5xl">
             “
             {highlightedTestimonial.text}

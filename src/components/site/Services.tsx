@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { getServiceIcon } from '@/lib/service-icons';
 import { useServices } from '@/hooks/useServices';
+import { OptionText } from '@/components/site/OptionText';
 
 export const Services = () => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
@@ -20,16 +21,19 @@ export const Services = () => {
         {/* Header */}
         <div className="mb-24 grid items-end gap-8 md:mb-32 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-8">
-            <div className="eyebrow mb-6 text-xs tracking-widest">{"// SERVIÇOS"}</div>
-            <h2 className="editorial text-4xl md:text-6xl leading-tight">
-              Quatro pilares.<br />
-              <span className="editorial-italic text-primary">Um único objetivo:</span>{" "}
-              resultado.
-            </h2>
+            <OptionText k="services.eyebrow" as="div" className="eyebrow mb-6 text-xs tracking-widest" />
+            <OptionText
+              k="services.title"
+              as="h2"
+              className="editorial text-4xl md:text-6xl leading-tight"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
-          <p className="md:col-span-4 text-muted-foreground text-sm md:text-base leading-relaxed">
-            Atuamos de ponta a ponta no funil digital com método, rigor analítico e governança.
-          </p>
+          <OptionText
+            k="services.description"
+            as="p"
+            className="md:col-span-4 text-muted-foreground text-sm md:text-base leading-relaxed"
+          />
         </div>
 
         {/* Cards Grid */}

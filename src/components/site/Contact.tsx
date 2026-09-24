@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useCompanyAddress } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
+import { OptionText } from "@/components/site/OptionText";
 
 export const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -46,14 +47,18 @@ export const Contact = () => {
         {/* left: orange editorial panel */}
         <div className="md:col-span-5 surface-orange relative p-10 md:p-16 flex flex-col justify-between">
           <div>
-            <div className="mono-tag text-primary-foreground/80">{"// Contato"}</div>
-            <h2 className="editorial mt-6 text-5xl md:text-7xl text-primary-foreground">
-              Vamos<br />
-              <span className="editorial-italic">conversar?</span>
-            </h2>
-            <p className="mt-8 max-w-md text-primary-foreground/90 text-lg leading-relaxed">
-              Conte rapidamente sobre o desafio. Em até 1 dia útil retornamos com próximos passos.
-            </p>
+            <OptionText k="contact.eyebrow" as="div" className="mono-tag text-primary-foreground/80" />
+            <OptionText
+              k="contact.title"
+              as="h2"
+              className="editorial mt-6 text-5xl md:text-7xl text-primary-foreground"
+              accentClassName="editorial-italic"
+            />
+            <OptionText
+              k="contact.description"
+              as="p"
+              className="mt-8 max-w-md text-primary-foreground/90 text-lg leading-relaxed"
+            />
           </div>
 
           <div className="mt-12 space-y-6 text-primary-foreground/95">

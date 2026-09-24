@@ -1,5 +1,6 @@
 import { useCompanies } from '@/hooks/useCompanies';
 import { useSiteOptions } from '@/hooks/useSiteOptions';
+import { OptionText } from '@/components/site/OptionText';
 import { useState } from 'react';
 
 export const Logos = () => {
@@ -20,11 +21,13 @@ export const Logos = () => {
     <section className="py-20 md:py-24 border-b border-border">
       <div className="container-x mb-10 flex items-end justify-between">
         <div>
-          <p className="eyebrow">{"// Quem confia"}</p>
-          <p className="editorial mt-4 text-3xl md:text-5xl max-w-xl">
-            Marcas que decidem com{" "}
-            <span className="editorial-italic text-primary">dado, não com achismo.</span>
-          </p>
+          <OptionText k="logos.eyebrow" as="p" className="eyebrow" />
+          <OptionText
+            k="logos.title"
+            as="p"
+            className="editorial mt-4 text-3xl md:text-5xl max-w-xl"
+            accentClassName="editorial-italic text-primary"
+          />
         </div>
         {brandsCount && (
           <p className="mono-tag text-muted-foreground hidden md:block">

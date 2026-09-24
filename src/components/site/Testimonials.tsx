@@ -1,4 +1,5 @@
 import { useTestimonials } from "@/hooks/useTestimonials";
+import { OptionText } from "@/components/site/OptionText";
 
 export const Testimonials = () => {
   const { testimonials: testimonialsData } = useTestimonials({ placement: 'testimonials' });
@@ -18,10 +19,13 @@ export const Testimonials = () => {
       <div className="container-x">
         <div className="grid md:grid-cols-12 items-end gap-10 mb-16">
           <div className="md:col-span-8">
-            <div className="eyebrow">{"// Depoimentos"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-7xl text-cream-foreground">
-              O que <span className="editorial-italic text-primary">dizem</span> sobre nós.
-            </h2>
+            <OptionText k="testimonials.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="testimonials.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-7xl text-cream-foreground"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
         </div>
 

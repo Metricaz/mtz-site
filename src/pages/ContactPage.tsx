@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { useCompanyAddress } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
+import { OptionText } from "@/components/site/OptionText";
 
 const ContactPage = () => {
   const { settings } = useWhatsAppSettings();
@@ -22,14 +23,14 @@ const ContactPage = () => {
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
         <div className="container-x">
           <div className="max-w-4xl">
-            <p className="mono-tag text-muted-foreground">Contato</p>
-            <h1 className="editorial mt-6 text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.95]">
-              Vamos transformar o seu próximo desafio em
-              <span className="editorial-italic text-primary"> um plano claro.</span>
-            </h1>
-            <p className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg">
-              Use o formulário para briefing, fale com a equipe no WhatsApp ou venha visitar nossa localização.
-            </p>
+            <OptionText k="contactpage.eyebrow" as="p" className="mono-tag text-muted-foreground" />
+            <OptionText
+              k="contactpage.title"
+              as="h1"
+              className="editorial mt-6 text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.95]"
+              accentClassName="editorial-italic text-primary"
+            />
+            <OptionText k="contactpage.description" as="p" className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg" />
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -56,11 +57,18 @@ const ContactPage = () => {
       <section className="py-16 md:py-24">
         <div className="container-x grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
           <div className="rounded-3xl border border-border bg-card/55 p-8 shadow-card">
-            <div className="eyebrow">// Localização</div>
-            <h2 className="editorial mt-4 text-4xl md:text-5xl">Onde estamos</h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground md:text-base">
-              A base da Metricaz fica em São Paulo e atende projetos em todo o Brasil de forma remota e híbrida.
-            </p>
+            <OptionText k="contactpage.location_eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="contactpage.location_title"
+              as="h2"
+              className="editorial mt-4 text-4xl md:text-5xl"
+              accentClassName="editorial-italic text-primary"
+            />
+            <OptionText
+              k="contactpage.location_description"
+              as="p"
+              className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground md:text-base"
+            />
 
             <div className="mt-8 space-y-4">
               {address && (
@@ -79,7 +87,7 @@ const ContactPage = () => {
                   <Mail className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
                     <p className="text-sm font-medium">{email}</p>
-                    <p className="text-sm text-muted-foreground">Retorno em até 1 dia útil</p>
+                    <OptionText k="contactpage.email_note" as="p" className="text-sm text-muted-foreground" />
                   </div>
                 </div>
               )}
@@ -95,7 +103,7 @@ const ContactPage = () => {
             </div>
 
             <div className="mt-8 rounded-3xl border border-border bg-ink-deep/55 p-5">
-              <p className="eyebrow">// WhatsApp</p>
+              <OptionText k="contactpage.whatsapp_eyebrow" as="p" className="eyebrow" />
               <div className="mt-5">
                 <WhatsAppButton
                   number={settings?.number}

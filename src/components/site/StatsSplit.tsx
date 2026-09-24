@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
+import { OptionText } from "@/components/site/OptionText";
+import { useSiteOptions } from "@/hooks/useSiteOptions";
+import { buildStats } from "@/lib/stats";
 
 const AUTOPLAY_MS = 10000;
+// "Em números" panel: numbers from "Opções do site" (value = number, text = its label).
+const SPLIT_STATS = [
+  { key: "marcasatendidas", prefix: "+" },
+  { key: "idade" },
+  { key: "receitaorganica", prefix: "+", suffix: "%" },
+];
 
 export const StatsSplit = () => {
   const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
   const { testimonials: testimonialsData } = useTestimonials({ placement: 'client_panel' });
+  const { options, labels } = useSiteOptions();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -30,11 +40,7 @@ export const StatsSplit = () => {
       .toUpperCase(),
   }));
 
-  const stats = [
-    { k: "+80", v: "Marcas atendidas" },
-    { k: "12", v: "Anos de método" },
-    { k: "+312%", v: "Receita orgânica média" },
-  ];
+  const stats = buildStats(SPLIT_STATS, options, labels);
 
   const [i, setI] = useState(0);
   const go = (dir: number) =>
@@ -47,17 +53,22 @@ export const StatsSplit = () => {
     return () => clearInterval(id);
   }, [isMobile, testimonials.length]);
 
-  // Client panel only exists with testimonials flagged for it; without it, the stats panel takes the full width.
+  // Each panel only exists with data (client testimonials / numbers); a lone panel takes the full width.
   const t = testimonials.length > 0 ? testimonials[i % testimonials.length] : null;
+  const hasStats = stats.length > 0;
+
+  if (!t && !hasStats) {
+    return null;
+  }
 
   return (
     <section className="grid md:grid-cols-12 border-y border-border">
       {/* Depoimentos — laranja com carrossel */}
       {t && (
-      <div className="md:col-span-5 surface-orange p-10 md:p-14 flex flex-col justify-between min-h-[420px] relative">
+      <div className={`${hasStats ? "md:col-span-5" : "md:col-span-12"} surface-orange p-10 md:p-14 flex flex-col justify-between min-h-[420px] relative`}>
         <div>
           <div className="flex items-center justify-between mb-6">
-            <div className="mono-tag text-primary-foreground/80">{"// Cliente"}</div>
+            <OptionText k="statssplit.client_eyebrow" as="div" className="mono-tag text-primary-foreground/80" />
             <div className="flex items-center gap-2">
               <button
                 aria-label="Anterior"
@@ -112,23 +123,27 @@ export const StatsSplit = () => {
       )}
 
       {/* Stats — ink deep */}
+      {hasStats && (
       <div className={`${t ? "md:col-span-7" : "md:col-span-12"} bg-ink-deep p-10 md:p-14 flex flex-col justify-between min-h-[420px]`}>
         <div>
-          <div className="mono-tag text-muted-foreground mb-6">{"// Em números"}</div>
-          <h3 className="editorial text-3xl md:text-5xl max-w-lg leading-tight">
-            Mais de <span className="editorial-italic text-primary">uma década</span>{" "}
-            construindo operações data-driven.
-          </h3>
+          <OptionText k="statssplit.numbers_eyebrow" as="div" className="mono-tag text-muted-foreground mb-6" />
+          <OptionText
+            k="statssplit.numbers_title"
+            as="h3"
+            className="editorial text-3xl md:text-5xl max-w-lg leading-tight"
+            accentClassName="editorial-italic text-primary"
+          />
         </div>
         <div className="grid grid-cols-3 gap-6 mt-10 pt-10 border-t border-border">
           {stats.map((s) => (
-            <div key={s.v}>
-              <div className="editorial text-4xl md:text-6xl text-foreground">{s.k}</div>
-              <div className="mono-tag text-muted-foreground mt-3">{s.v}</div>
+            <div key={s.key}>
+              <div className="editorial text-4xl md:text-6xl text-foreground">{s.value}</div>
+              <div className="mono-tag text-muted-foreground mt-3">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
+      )}
     </section>
   );
 };

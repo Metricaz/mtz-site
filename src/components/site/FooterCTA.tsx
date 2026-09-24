@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import mSymbol from "@/assets/m-metricaz.png";
 import { api } from "@/lib/api";
+import { OptionText } from "@/components/site/OptionText";
 
 export const FooterCTA = () => {
   const [loading, setLoading] = useState(false);
@@ -44,17 +45,16 @@ export const FooterCTA = () => {
       <div className="container-x relative py-24 md:py-36">
         <div className="grid md:grid-cols-12 gap-10 items-end">
           <div className="md:col-span-8">
-            <div className="eyebrow">{"// Próximo passo"}</div>
-            <h2 className="editorial mt-6 text-5xl md:text-8xl leading-[0.95]">
-              Vamos construir{" "}
-              <span className="editorial-italic">o que vem</span>{" "}
-              a seguir?
-            </h2>
+            <OptionText k="footercta.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="footercta.title"
+              as="h2"
+              className="editorial mt-6 text-5xl md:text-8xl leading-[0.95]"
+              accentClassName="editorial-italic"
+            />
           </div>
           <div className="md:col-span-4">
-            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              Conte sobre o desafio em uma frase. Retornamos em até 1 dia útil.
-            </p>
+            <OptionText k="footercta.description" as="p" className="text-muted-foreground text-lg leading-relaxed mb-6" />
             <form onSubmit={onSubmit} className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
               <input
                 type="email"

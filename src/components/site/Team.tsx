@@ -1,6 +1,7 @@
 import { type PointerEvent, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTeam } from "@/hooks/useTeam";
+import { OptionText } from "@/components/site/OptionText";
 
 export const Team = () => {
   const { team: teamData } = useTeam({ placement: 'home' });
@@ -133,16 +134,16 @@ export const Team = () => {
       <div className="container-x">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
           <div>
-            <div className="eyebrow">{"// Time"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-7xl">
-              Quem constrói{" "}
-              <span className="editorial-italic text-primary">com você.</span>
-            </h2>
+            <OptionText k="team.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="team.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-7xl"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
           <div className="flex items-end justify-between md:justify-end gap-6">
-            <p className="mono-tag text-muted-foreground max-w-xs">
-              Especialistas seniores. Sem repasse. Sem terceirização.
-            </p>
+            <OptionText k="team.subtitle" as="p" className="mono-tag text-muted-foreground max-w-xs" />
             <div className="flex items-center gap-2 shrink-0">
               <button
                 aria-label="Anterior"

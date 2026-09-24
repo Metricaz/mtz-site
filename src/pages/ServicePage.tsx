@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useServices } from '@/hooks/useServices';
+import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { getServiceIcon } from '@/lib/service-icons';
@@ -53,7 +54,7 @@ const ServicePage = () => {
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
         <div className="container-x">
           <div className="mb-6">
-            <span className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground">Metricaz / Serviço</span>
+            <OptionText k="servicepage.eyebrow" className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground" />
           </div>
           <div className="flex items-start gap-4 md:gap-6">
             <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
@@ -74,8 +75,13 @@ const ServicePage = () => {
           <div className="mt-14 rounded-3xl border border-border bg-card/55 p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="eyebrow">Próximo passo</p>
-                <h2 className="editorial mt-3 text-3xl md:text-5xl">Quer aplicar este serviço no seu cenário?</h2>
+                <OptionText k="servicepage.cta_eyebrow" as="p" className="eyebrow" />
+                <OptionText
+                  k="servicepage.cta_title"
+                  as="h2"
+                  className="editorial mt-3 text-3xl md:text-5xl"
+                  accentClassName="editorial-italic text-primary"
+                />
               </div>
               <Link
                 to="/#contato"
