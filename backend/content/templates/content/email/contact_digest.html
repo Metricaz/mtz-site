@@ -1,0 +1,33 @@
+<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #191825; max-width: 680px;">
+  <h2 style="margin-bottom: 8px;">Resumo do site Metricaz</h2>
+
+  {% if submissions %}
+  <h3 style="margin-top: 28px;">Mensagens de contato ({{ submissions|length }})</h3>
+  {% for s in submissions %}
+  <div style="margin: 14px 0; padding: 16px; border-radius: 12px; background: #f7f4ef;">
+    <strong>{{ s.name }}</strong> · <a href="mailto:{{ s.email }}">{{ s.email }}</a>
+    {% if s.company %} · {{ s.company }}{% endif %}{% if s.phone %} · {{ s.phone }}{% endif %}
+    <div style="color: #6b6978; font-size: 13px;">{{ s.created_at|date:"d/m/Y H:i" }} · página {{ s.source_page|default:"-" }}</div>
+    <p style="margin: 10px 0 0; white-space: pre-wrap;">{{ s.message }}</p>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if leads %}
+  <h3 style="margin-top: 28px;">Leads ({{ leads|length }})</h3>
+  <ul>
+    {% for lead in leads %}
+    <li><a href="mailto:{{ lead.email }}">{{ lead.email }}</a> · {{ lead.created_at|date:"d/m/Y H:i" }} · página {{ lead.source_page|default:"-" }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if subscribers %}
+  <h3 style="margin-top: 28px;">Novos inscritos na newsletter ({{ subscribers|length }})</h3>
+  <ul>
+    {% for sub in subscribers %}
+    <li>{{ sub.email }} · {{ sub.created_at|date:"d/m/Y H:i" }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

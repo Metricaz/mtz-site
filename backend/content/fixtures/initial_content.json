@@ -556,16 +556,6 @@
     }
   },
   {
-    "model": "content.contactsettings",
-    "pk": 1,
-    "fields": {
-      "recipient_email": "comercial@metricaz.com",
-      "sender_email": "contato@metricaz.com",
-      "sender_name": "Metricaz",
-      "updated_at": "2026-09-24T00:00:00Z"
-    }
-  },
-  {
     "model": "content.siteoption",
     "pk": 1,
     "fields": {

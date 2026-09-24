@@ -114,7 +114,6 @@ export type ContactSubmission = {
   source_page: string;
   source_context: string;
   status: 'queued' | 'sent' | 'failed';
-  email_message_id: string;
   error_message: string;
   payload: Record<string, unknown>;
   created_at: string;

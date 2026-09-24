@@ -1,12 +1,14 @@
 import io
 import tempfile
+from unittest import mock
 from pathlib import Path
 
 from django.apps import apps
 from django.contrib.auth.models import User
+from django.core import mail
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from PIL import Image
@@ -20,7 +22,6 @@ from .models import (
     Case,
     Company,
     CompanyAddress,
-    ContactSettings,
     ContactSubmission,
     ContentImage,
     EngagementModel,
@@ -95,8 +96,6 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(SiteOption.objects.get(key="receitaorganica").label, "Receita orgânica média")
         self.assertEqual(SiteOption.objects.get(key="hero.title").value, "Dados que viram\n*vantagem* competitiva.")
         self.assertFalse(SiteOption.objects.filter(key="logos.brands_count").exists())
-        contact = ContactSettings.load()
-        self.assertEqual((contact.recipient_email, contact.sender_email), ("comercial@metricaz.com", "contato@metricaz.com"))
         self.assertTrue(WhatsAppSettings.load().message)
 
     def test_every_record_passes_model_validation(self):
@@ -175,9 +174,8 @@ class PublicContentApiTests(ApiTestCase):
         self.assertEqual([(o["key"], o["value"]) for o in data], [("contact.email", "comercial@metricaz.com")])
         self.assertEqual(self.client.get("/api/options/contact.email/").json()["value"], "comercial@metricaz.com")
 
-    def test_whatsapp_settings_public_contact_settings_private(self):
+    def test_whatsapp_settings_are_public(self):
         self.assertEqual(self.client.get("/api/whatsapp-settings/").status_code, 200)
-        self.assertEqual(self.client.get("/api/contact-settings/").status_code, 403)
 
 
 class StaffWriteApiTests(ApiTestCase):
@@ -518,3 +516,63 @@ class BlogApiTests(ApiTestCase):
     def test_authors_and_tags_are_public(self):
         self.assertEqual(len(self.client.get("/api/tags/").json()), 5)
         self.assertEqual(self.client.get("/api/authors/").json()[0]["name"], "Nome Sobrenome")
+
+
+@override_settings(DEFAULT_FROM_EMAIL="Metricaz <contato@metricaz.com>", CONTACT_DIGEST_TO="comercial@metricaz.com")
+class ContactDigestTests(TestCase):
+    def run_digest(self, *args):
+        out = io.StringIO()
+        call_command("send_contact_digest", *args, stdout=out)
+        return out.getvalue()
+
+    def add_everything(self):
+        ContactSubmission.objects.create(name="Ana", email="ana@acme.com", company="ACME", message="Quero um orçamento", source_page="/contato")
+        Lead.objects.create(email="lead@acme.com", source_page="/")
+        NewsletterSubscriber.objects.create(email="news@acme.com")
+
+    def test_nothing_new_sends_nothing(self):
+        self.assertIn("Nada novo", self.run_digest())
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_one_email_with_everything_then_marked(self):
+        self.add_everything()
+        self.run_digest()
+
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertEqual(email.to, ["comercial@metricaz.com"])
+        self.assertEqual(email.from_email, "Metricaz <contato@metricaz.com>")
+        self.assertIn("1 mensagem(ns), 1 lead(s), 1 inscrição(ões)", email.subject)
+        for text in ("Ana", "ana@acme.com", "Quero um orçamento", "lead@acme.com", "news@acme.com"):
+            self.assertIn(text, email.body)
+        self.assertIn("Quero um orçamento", email.alternatives[0].content)
+
+        self.assertEqual(ContactSubmission.objects.get().status, "sent")
+        self.assertIsNotNone(Lead.objects.get().notified_at)
+        self.assertIsNotNone(NewsletterSubscriber.objects.get().notified_at)
+
+        # next run: nothing left
+        self.run_digest()
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_dry_run_sends_and_marks_nothing(self):
+        self.add_everything()
+        self.assertIn("[dry-run]", self.run_digest("--dry-run"))
+        self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(ContactSubmission.objects.get().status, "queued")
+
+    @override_settings(CONTACT_DIGEST_TO="")
+    def test_missing_settings_fails_without_marking(self):
+        self.add_everything()
+        with self.assertRaises(CommandError):
+            self.run_digest()
+        self.assertEqual(ContactSubmission.objects.get().status, "queued")
+
+    def test_send_failure_keeps_everything_pending(self):
+        self.add_everything()
+        with mock.patch("django.core.mail.EmailMultiAlternatives.send", side_effect=OSError("relay down")):
+            with self.assertRaises(CommandError):
+                self.run_digest()
+        self.assertEqual(ContactSubmission.objects.get().status, "queued")
+        self.assertIsNone(Lead.objects.get().notified_at)
+        self.assertIsNone(NewsletterSubscriber.objects.get().notified_at)

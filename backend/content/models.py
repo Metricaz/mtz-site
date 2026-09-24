@@ -456,21 +456,6 @@ class WhatsAppSettings(SingletonModel):
         return "WhatsApp"
 
 
-class ContactSettings(SingletonModel):
-    recipient_email = models.EmailField("destinatário", blank=True, help_text="Quem recebe as mensagens do formulário.")
-    sender_email = models.EmailField(
-        "remetente", blank=True, help_text="Precisa ser um remetente verificado no SendGrid."
-    )
-    sender_name = models.CharField("nome do remetente", max_length=120, blank=True)
-
-    class Meta:
-        verbose_name = "envio do formulário de contato"
-        verbose_name_plural = "envio do formulário de contato"
-
-    def __str__(self):
-        return "Envio do formulário de contato"
-
-
 # --- Recebido do visitante ----------------------------------------------------------------------
 
 class ContactSubmission(models.Model):
@@ -487,7 +472,6 @@ class ContactSubmission(models.Model):
     source_page = models.CharField("página de origem", max_length=500, blank=True)
     source_context = models.CharField("contexto de origem", max_length=120, blank=True)
     status = models.CharField("status do envio", max_length=10, choices=Status, default=Status.QUEUED)
-    email_message_id = models.CharField("ID da mensagem no SendGrid", max_length=255, blank=True)
     error_message = models.TextField("erro", blank=True)
     payload = models.JSONField("dados recebidos", default=dict, blank=True)
     created_at = models.DateTimeField("recebida em", auto_now_add=True)
@@ -519,6 +503,10 @@ class NewsletterSubscriber(models.Model):
     email = models.EmailField("e-mail", unique=True)
     source_page = models.CharField("página de origem", max_length=500, blank=True)
     created_at = models.DateTimeField("inscrito em", auto_now_add=True)
+    notified_at = models.DateTimeField(
+        "enviado no resumo em", null=True, blank=True, editable=False,
+        help_text="Preenchido pelo resumo por e-mail (send_contact_digest). Vazio = ainda não enviado.",
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -533,6 +521,10 @@ class Lead(models.Model):
     email = models.EmailField("e-mail")
     source_page = models.CharField("página de origem", max_length=500, blank=True)
     created_at = models.DateTimeField("recebido em", auto_now_add=True)
+    notified_at = models.DateTimeField(
+        "enviado no resumo em", null=True, blank=True, editable=False,
+        help_text="Preenchido pelo resumo por e-mail (send_contact_digest). Vazio = ainda não enviado.",
+    )
 
     class Meta:
         ordering = ["-created_at"]

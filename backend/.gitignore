@@ -267,3 +267,6 @@ pyrightconfig.json
 
 # Images used by the content fixture (copied to MEDIA_ROOT when loading it)
 !content/fixtures/media/
+
+# The env template is committed (the root .gitignore ignores .env.*); the real .env is not.
+!.env.example

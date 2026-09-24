@@ -8,7 +8,6 @@ from .models import (
     Case,
     Company,
     CompanyAddress,
-    ContactSettings,
     ContactSubmission,
     ContentImage,
     EngagementModel,
@@ -204,11 +203,6 @@ class SingletonAdmin(admin.ModelAdmin):
 @admin.register(WhatsAppSettings)
 class WhatsAppSettingsAdmin(SingletonAdmin):
     list_display = ("__str__", "number", "enabled")
-
-
-@admin.register(ContactSettings)
-class ContactSettingsAdmin(SingletonAdmin):
-    list_display = ("__str__", "recipient_email", "sender_email")
 
 
 class ReceivedAdmin(admin.ModelAdmin):

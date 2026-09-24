@@ -10,22 +10,41 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Environment-specific values live in backend/.env (never committed; see .env.example).
+# Variables already set in the real environment take precedence over the file.
+load_dotenv(BASE_DIR / '.env')
+
+
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def env_list(name):
+    return [item.strip() for item in os.environ.get(name, '').split(',') if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v$4%7ejf+5ak*6r-b12_gd1fj+olp7ej_3o(o5j)z)2lx@=cx1'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
+if not SECRET_KEY:
+    raise ImproperlyConfigured('DJANGO_SECRET_KEY is not set (backend/.env or the environment).')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env_list('DJANGO_ALLOWED_HOSTS')
+CSRF_TRUSTED_ORIGINS = env_list('DJANGO_CSRF_TRUSTED_ORIGINS')
 
 
 # Application definition
@@ -144,8 +163,30 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+# The SMTP relay (e.g. SendGrid) comes from the environment. Without EMAIL_HOST, e-mails are only
+# printed to the console (development). Sent by `manage.py send_contact_digest` (hourly cron).
+
+if os.environ.get('EMAIL_HOST'):
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': os.environ['EMAIL_HOST'],
+                'port': int(os.environ.get('EMAIL_PORT', '587')),
+                'username': os.environ.get('EMAIL_HOST_USER', ''),
+                'password': os.environ.get('EMAIL_HOST_PASSWORD', ''),
+                'use_tls': os.environ.get('EMAIL_USE_TLS', 'true').lower() in ('1', 'true', 'yes'),
+                'timeout': 30,
+            },
+        },
+    }
+else:
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        },
+    }
+
+# Contact digest: sender (must be a verified sender in the relay) and recipient.
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Metricaz <contato@metricaz.com>')
+CONTACT_DIGEST_TO = os.environ.get('CONTACT_DIGEST_TO', 'comercial@metricaz.com')

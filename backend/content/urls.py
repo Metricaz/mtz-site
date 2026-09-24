@@ -31,6 +31,5 @@ router.register("whatsapp-clicks", views.WhatsAppClickViewSet, basename="whatsap
 urlpatterns = [
     path("auth/me/", views.MeView.as_view(), name="auth-me"),
     path("whatsapp-settings/", views.WhatsAppSettingsView.as_view(), name="whatsapp-settings"),
-    path("contact-settings/", views.ContactSettingsView.as_view(), name="contact-settings"),
     path("", include(router.urls)),
 ]

@@ -17,7 +17,6 @@ from .models import (
     Case,
     Company,
     CompanyAddress,
-    ContactSettings,
     ContactSubmission,
     ContentImage,
     EngagementModel,
@@ -45,7 +44,6 @@ from .serializers import (
     CaseSerializer,
     CompanyAddressSerializer,
     CompanySerializer,
-    ContactSettingsSerializer,
     ContactSubmissionSerializer,
     ContentImageSerializer,
     EngagementModelSerializer,
@@ -274,14 +272,6 @@ class WhatsAppSettingsView(SingletonView):
 
     model = WhatsAppSettings
     serializer_class = WhatsAppSettingsSerializer
-
-
-class ContactSettingsView(SingletonView):
-    """Staff only: e-mail addresses used to send the contact form are not public."""
-
-    model = ContactSettings
-    serializer_class = ContactSettingsSerializer
-    permission_classes = [IsStaff]
 
 
 # --- Received from visitors ---------------------------------------------------------------------

@@ -9,7 +9,6 @@ from .models import (
     Case,
     Company,
     CompanyAddress,
-    ContactSettings,
     ContactSubmission,
     ContentImage,
     EngagementModel,
@@ -211,13 +210,6 @@ class WhatsAppSettingsSerializer(serializers.ModelSerializer):
         read_only_fields = ["updated_at"]
 
 
-class ContactSettingsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContactSettings
-        fields = ["recipient_email", "sender_email", "sender_name", "updated_at"]
-        read_only_fields = ["updated_at"]
-
-
 # --- Received from visitors ---------------------------------------------------------------------
 
 class ContactSubmissionSerializer(serializers.ModelSerializer):
@@ -225,7 +217,7 @@ class ContactSubmissionSerializer(serializers.ModelSerializer):
         model = ContactSubmission
         fields = "__all__"
         read_only_fields = [
-            "id", "status", "email_message_id", "error_message", "payload", "created_at", "updated_at",
+            "id", "status", "error_message", "payload", "created_at", "updated_at",
         ]
 
 
