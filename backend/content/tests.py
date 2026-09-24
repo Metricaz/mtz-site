@@ -1,5 +1,6 @@
 import io
 import tempfile
+from pathlib import Path
 
 from django.apps import apps
 from django.contrib.auth.models import User
@@ -12,18 +13,25 @@ from PIL import Image
 from rest_framework.test import APIClient
 
 from .models import (
+    AboutHighlight,
+    AboutPillar,
     Author,
+    Capability,
     Company,
     CompanyAddress,
     ContactSettings,
     ContactSubmission,
     ContentImage,
+    EngagementModel,
     Lead,
+    MethodStep,
     NewsletterSubscriber,
     Post,
     Sector,
     Service,
+    SiteImage,
     SiteOption,
+    SocialLink,
     Tag,
     TeamMember,
     Testimonial,
@@ -42,6 +50,25 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(Testimonial.objects.count(), 3)
         self.assertEqual(Service.objects.count(), 4)
         self.assertEqual(CompanyAddress.objects.count(), 2)
+        self.assertEqual(MethodStep.objects.count(), 4)
+        self.assertEqual(EngagementModel.objects.count(), 3)
+        self.assertEqual(Capability.objects.count(), 6)
+        self.assertEqual(AboutPillar.objects.count(), 3)
+        self.assertEqual(AboutHighlight.objects.count(), 4)
+        self.assertEqual(SocialLink.objects.count(), 3)
+        self.assertEqual(SiteImage.objects.get().key, "about.why_image")
+        self.assertEqual(Tag.objects.count(), 5)
+
+    def test_example_post_is_complete(self):
+        post = Post.objects.get()
+        self.assertEqual((post.author.name, post.tag.name), ("Nome Sobrenome", "Privacidade"))
+        self.assertTrue(post.subtitle and post.featured_image and post.content_html)
+
+    def test_fixture_images_exist(self):
+        media = Path(__file__).parent / "fixtures" / "media"
+        paths = [p.image.name for p in AboutPillar.objects.all()] + [SiteImage.objects.get().image.name, Post.objects.get().featured_image.name]
+        for name in paths:
+            self.assertTrue((media / name).is_file(), name)
 
     def test_team_flags(self):
         self.assertEqual(TeamMember.objects.filter(show_on_home=True).count(), 8)
@@ -58,13 +85,19 @@ class InitialContentFixtureTests(TestCase):
 
     def test_options_and_settings(self):
         self.assertEqual(SiteOption.objects.get(key="contact.email").value, "comercial@metricaz.com")
-        self.assertEqual(SiteOption.objects.get(key="logos.brands_count").value, "+80")
+        self.assertEqual(SiteOption.objects.get(key="marcasatendidas").value, "80")
+        self.assertEqual(SiteOption.objects.get(key="receitaorganica").label, "Receita orgânica média")
+        self.assertEqual(SiteOption.objects.get(key="hero.title").value, "Dados que viram\n*vantagem* competitiva.")
+        self.assertFalse(SiteOption.objects.filter(key="logos.brands_count").exists())
         contact = ContactSettings.load()
         self.assertEqual((contact.recipient_email, contact.sender_email), ("comercial@metricaz.com", "contato@metricaz.com"))
         self.assertTrue(WhatsAppSettings.load().message)
 
     def test_every_record_passes_model_validation(self):
-        for model in (Sector, Company, TeamMember, Testimonial, Service, CompanyAddress, SiteOption):
+        for model in (
+            Sector, Company, TeamMember, Testimonial, Service, CompanyAddress, SiteOption, SiteImage,
+            MethodStep, EngagementModel, Capability, AboutPillar, AboutHighlight, SocialLink, Author, Tag, Post,
+        ):
             for obj in model.objects.all():
                 obj.full_clean()
 
@@ -301,8 +334,8 @@ class SanitizeTests(TestCase):
 
     def test_fixture_content_survives_sanitizing(self):
         call_command("loaddata", "initial_content", verbosity=0)
-        for service in Service.objects.all():
-            self.assertEqual(sanitize_html(service.content_html), service.content_html, service.slug)
+        for obj in [*Service.objects.all(), *Post.objects.all()]:
+            self.assertEqual(sanitize_html(obj.content_html), obj.content_html, obj.slug)
 
 
 class SanitizeApiTests(ApiTestCase):

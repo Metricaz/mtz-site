@@ -4,14 +4,14 @@ import { useState } from 'react';
 
 export const Logos = () => {
   const { companies } = useCompanies();
-  const { options } = useSiteOptions();
+  const { options, labels } = useSiteOptions();
   const [isPaused, setIsPaused] = useState(false);
 
   if (companies.length === 0) {
     return null;
   }
 
-  const brandsCount = options['logos.brands_count'];
+  const brandsCount = options['marcasatendidas'];
 
   // Duplicar items para efeito de loop infinito
   const items = [...companies, ...companies];
@@ -26,7 +26,11 @@ export const Logos = () => {
             <span className="editorial-italic text-primary">dado, não com achismo.</span>
           </p>
         </div>
-        {brandsCount && <p className="mono-tag text-muted-foreground hidden md:block">{brandsCount} marcas atendidas</p>}
+        {brandsCount && (
+          <p className="mono-tag text-muted-foreground hidden md:block">
+            +{brandsCount} {labels['marcasatendidas']}
+          </p>
+        )}
       </div>
       <div
         className="overflow-hidden"

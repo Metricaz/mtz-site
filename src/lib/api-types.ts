@@ -79,6 +79,7 @@ export type CompanyAddress = Ordered & {
 
 export type SiteOption = {
   key: string;
+  label: string;
   value: string;
   description: string;
   updated_at: string;
