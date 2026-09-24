@@ -17,6 +17,7 @@ from .models import (
     AboutPillar,
     Author,
     Capability,
+    Case,
     Company,
     CompanyAddress,
     ContactSettings,
@@ -58,6 +59,7 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(SocialLink.objects.count(), 3)
         self.assertEqual(SiteImage.objects.get().key, "about.why_image")
         self.assertEqual(Tag.objects.count(), 5)
+        self.assertEqual(Case.objects.get().slug, "case-de-exemplo")
 
     def test_example_post_is_complete(self):
         post = Post.objects.get()
@@ -66,7 +68,11 @@ class InitialContentFixtureTests(TestCase):
 
     def test_fixture_images_exist(self):
         media = Path(__file__).parent / "fixtures" / "media"
-        paths = [p.image.name for p in AboutPillar.objects.all()] + [SiteImage.objects.get().image.name, Post.objects.get().featured_image.name]
+        paths = [p.image.name for p in AboutPillar.objects.all()] + [
+            SiteImage.objects.get().image.name,
+            Post.objects.get().featured_image.name,
+            Case.objects.get().featured_image.name,
+        ]
         for name in paths:
             self.assertTrue((media / name).is_file(), name)
 
@@ -95,7 +101,7 @@ class InitialContentFixtureTests(TestCase):
 
     def test_every_record_passes_model_validation(self):
         for model in (
-            Sector, Company, TeamMember, Testimonial, Service, CompanyAddress, SiteOption, SiteImage,
+            Sector, Company, TeamMember, Testimonial, Service, Case, CompanyAddress, SiteOption, SiteImage,
             MethodStep, EngagementModel, Capability, AboutPillar, AboutHighlight, SocialLink, Author, Tag, Post,
         ):
             for obj in model.objects.all():
@@ -334,7 +340,7 @@ class SanitizeTests(TestCase):
 
     def test_fixture_content_survives_sanitizing(self):
         call_command("loaddata", "initial_content", verbosity=0)
-        for obj in [*Service.objects.all(), *Post.objects.all()]:
+        for obj in [*Service.objects.all(), *Post.objects.all(), *Case.objects.all()]:
             self.assertEqual(sanitize_html(obj.content_html), obj.content_html, obj.slug)
 
 

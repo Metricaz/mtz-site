@@ -1766,5 +1766,27 @@
       "created_at": "2026-09-24T00:00:00Z",
       "updated_at": "2026-09-24T00:00:00Z"
     }
+  },
+  {
+    "model": "content.case",
+    "pk": 1,
+    "fields": {
+      "title": "Case de exemplo: mensuração de ponta a ponta para e-commerce",
+      "slug": "case-de-exemplo",
+      "tag": "Digital Analytics",
+      "excerpt": "Case de exemplo: como uma base de dados confiável mudou as decisões de mídia e conversão.",
+      "kpi_value": "+40%",
+      "kpi_label": "conversão (exemplo)",
+      "client_name": "Cliente Exemplo",
+      "service_stack": "GA4, GTM Server-Side, Looker Studio",
+      "featured_image": "cases/case-exemplo.jpg",
+      "featured_image_alt": "Dashboard de analytics",
+      "content_html": "<p>Este é um case de exemplo, criado para mostrar o layout completo da página de case.</p><h2>Contexto</h2><p>Uma operação de e-commerce com dados de mídia, analytics e CRM desconectados, sem uma leitura única do funil.</p><h2>O que fizemos</h2><ul><li>Diagnóstico do tagueamento e da qualidade dos dados</li><li>Migração para GA4 com server-side tracking</li><li>Dashboards de funil para marketing e liderança</li></ul><h2>Resultado</h2><p>Decisões de mídia passaram a ser tomadas com base em dados confiáveis, com ganho de conversão no período.</p><blockquote><p>Números de exemplo: substitua por um case real no admin.</p></blockquote>",
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
   }
 ]
