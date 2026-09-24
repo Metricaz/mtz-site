@@ -1,0 +1,588 @@
+[
+  {
+    "model": "content.sector",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "SEO Técnico"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "CRO & Testes A/B"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "GA4 + GTM"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Server-Side Tracking"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Looker Studio"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "BigQuery"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Consent Mode v2"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Core Web Vitals"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 9,
+    "fields": {
+      "order_position": 8,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Desenvolvimento"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 10,
+    "fields": {
+      "order_position": 9,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "BI & Dashboards"
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Whirlpool",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Claro",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Veloe",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Lavazza",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Ambev",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Bradesco",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Natura",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Itaú",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Founder · Head de Analytics",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de SEO",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de CRO & Produto",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Conteúdo",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Mídia Paga",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Desenvolvimento",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Engenharia de Dados",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Operações",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Marina Costa",
+      "role": "Head of Growth",
+      "company": "Whirlpool",
+      "text": "A Metricaz levou nossa operação de analytics a outro nível. Decisões viraram dado, não opinião.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Lucas Andrade",
+      "role": "CMO",
+      "company": "Veloe",
+      "text": "Precisão técnica + visão de negócio. Em 6 meses dobramos a conversão do nosso e-commerce.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Renata Silva",
+      "role": "Diretora Digital",
+      "company": "Claro",
+      "text": "O time é cirúrgico. Implementação de GA4 e server-side impecável, sem gambiarra.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "SEO",
+      "slug": "seo",
+      "icon_name": "seo",
+      "excerpt": "Auditoria técnica, estratégia de conteúdo e link building com foco em crescimento orgânico previsível.",
+      "content_html": "<h2>SEO orientado a negócio</h2>\n<p>Estruturamos a presença orgânica para gerar demanda qualificada, apoiar a jornada de compra e ampliar previsibilidade de receita.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria técnica e correção de gargalos</li>\n  <li>Arquitetura de conteúdo e clusters temáticos</li>\n  <li>Estratégia de autoridade e desempenho orgânico</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "CRO & Testes A/B",
+      "slug": "cro",
+      "icon_name": "cro",
+      "excerpt": "Hipóteses baseadas em dados, experimentação contínua e otimização da jornada de conversão.",
+      "content_html": "<h2>Conversão com método</h2>\n<p>Testamos, priorizamos e ajustamos a experiência para transformar mais tráfego em resultado real.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria de UX e comportamento</li>\n  <li>Hipóteses ICE e roadmap de testes</li>\n  <li>Experimentação e leitura estatística</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Digital Analytics",
+      "slug": "analytics",
+      "icon_name": "analytics",
+      "excerpt": "Mensuração ponta a ponta com GA4, GTM, server-side tracking e dashboards acionáveis.",
+      "content_html": "<h2>Mensuração confiável</h2>\n<p>Construímos uma base de dados clara para que marketing, produto e liderança tomem decisão com segurança.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Setup e migração para GA4</li>\n  <li>Tagueamento e governança</li>\n  <li>Integração com mídia e BI</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Desenvolvimento",
+      "slug": "desenvolvimento",
+      "icon_name": "development",
+      "excerpt": "Software sob medida, integrações e automações que sustentam a operação data-driven.",
+      "content_html": "<h2>Produto e automação</h2>\n<p>Desenvolvemos camadas técnicas que conectam sistemas, simplificam fluxos e sustentam operações mais inteligentes.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Integrações com APIs e dados</li>\n  <li>Web apps e ferramentas internas</li>\n  <li>Automação de processos e relatórios</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.companyaddress",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "São Paulo",
+      "street": "Rua Cardeal Arcoverde, 2365",
+      "complement": "3º andar",
+      "district": "Pinheiros",
+      "city": "São Paulo",
+      "state": "SP",
+      "postal_code": "05408-003",
+      "country": "Brasil",
+      "phone": "",
+      "hours": "Seg–Sex · 9h às 18h",
+      "map_url": "https://www.google.com/maps?q=Rua%20Cardeal%20Arcoverde%2C%202365%20-%20Pinheiros%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2005408-003&z=15&output=embed"
+    }
+  },
+  {
+    "model": "content.companyaddress",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Orlando",
+      "street": "7901 Kingspointe Pkwy",
+      "complement": "Ste 14",
+      "district": "",
+      "city": "Orlando",
+      "state": "FL",
+      "postal_code": "32819",
+      "country": "US",
+      "phone": "",
+      "hours": "",
+      "map_url": "https://www.google.com/maps?q=7901%20Kingspointe%20Pkwy%20Ste%2014%2C%20Orlando%2C%20FL%2032819&z=15&output=embed"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 1,
+    "fields": {
+      "key": "contact.email",
+      "value": "comercial@metricaz.com",
+      "description": "E-mail de contato exibido no site (seção Contato e página Contato).",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 2,
+    "fields": {
+      "key": "logos.brands_count",
+      "value": "+80",
+      "description": "Número ao lado de \"marcas atendidas\" na seção Quem confia.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.whatsappsettings",
+    "pk": 1,
+    "fields": {
+      "number": "",
+      "enabled": true,
+      "message": "Olá, vim pelo site da Metricaz e gostaria de conversar.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.contactsettings",
+    "pk": 1,
+    "fields": {
+      "recipient_email": "comercial@metricaz.com",
+      "sender_email": "contato@metricaz.com",
+      "sender_name": "Metricaz",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  }
+]
