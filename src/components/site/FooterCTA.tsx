@@ -1,6 +1,31 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import mSymbol from "@/assets/m-metricaz.png";
+import { api } from "@/lib/api";
 
 export const FooterCTA = () => {
+  const [loading, setLoading] = useState(false);
+
+  // Saves the e-mail as a Lead, then takes the visitor to the contact form (as the link did before).
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = String(new FormData(form).get("email") || "").trim();
+
+    setLoading(true);
+    try {
+      await api.post("/leads/", { email, source_page: `${window.location.pathname}${window.location.hash}` });
+      form.reset();
+      toast.success("Recebemos seu e-mail! Conte um pouco mais abaixo.");
+      document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
+    } catch (error) {
+      console.error("Error saving lead:", error);
+      toast.error("Nao foi possivel enviar agora.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="relative bg-ink-deep overflow-hidden">
       {/* faixa colorida no topo */}
@@ -30,19 +55,21 @@ export const FooterCTA = () => {
             <p className="text-muted-foreground text-lg leading-relaxed mb-6">
               Conte sobre o desafio em uma frase. Retornamos em até 1 dia útil.
             </p>
-            <form className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
+            <form onSubmit={onSubmit} className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
               <input
                 type="email"
+                name="email"
                 placeholder="seu@email.com"
                 className="flex-1 bg-transparent outline-none px-4 text-sm text-foreground"
                 required
               />
-              <a
-                href="#contato"
-                className="px-5 h-11 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-glow transition-colors inline-flex items-center"
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-5 h-11 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-glow transition-colors inline-flex items-center disabled:opacity-60"
               >
                 Começar →
-              </a>
+              </button>
             </form>
           </div>
         </div>
