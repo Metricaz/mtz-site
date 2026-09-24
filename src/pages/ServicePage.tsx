@@ -1,42 +1,14 @@
-import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { SiteService } from '@/lib/types';
+import { useServices } from '@/hooks/useServices';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
-import { DEFAULT_SERVICES, getServiceIcon } from '@/lib/service-icons';
+import { getServiceIcon } from '@/lib/service-icons';
 
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [service, setService] = useState<SiteService | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchService = async () => {
-      if (!slug) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('s_services')
-          .select('*')
-          .eq('slug', slug)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (error) throw error;
-        setService(data || DEFAULT_SERVICES.find((item) => item.slug === slug) || null);
-      } catch (err) {
-        console.error('Error fetching service by slug:', err);
-        setService(DEFAULT_SERVICES.find((item) => item.slug === slug) || null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchService();
-  }, [slug]);
+  const { services, loading } = useServices({ slug, enabled: Boolean(slug) });
+  const service = services[0] ?? null;
 
   if (loading) {
     return (

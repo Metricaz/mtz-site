@@ -2,32 +2,11 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 
-const fallbackTestimonials = [
-  {
-    q: '"A Metricaz levou nossa operação de analytics a outro nível. Decisões viraram dado, não opinião."',
-    name: "Marina Costa",
-    role: "Head of Growth · Whirlpool",
-    initials: "MC",
-  },
-  {
-    q: '"Precisão técnica + visão de negócio. Em 6 meses dobramos a conversão do nosso e-commerce."',
-    name: "Lucas Andrade",
-    role: "CMO · Veloe",
-    initials: "LA",
-  },
-  {
-    q: '"O time é cirúrgico. Implementação de GA4 e server-side impecável, sem gambiarra."',
-    name: "Renata Silva",
-    role: "Diretora Digital · Claro",
-    initials: "RS",
-  },
-];
-
 const AUTOPLAY_MS = 10000;
 
 export const StatsSplit = () => {
   const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
-  const { testimonials: testimonialsData } = useTestimonials({ section: 'clients' });
+  const { testimonials: testimonialsData } = useTestimonials({ placement: 'client_panel' });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -39,20 +18,17 @@ export const StatsSplit = () => {
     return () => mediaQuery.removeEventListener?.("change", updateViewport);
   }, []);
 
-  // Use dynamic data if available, otherwise use fallback
-  const testimonials = testimonialsData.length > 0 
-    ? testimonialsData.map(t => ({
-        q: `"${t.testimonial}"`,
-        name: t.name,
-        role: `${t.role} · ${t.company}`,
-        initials: t.name
-          .split(" ")
-          .slice(0, 2)
-          .map((part) => part[0])
-          .join("")
-          .toUpperCase(),
-      }))
-    : fallbackTestimonials;
+  const testimonials = testimonialsData.map((t) => ({
+    q: `"${t.text}"`,
+    name: t.name,
+    role: `${t.role} · ${t.company}`,
+    initials: t.name
+      .split(" ")
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase(),
+  }));
 
   const stats = [
     { k: "+80", v: "Marcas atendidas" },
@@ -71,11 +47,13 @@ export const StatsSplit = () => {
     return () => clearInterval(id);
   }, [isMobile, testimonials.length]);
 
-  const t = testimonials[i];
+  // Client panel only exists with testimonials flagged for it; without it, the stats panel takes the full width.
+  const t = testimonials.length > 0 ? testimonials[i % testimonials.length] : null;
 
   return (
     <section className="grid md:grid-cols-12 border-y border-border">
       {/* Depoimentos — laranja com carrossel */}
+      {t && (
       <div className="md:col-span-5 surface-orange p-10 md:p-14 flex flex-col justify-between min-h-[420px] relative">
         <div>
           <div className="flex items-center justify-between mb-6">
@@ -131,9 +109,10 @@ export const StatsSplit = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Stats — ink deep */}
-      <div className="md:col-span-7 bg-ink-deep p-10 md:p-14 flex flex-col justify-between min-h-[420px]">
+      <div className={`${t ? "md:col-span-7" : "md:col-span-12"} bg-ink-deep p-10 md:p-14 flex flex-col justify-between min-h-[420px]`}>
         <div>
           <div className="mono-tag text-muted-foreground mb-6">{"// Em números"}</div>
           <h3 className="editorial text-3xl md:text-5xl max-w-lg leading-tight">

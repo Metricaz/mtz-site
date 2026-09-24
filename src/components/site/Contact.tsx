@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
+import { useCompanyAddress } from "@/hooks/useCompanyAddress";
+import { useSiteOptions } from "@/hooks/useSiteOptions";
 
 export const Contact = () => {
   const [loading, setLoading] = useState(false);
+  const { options } = useSiteOptions();
+  const { address } = useCompanyAddress();
+  const email = options['contact.email'];
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -22,13 +28,7 @@ export const Contact = () => {
         source_context: 'site-contact-form',
       };
 
-      const { error } = await supabase.functions.invoke('contact-form', {
-        body: payload,
-      });
-
-      if (error) {
-        throw error;
-      }
+      await api.post('/contact-submissions/', payload);
 
         toast.success('Mensagem recebida! Ela já foi salva no banco.');
       form.reset();
@@ -57,22 +57,29 @@ export const Contact = () => {
           </div>
 
           <div className="mt-12 space-y-6 text-primary-foreground/95">
-            <div>
-              <div className="mono-tag text-primary-foreground/70 mb-2">E-mail</div>
-              <a href="mailto:contato@metricaz.com" className="editorial text-2xl md:text-3xl underline-offset-4 hover:underline">
-                contato@metricaz.com
-              </a>
-            </div>
-            <div className="grid grid-cols-2 gap-6 pt-6 border-t border-primary-foreground/20">
+            {email && (
               <div>
-                <div className="mono-tag text-primary-foreground/70 mb-2">Horário</div>
-                <span className="text-base">Seg–Sex · 9h às 18h</span>
+                <div className="mono-tag text-primary-foreground/70 mb-2">E-mail</div>
+                <a href={`mailto:${email}`} className="editorial text-2xl md:text-3xl underline-offset-4 hover:underline">
+                  {email}
+                </a>
               </div>
-              <div>
-                <div className="mono-tag text-primary-foreground/70 mb-2">São Paulo</div>
-                <span className="text-base">Av. Paulista, 1000</span>
+            )}
+            {/* First active address (Django admin → Endereços) */}
+            {address && (
+              <div className="grid grid-cols-2 gap-6 pt-6 border-t border-primary-foreground/20">
+                {address.hours && (
+                  <div>
+                    <div className="mono-tag text-primary-foreground/70 mb-2">Horário</div>
+                    <span className="text-base">{address.hours}</span>
+                  </div>
+                )}
+                <div>
+                  <div className="mono-tag text-primary-foreground/70 mb-2">{address.label}</div>
+                  <span className="text-base">{address.street}</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 

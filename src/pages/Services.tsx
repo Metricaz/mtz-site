@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { useServices } from '@/hooks/useServices';
-import { DEFAULT_SERVICES, getServiceIcon } from '@/lib/service-icons';
+import { getServiceIcon } from '@/lib/service-icons';
 import { ArrowRight } from 'lucide-react';
 
 const ServicesPage = () => {
   const { services, loading } = useServices();
-  const displayServices = services.length > 0 ? services : DEFAULT_SERVICES;
+  const displayServices = services;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -25,6 +25,7 @@ const ServicesPage = () => {
         </div>
       </section>
 
+      {(loading || displayServices.length > 0) && (
       <section className="py-12 md:py-16">
         <div className="container-x">
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -70,6 +71,7 @@ const ServicesPage = () => {
           )}
         </div>
       </section>
+      )}
 
       <Footer useHomeSectionLinks />
     </main>

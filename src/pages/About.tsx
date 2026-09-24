@@ -9,12 +9,6 @@ import case1 from "@/assets/case-1.jpg";
 import case2 from "@/assets/case-2.jpg";
 import case3 from "@/assets/case-3.jpg";
 
-const fallbackLeads = [
-  { name: "Nome Sobrenome", role: "Head de Analytics", image_url: "", image_alt: "" },
-  { name: "Nome Sobrenome", role: "Head de SEO", image_url: "", image_alt: "" },
-  { name: "Nome Sobrenome", role: "Head de CRO", image_url: "", image_alt: "" },
-];
-
 const highlights = [
   {
     title: "SEO técnico de verdade",
@@ -63,10 +57,9 @@ const whatWeDo = [
 ];
 
 const About = () => {
-  const { team } = useTeam();
-  const { testimonials } = useTestimonials({ section: "testimonials" });
-
-  const leads = team.length > 0 ? team : fallbackLeads;
+  const { team: leads } = useTeam({ placement: "about" });
+  // Only one testimonial is shown here: the first flagged "destaque do Quem Somos", by position.
+  const { testimonials } = useTestimonials({ placement: "about" });
   const highlightedTestimonial = testimonials[0];
 
   return (
@@ -159,6 +152,7 @@ const About = () => {
         </div>
       </section>
 
+      {leads.length > 0 && (
       <section className="relative overflow-hidden border-y border-border bg-ink-deep py-20 md:py-28">
         <div className="container-x relative">
           <div className="mb-12">
@@ -177,11 +171,11 @@ const About = () => {
                 key={`${member.name}-${idx}`}
                 className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-border bg-ink"
               >
-                {member.image_url ? (
+                {member.photo ? (
                   <>
                     <img
-                      src={member.image_url}
-                      alt={member.image_alt || member.name}
+                      src={member.photo}
+                      alt={member.photo_alt || member.name}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       style={{
                         filter: "grayscale(100%) hue-rotate(200deg) saturate(0.6) brightness(1.1) contrast(1.1)",
@@ -216,24 +210,26 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
+      {highlightedTestimonial && (
       <section className="surface-cream py-20 md:py-28">
         <div className="container-x text-center">
           <div className="eyebrow">// O que nossos clientes dizem</div>
           <blockquote className="mx-auto mt-6 max-w-4xl text-balance font-display text-3xl leading-tight text-cream-foreground md:text-5xl">
             “
-            {highlightedTestimonial?.testimonial ||
-              "A Metricaz nos ajudou a transformar dados dispersos em decisões estratégicas e crescimento consistente."}
+            {highlightedTestimonial.text}
             ”
           </blockquote>
           <p className="mt-7 text-lg font-semibold text-cream-foreground">
-            {highlightedTestimonial?.name || "Cliente Metricaz"}
+            {highlightedTestimonial.name}
           </p>
           <p className="text-sm text-muted-foreground">
-            {highlightedTestimonial ? `${highlightedTestimonial.role} · ${highlightedTestimonial.company}` : "Parceria ativa"}
+            {highlightedTestimonial.role} · {highlightedTestimonial.company}
           </p>
         </div>
       </section>
+      )}
 
       <FooterCTA />
       <Contact />

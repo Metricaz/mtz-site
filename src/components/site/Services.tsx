@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { DEFAULT_SERVICES, getServiceIcon } from '@/lib/service-icons';
+import { getServiceIcon } from '@/lib/service-icons';
 import { useServices } from '@/hooks/useServices';
 
 export const Services = () => {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const { services, loading } = useServices({ limit: 4 });
-  const items = services.length > 0 ? services : DEFAULT_SERVICES;
+  const items = services;
+
+  if (!loading && items.length === 0) {
+    return null;
+  }
 
   return (
     <section id="servicos" className="relative bg-background py-24 md:py-36">

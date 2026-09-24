@@ -1,19 +1,19 @@
 import { useLocation } from "react-router-dom";
 import { MessageCircleMore } from "lucide-react";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
 import { buildWhatsAppHref, getWhatsAppMessage, trackWhatsAppClick } from "@/lib/whatsapp";
 
 export const WhatsAppFloatingButton = () => {
   const location = useLocation();
-  const { settings } = useSiteSettings();
-  const finalMessage = getWhatsAppMessage(settings.whatsapp_message);
-  const href = settings.whatsapp_number ? buildWhatsAppHref(settings.whatsapp_number, finalMessage) : "";
+  const { settings } = useWhatsAppSettings();
+  const finalMessage = getWhatsAppMessage(settings?.message);
+  const href = settings?.number ? buildWhatsAppHref(settings.number, finalMessage) : "";
 
   if (location.pathname.startsWith('/dashboard')) {
     return null;
   }
 
-  if (!settings.whatsapp_enabled || !href) {
+  if (!settings?.enabled || !href) {
     return null;
   }
 
@@ -21,7 +21,7 @@ export const WhatsAppFloatingButton = () => {
     const currentPagePath = `${window.location.pathname}${window.location.hash}`;
 
     void trackWhatsAppClick({
-      number: settings.whatsapp_number || "",
+      number: settings.number,
       message: finalMessage,
       pagePath: currentPagePath,
       buttonContext: "floating",

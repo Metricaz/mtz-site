@@ -1,41 +1,13 @@
-import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { SiteCase } from '@/lib/types';
+import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 
 const CasePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [caseItem, setCaseItem] = useState<SiteCase | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCase = async () => {
-      if (!slug) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('s_cases')
-          .select('*')
-          .eq('slug', slug)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (error) throw error;
-        setCaseItem(data || null);
-      } catch (err) {
-        console.error('Error fetching case by slug:', err);
-        setCaseItem(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCase();
-  }, [slug]);
+  const { cases, loading } = useCases({ slug, enabled: Boolean(slug) });
+  const caseItem = cases[0] ?? null;
 
   if (loading) {
     return (
@@ -121,7 +93,7 @@ const CasePage = () => {
         <div className="container-x">
           <figure className="overflow-hidden rounded-3xl border border-border bg-card/45">
             <img
-              src={caseItem.featured_image_url}
+              src={caseItem.featured_image}
               alt={caseItem.featured_image_alt || caseItem.title}
               className="h-[260px] w-full object-cover md:h-[500px]"
             />

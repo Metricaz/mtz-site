@@ -1,76 +1,16 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { TeamMember } from '@/lib/types';
+import { useApiList } from '@/hooks/useApiList';
+import { TeamMember, TeamPlacement } from '@/lib/api-types';
 
 interface UseTeamOptions {
+  placement: TeamPlacement;
   enabled?: boolean;
 }
 
 /**
- * Hook para buscar membros do time
- * Usado na seção "Quem constrói com você"
+ * Hook para buscar membros do time marcados para um lugar do site
+ * ("home" = seção Time da home, "about" = Heads da operação no Quem Somos)
  */
-export const useTeam = (options?: UseTeamOptions) => {
-  const enabled = options?.enabled ?? true;
-  const [team, setTeam] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(enabled);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!enabled) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchTeam = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const { data, error: supabaseError } = await supabase
-          .from('s_team')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true });
-
-        if (supabaseError) {
-          throw supabaseError;
-        }
-
-        setTeam(data || []);
-      } catch (err) {
-        console.error('Error fetching team:', err);
-        setError(err instanceof Error ? err.message : 'Erro ao carregar time');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTeam();
-
-    // Subscribe to real-time changes
-    const channel = supabase
-      .channel('s_team')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 's_team',
-          filter: 'is_active=eq.true',
-        },
-        (payload) => {
-          console.log('Real-time team update:', payload);
-          // Refetch team when there's a change
-          fetchTeam();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [enabled]);
-
+export const useTeam = ({ placement, enabled = true }: UseTeamOptions) => {
+  const { items: team, loading, error } = useApiList<TeamMember>('/team/', { placement }, enabled);
   return { team, loading, error };
 };

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import caseFallback from "@/assets/case-1.jpg";
 import { useCases } from "@/hooks/useCases";
 
 const spans = [
@@ -36,11 +35,10 @@ export const Cases = () => {
         </div>
 
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
-          {(loading ? Array.from({ length: 3 }) : cases).map((c, i) => {
-            if (loading) {
-              return <div key={i} className={`rounded-3xl border border-border bg-card/40 animate-pulse ${spans[i % spans.length]}`} />;
-            }
-
+          {loading && Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className={`rounded-3xl border border-border bg-card/40 animate-pulse ${spans[i % spans.length]}`} />
+          ))}
+          {!loading && cases.map((c, i) => {
             return (
             <Link
               key={c.id}
@@ -48,7 +46,7 @@ export const Cases = () => {
               className={`group relative rounded-3xl overflow-hidden border border-border bg-card block ${spans[i % spans.length]}`}
             >
               <img
-                src={c.featured_image_url || caseFallback}
+                src={c.featured_image}
                 alt={c.featured_image_alt || c.title}
                 width={1024}
                 height={768}

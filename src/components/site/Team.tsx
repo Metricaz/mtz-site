@@ -2,19 +2,8 @@ import { type PointerEvent, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTeam } from "@/hooks/useTeam";
 
-const fallbackTeam = [
-  { name: "Nome Sobrenome", role: "Founder · Head of Analytics", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of SEO", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of CRO & Product", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Content", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Paid Media", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Development", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Data Engineering", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Operations", initials: "NS" },
-];
-
 export const Team = () => {
-  const { team: teamData } = useTeam();
+  const { team: teamData } = useTeam({ placement: 'home' });
   const trackRef = useRef<HTMLDivElement>(null);
   const stepRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -25,8 +14,7 @@ export const Team = () => {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  // Use dynamic team data if available, otherwise use fallback
-  const displayTeam = teamData.length > 0 ? teamData : fallbackTeam;
+  const displayTeam = teamData;
 
   // Cache the card width + gap so we don't force a layout read on every auto-scroll tick.
   const getStep = (track: HTMLDivElement) => {
@@ -136,6 +124,10 @@ export const Team = () => {
       .toUpperCase();
   };
 
+  if (displayTeam.length === 0) {
+    return null;
+  }
+
   return (
     <section id="time" className="bg-ink-deep border-y border-border py-24 md:py-36 overflow-hidden">
       <div className="container-x">
@@ -185,8 +177,8 @@ export const Team = () => {
             style={{ touchAction: "pan-x" }}
           >
             {displayTeam.map((person, i) => {
-              const initials = "initials" in person ? person.initials : getInitials(person.name);
-              const hasImage = "image_url" in person && person.image_url;
+              const initials = getInitials(person.name);
+              const hasImage = Boolean(person.photo);
 
               return (
                 <div
@@ -197,8 +189,8 @@ export const Team = () => {
                   {hasImage ? (
                     <>
                       <img
-                        src={person.image_url}
-                        alt={person.image_alt || person.name}
+                        src={person.photo}
+                        alt={person.photo_alt || person.name}
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{
                           filter: 'grayscale(100%) hue-rotate(200deg) saturate(0.6) brightness(1.1) contrast(1.1)'

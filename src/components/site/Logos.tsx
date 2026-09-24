@@ -1,20 +1,20 @@
 import { useCompanies } from '@/hooks/useCompanies';
+import { useSiteOptions } from '@/hooks/useSiteOptions';
 import { useState } from 'react';
-
-// Fallback para quando não há empresas cadastradas
-const fallbackBrands = ["Whirlpool", "Claro", "Veloe", "Lavazza", "Ambev", "Bradesco", "Natura", "Itaú"];
 
 export const Logos = () => {
   const { companies } = useCompanies();
+  const { options } = useSiteOptions();
   const [isPaused, setIsPaused] = useState(false);
 
-  // Usar empresas do Supabase, ou fallback para marcas estáticas
-  const displayBrands = companies.length > 0 
-    ? companies.map(c => c.name)
-    : fallbackBrands;
+  if (companies.length === 0) {
+    return null;
+  }
+
+  const brandsCount = options['logos.brands_count'];
 
   // Duplicar items para efeito de loop infinito
-  const items = [...displayBrands, ...displayBrands];
+  const items = [...companies, ...companies];
 
   return (
     <section className="py-20 md:py-24 border-b border-border">
@@ -26,7 +26,7 @@ export const Logos = () => {
             <span className="editorial-italic text-primary">dado, não com achismo.</span>
           </p>
         </div>
-        <p className="mono-tag text-muted-foreground hidden md:block">+{companies.length > 0 ? companies.length * 10 : 80} marcas atendidas</p>
+        {brandsCount && <p className="mono-tag text-muted-foreground hidden md:block">{brandsCount} marcas atendidas</p>}
       </div>
       <div
         className="overflow-hidden"
@@ -34,11 +34,8 @@ export const Logos = () => {
         onMouseLeave={() => setIsPaused(false)}
       >
         <div className="flex gap-20 ticker whitespace-nowrap" style={{ animationPlayState: isPaused ? 'paused' : 'running' }}>
-          {items.map((item, i) => {
-            const company = companies[i % companies.length];
-            const isCompany = companies.length > 0;
-
-            if (isCompany && company?.website_url) {
+          {items.map((company, i) => {
+            if (company.website_url) {
               return (
                 <a
                   key={i}
@@ -58,7 +55,7 @@ export const Logos = () => {
                 key={i}
                 className="editorial text-4xl md:text-6xl text-muted-foreground/50 hover:text-primary transition-colors"
               >
-                {item}
+                {company.name}
               </span>
             );
           })}

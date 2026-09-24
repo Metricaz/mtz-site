@@ -1,14 +1,9 @@
-import { supabase } from '@/lib/supabase';
-import { isMissingSupabaseTableError } from '@/lib/supabase-errors';
-
-const defaultWhatsAppMessage = 'Olá, vim pelo site da Metricaz e gostaria de conversar.';
+import { api } from '@/lib/api';
 
 export const normalizeWhatsAppNumber = (value: string) => value.replace(/\D/g, '');
 
-export const getWhatsAppMessage = (message?: string | null) => {
-  const trimmedMessage = message?.trim();
-  return trimmedMessage || defaultWhatsAppMessage;
-};
+// The message comes only from the database (Django admin → WhatsApp); empty = the chat opens with no text.
+export const getWhatsAppMessage = (message?: string | null) => message?.trim() || '';
 
 export const buildWhatsAppHref = (number: string, message?: string | null) => {
   const cleanedNumber = normalizeWhatsAppNumber(number);
@@ -18,7 +13,8 @@ export const buildWhatsAppHref = (number: string, message?: string | null) => {
     return '';
   }
 
-  return `https://wa.me/${cleanedNumber}?text=${encodeURIComponent(finalMessage)}`;
+  const base = `https://wa.me/${cleanedNumber}`;
+  return finalMessage ? `${base}?text=${encodeURIComponent(finalMessage)}` : base;
 };
 
 export const trackWhatsAppClick = async ({
@@ -33,20 +29,13 @@ export const trackWhatsAppClick = async ({
   buttonContext: string;
 }) => {
   try {
-    const { error } = await supabase.from('s_whatsapp_clicks').insert({
+    await api.post('/whatsapp-clicks/', {
       page_path: pagePath,
       button_context: buttonContext,
       target_number: normalizeWhatsAppNumber(number),
       message_text: getWhatsAppMessage(message),
-      clicked_at: new Date().toISOString(),
     });
-
-    if (error && !isMissingSupabaseTableError(error)) {
-      throw error;
-    }
   } catch (error) {
-    if (!isMissingSupabaseTableError(error)) {
-      console.error('Error tracking WhatsApp click:', error);
-    }
+    console.error('Error tracking WhatsApp click:', error);
   }
 };
