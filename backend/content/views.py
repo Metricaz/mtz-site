@@ -10,17 +10,27 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from .models import (
+    AboutHighlight,
+    AboutPillar,
+    Author,
+    Capability,
     Case,
     Company,
     CompanyAddress,
     ContactSettings,
     ContactSubmission,
     ContentImage,
+    EngagementModel,
     Lead,
+    MethodStep,
     NewsletterSubscriber,
+    Post,
     Sector,
     Service,
+    SiteImage,
     SiteOption,
+    SocialLink,
+    Tag,
     TeamMember,
     Testimonial,
     WhatsAppClick,
@@ -28,17 +38,27 @@ from .models import (
 )
 from .permissions import IsStaff, is_staff
 from .serializers import (
+    AboutHighlightSerializer,
+    AboutPillarSerializer,
+    AuthorSerializer,
+    CapabilitySerializer,
     CaseSerializer,
     CompanyAddressSerializer,
     CompanySerializer,
     ContactSettingsSerializer,
     ContactSubmissionSerializer,
     ContentImageSerializer,
+    EngagementModelSerializer,
     LeadSerializer,
+    MethodStepSerializer,
     NewsletterSubscriberSerializer,
+    PostSerializer,
     SectorSerializer,
     ServiceSerializer,
+    SiteImageSerializer,
     SiteOptionSerializer,
+    SocialLinkSerializer,
+    TagSerializer,
     TeamMemberSerializer,
     TestimonialSerializer,
     WhatsAppClickSerializer,
@@ -143,6 +163,63 @@ class CompanyAddressViewSet(OrderedViewSet):
     """The site shows the first active address (?limit=1)."""
 
     serializer_class = CompanyAddressSerializer
+
+
+class MethodStepViewSet(OrderedViewSet):
+    serializer_class = MethodStepSerializer
+
+
+class EngagementModelViewSet(OrderedViewSet):
+    serializer_class = EngagementModelSerializer
+
+
+class CapabilityViewSet(OrderedViewSet):
+    serializer_class = CapabilitySerializer
+
+
+class AboutPillarViewSet(OrderedViewSet):
+    serializer_class = AboutPillarSerializer
+
+
+class AboutHighlightViewSet(OrderedViewSet):
+    serializer_class = AboutHighlightSerializer
+
+
+class SocialLinkViewSet(OrderedViewSet):
+    serializer_class = SocialLinkSerializer
+
+
+class PostViewSet(OrderedViewSet):
+    """Blog posts, newest first. Extra filter: ?tag=<tag slug>."""
+
+    serializer_class = PostSerializer
+    slug_filter = True
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related("author", "tag")
+        if tag := self.request.query_params.get("tag"):
+            queryset = queryset.filter(tag__slug=tag)
+        return queryset
+
+
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+
+class SiteImageViewSet(viewsets.ModelViewSet):
+    """Single site images by key (like options)."""
+
+    queryset = SiteImage.objects.all()
+    serializer_class = SiteImageSerializer
+    lookup_field = "key"
+    lookup_value_regex = r"[a-z0-9_.]+"
+    parser_classes = FILE_PARSERS
 
 
 class SiteOptionViewSet(viewsets.ModelViewSet):

@@ -2,17 +2,27 @@ from rest_framework import serializers
 
 from . import rich_text
 from .models import (
+    AboutHighlight,
+    AboutPillar,
+    Author,
+    Capability,
     Case,
     Company,
     CompanyAddress,
     ContactSettings,
     ContactSubmission,
     ContentImage,
+    EngagementModel,
     Lead,
+    MethodStep,
     NewsletterSubscriber,
+    Post,
     Sector,
     Service,
+    SiteImage,
     SiteOption,
+    SocialLink,
+    Tag,
     TeamMember,
     Testimonial,
     WhatsAppClick,
@@ -104,8 +114,94 @@ class ContentImageSerializer(serializers.ModelSerializer):
 class SiteOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteOption
-        fields = ["key", "value", "description", "updated_at"]
+        fields = ["key", "label", "value", "description", "updated_at"]
         read_only_fields = ["updated_at"]
+
+
+class SiteImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteImage
+        fields = ["key", "image", "alt", "description", "updated_at"]
+        read_only_fields = ["updated_at"]
+
+
+class MethodStepSerializer(OrderedSerializer):
+    class Meta:
+        model = MethodStep
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class EngagementModelSerializer(OrderedSerializer):
+    class Meta:
+        model = EngagementModel
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class CapabilitySerializer(OrderedSerializer):
+    class Meta:
+        model = Capability
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class AboutPillarSerializer(OrderedSerializer):
+    class Meta:
+        model = AboutPillar
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class AboutHighlightSerializer(OrderedSerializer):
+    class Meta:
+        model = AboutHighlight
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class SocialLinkSerializer(OrderedSerializer):
+    class Meta:
+        model = SocialLink
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+# --- Blog ---------------------------------------------------------------------------------------
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ["id", "name", "mini_bio"]
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["id", "name", "slug"]
+
+
+class PostSerializer(RichTextMixin, serializers.ModelSerializer):
+    """Author and tag come nested on reads; writes take their ids (author_id, tag_id)."""
+
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    author = AuthorSerializer(read_only=True)
+    tag = TagSerializer(read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(
+        source="author", queryset=Author.objects.all(), write_only=True, required=False, allow_null=True
+    )
+    tag_id = serializers.PrimaryKeyRelatedField(
+        source="tag", queryset=Tag.objects.all(), write_only=True, required=False, allow_null=True
+    )
+
+    class Meta:
+        model = Post
+        fields = [
+            "id", "title", "slug", "subtitle", "author", "author_id", "tag", "tag_id",
+            "featured_image", "featured_image_alt", "content_html", "published_at",
+            "is_active", "created_by", "created_at", "updated_at",
+        ]
+        read_only_fields = ["id", "created_by", "created_at", "updated_at"]
 
 
 class WhatsAppSettingsSerializer(serializers.ModelSerializer):

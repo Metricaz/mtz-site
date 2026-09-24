@@ -437,3 +437,78 @@ class BlogModelTests(TestCase):
         self.assertEqual(Post.objects.get(pk=post.pk).content_html, "<p>b</p>")
         self.assertEqual(list(Post.objects.values_list("slug", flat=True)), ["novo", "antigo"])
         self.assertEqual(list(tag.posts.values_list("slug", flat=True)), ["novo", "antigo"])
+
+
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class SiteContentApiTests(ApiTestCase):
+    fixtures = ["initial_content"]
+
+    def test_lists_are_public_and_ordered(self):
+        self.assertEqual([s["title"] for s in self.client.get("/api/method-steps/").json()],
+                         ["Diagnóstico", "Estratégia", "Execução", "Mensuração"])
+        self.assertEqual(len(self.client.get("/api/engagement-models/").json()), 3)
+        self.assertEqual([c["icon_name"] for c in self.client.get("/api/capabilities/").json()][:2], ["seo", "cro"])
+        self.assertEqual(len(self.client.get("/api/about-pillars/").json()), 3)
+        self.assertEqual(len(self.client.get("/api/about-highlights/").json()), 4)
+        links = self.client.get("/api/social-links/").json()
+        self.assertEqual(links[0]["url"], "https://br.linkedin.com/company/metricaz")
+
+    def test_inactive_items_are_hidden_from_the_public(self):
+        MethodStep.objects.filter(title="Execução").update(is_active=False)
+        self.assertEqual(len(self.client.get("/api/method-steps/").json()), 3)
+        self.login()
+        self.assertEqual(len(self.client.get("/api/method-steps/").json()), 4)
+
+    def test_options_include_label(self):
+        option = self.client.get("/api/options/receitaorganica/").json()
+        self.assertEqual((option["value"], option["label"]), ("312", "Receita orgânica média"))
+
+    def test_site_image_by_key(self):
+        image = self.client.get("/api/site-images/about.why_image/").json()
+        self.assertTrue(image["image"].endswith("/media/site/por-que-escolher.webp"))
+        self.assertEqual(image["alt"], "Metricaz")
+
+
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class BlogApiTests(ApiTestCase):
+    fixtures = ["initial_content"]
+
+    def test_post_comes_with_author_and_tag(self):
+        post = self.client.get("/api/posts/?slug=google-consent-mode-v2").json()[0]
+        self.assertEqual(post["author"]["name"], "Nome Sobrenome")
+        self.assertIn("mini_bio", post["author"])
+        self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade"})
+        self.assertNotIn("author_id", post)
+
+    def test_filters_and_order(self):
+        Post.objects.create(
+            title="Mais novo", slug="mais-novo", tag=Tag.objects.get(slug="seo"), featured_image="blog/x.png",
+            content_html="<p>x</p>", published_at="2026-09-01",
+        )
+        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/").json()], ["mais-novo", "google-consent-mode-v2"])
+        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/?tag=seo").json()], ["mais-novo"])
+        self.assertEqual(len(self.client.get("/api/posts/?limit=1").json()), 1)
+
+    def test_unpublished_post_is_hidden(self):
+        Post.objects.update(is_active=False)
+        self.assertEqual(self.client.get("/api/posts/").json(), [])
+
+    def test_staff_creates_post_with_ids(self):
+        self.login()
+        response = self.client.post(
+            "/api/posts/",
+            {
+                "title": "Novo", "slug": "novo", "author_id": 1, "tag_id": 2, "featured_image": png(),
+                "content_html": "<p>ok</p><script>x()</script>", "published_at": "2026-09-24",
+            },
+            format="multipart",
+            **self.csrf,
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        data = response.json()
+        self.assertEqual((data["author"]["id"], data["tag"]["slug"], data["content_html"]), (1, "tag-manager", "<p>ok</p>"))
+        self.assertEqual(Post.objects.get(slug="novo").created_by, self.staff)
+
+    def test_authors_and_tags_are_public(self):
+        self.assertEqual(len(self.client.get("/api/tags/").json()), 5)
+        self.assertEqual(self.client.get("/api/authors/").json()[0]["name"], "Nome Sobrenome")
