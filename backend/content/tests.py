@@ -4,6 +4,7 @@ import tempfile
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management import call_command
 from django.test import TestCase, override_settings
 from PIL import Image
 from rest_framework.test import APIClient
@@ -23,6 +24,7 @@ from .models import (
     Testimonial,
     WhatsAppSettings,
 )
+from .sanitize import sanitize_html
 
 
 class InitialContentFixtureTests(TestCase):
@@ -251,3 +253,56 @@ class ReceivedApiTests(ApiTestCase):
     def test_public_forms_are_throttled(self):
         codes = [self.client.post("/api/leads/", {"email": f"a{i}@b.com"}, format="json").status_code for i in range(11)]
         self.assertEqual(codes[-1], 429)
+
+
+class SanitizeTests(TestCase):
+    def test_dangerous_markup_is_removed(self):
+        html = sanitize_html(
+            '<h2 onclick="x()">Oi</h2><script>alert(1)</script><style>p{}</style>'
+            '<p style="color:red">t<iframe src="https://evil"></iframe></p>'
+            '<a href="javascript:alert(1)">x</a><img src="x" onerror="alert(1)">'
+        )
+        for bad in ("onclick", "script", "alert", "style", "iframe", "javascript", "onerror"):
+            self.assertNotIn(bad, html)
+        self.assertIn("<h2>Oi</h2>", html)
+
+    def test_editor_markup_is_kept(self):
+        html = (
+            '<h2>T</h2><h3>S</h3><p><strong>b</strong> <em>i</em> <u>u</u> <s>s</s> <code>c</code><br></p>'
+            '<blockquote><p>q</p></blockquote><ul><li>a</li></ul><ol start="3"><li>b</li></ol><hr>'
+            '<img data-image-id="7" alt="foto">'
+        )
+        self.assertEqual(sanitize_html(html), html)
+
+    def test_links_get_safe_rel(self):
+        self.assertEqual(
+            sanitize_html('<a href="https://metricaz.com" target="_blank">m</a>'),
+            '<a href="https://metricaz.com" target="_blank" rel="noopener noreferrer">m</a>',
+        )
+
+    def test_model_save_sanitizes_every_path(self):
+        service = Service.objects.create(
+            title="S", slug="s", icon_name="seo", excerpt="e", content_html="<p>ok</p><script>x()</script>"
+        )
+        self.assertEqual(Service.objects.get(pk=service.pk).content_html, "<p>ok</p>")
+
+    def test_fixture_content_survives_sanitizing(self):
+        call_command("loaddata", "initial_content", verbosity=0)
+        for service in Service.objects.all():
+            self.assertEqual(sanitize_html(service.content_html), service.content_html, service.slug)
+
+
+class SanitizeApiTests(ApiTestCase):
+    def test_api_returns_sanitized_html(self):
+        self.login()
+        response = self.client.post(
+            "/api/cases/",
+            {
+                "title": "C", "slug": "c", "tag": "t", "excerpt": "e", "kpi_value": "+1", "kpi_label": "l",
+                "featured_image": png(), "content_html": '<p onclick="x()">a</p><script>b()</script>',
+            },
+            format="multipart",
+            **self.csrf,
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual(response.json()["content_html"], "<p>a</p>")

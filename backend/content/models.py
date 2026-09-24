@@ -2,6 +2,8 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 
+from .sanitize import sanitize_html
+
 
 class OrderedModel(models.Model):
     """Base for everything editable in the dashboard: manual ordering, on/off switch and authorship."""
@@ -134,17 +136,31 @@ SERVICE_ICONS = [
     ("signal", "Sinal & Métrica"),
 ]
 
-RICH_TEXT_HELP = 'HTML. Imagens são referenciadas por <img data-image-id="ID"> (ID de uma Imagem de conteúdo).'
+RICH_TEXT_HELP = (
+    'HTML. Imagens são referenciadas por <img data-image-id="ID"> (ID de uma Imagem de conteúdo). '
+    "Scripts, estilos e atributos fora da lista permitida são removidos ao salvar."
+)
 
 
-class Service(OrderedModel):
+class RichTextModel(OrderedModel):
+    """content_html is sanitized on every save (API, admin, shell), since the site renders it as raw HTML."""
+
+    class Meta(OrderedModel.Meta):
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.content_html = sanitize_html(self.content_html)
+        super().save(*args, **kwargs)
+
+
+class Service(RichTextModel):
     title = models.CharField("título", max_length=255)
     slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /servicos/<slug>")
     icon_name = models.CharField("ícone", max_length=40, choices=SERVICE_ICONS)
     excerpt = models.TextField("resumo")
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
 
-    class Meta(OrderedModel.Meta):
+    class Meta(RichTextModel.Meta):
         verbose_name = "serviço"
         verbose_name_plural = "serviços"
 
@@ -152,7 +168,7 @@ class Service(OrderedModel):
         return self.title
 
 
-class Case(OrderedModel):
+class Case(RichTextModel):
     title = models.CharField("título", max_length=255)
     slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /cases/<slug>")
     tag = models.CharField("tag", max_length=120)
@@ -165,7 +181,7 @@ class Case(OrderedModel):
     featured_image_alt = models.CharField("texto alternativo da imagem", max_length=255, blank=True)
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
 
-    class Meta(OrderedModel.Meta):
+    class Meta(RichTextModel.Meta):
         verbose_name = "case"
         verbose_name_plural = "cases"
 
