@@ -1,15 +1,18 @@
 import io
 import tempfile
 
+from django.apps import apps
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.test import Client, TestCase, override_settings
+from django.urls import reverse
 from PIL import Image
 from rest_framework.test import APIClient
 
 from .models import (
+    Author,
     Company,
     CompanyAddress,
     ContactSettings,
@@ -17,9 +20,11 @@ from .models import (
     ContentImage,
     Lead,
     NewsletterSubscriber,
+    Post,
     Sector,
     Service,
     SiteOption,
+    Tag,
     TeamMember,
     Testimonial,
     WhatsAppSettings,
@@ -374,3 +379,28 @@ class DjangoLoginTests(TestCase):
         self.post_login("visitante")
         self.assertIsNone(self.me())
         self.assertEqual(self.client.get("/api/contact-submissions/").status_code, 403)
+
+
+class AdminPagesTests(TestCase):
+    def test_every_content_admin_page_opens(self):
+        self.client.force_login(User.objects.create_superuser("root", password="x"))
+        for model in apps.get_app_config("content").get_models():
+            name = model._meta.model_name
+            for view in ("changelist", "add"):
+                response = self.client.get(reverse(f"admin:content_{name}_{view}"))
+                # received data (contact, clicks, newsletter, leads) is read-only: no "add" page
+                self.assertIn(response.status_code, (200, 403), f"{name} {view}")
+
+
+class BlogModelTests(TestCase):
+    def test_post_content_is_sanitized_and_listed_newest_first(self):
+        author = Author.objects.create(name="Nome Sobrenome")
+        tag = Tag.objects.create(name="SEO", slug="seo")
+        common = {"author": author, "tag": tag, "featured_image": "blog/x.png"}
+        Post.objects.create(title="Antigo", slug="antigo", content_html="<p>a</p>", published_at="2026-01-01", **common)
+        post = Post.objects.create(
+            title="Novo", slug="novo", content_html='<p onclick="x()">b</p><script>c()</script>', published_at="2026-05-01", **common
+        )
+        self.assertEqual(Post.objects.get(pk=post.pk).content_html, "<p>b</p>")
+        self.assertEqual(list(Post.objects.values_list("slug", flat=True)), ["novo", "antigo"])
+        self.assertEqual(list(tag.posts.values_list("slug", flat=True)), ["novo", "antigo"])

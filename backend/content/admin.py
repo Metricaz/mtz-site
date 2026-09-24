@@ -1,17 +1,27 @@
 from django.contrib import admin
 
 from .models import (
+    AboutHighlight,
+    AboutPillar,
+    Author,
+    Capability,
     Case,
     Company,
     CompanyAddress,
     ContactSettings,
     ContactSubmission,
     ContentImage,
+    EngagementModel,
     Lead,
+    MethodStep,
     NewsletterSubscriber,
+    Post,
     Sector,
     Service,
+    SiteImage,
     SiteOption,
+    SocialLink,
+    Tag,
     TeamMember,
     Testimonial,
     WhatsAppClick,
@@ -105,9 +115,80 @@ class ContentImageAdmin(admin.ModelAdmin):
 
 @admin.register(SiteOption)
 class SiteOptionAdmin(admin.ModelAdmin):
-    list_display = ("key", "value", "description")
-    list_editable = ("value",)
-    search_fields = ("key", "value", "description")
+    list_display = ("key", "label", "value", "description")
+    list_editable = ("label", "value")
+    search_fields = ("key", "label", "value", "description")
+
+
+@admin.register(SiteImage)
+class SiteImageAdmin(admin.ModelAdmin):
+    list_display = ("key", "image", "alt", "description")
+    search_fields = ("key", "alt", "description")
+
+
+@admin.register(MethodStep)
+class MethodStepAdmin(OrderedAdmin):
+    list_display = ("title", "icon_name", "tags", "order_position", "is_active")
+    search_fields = ("title", "text", "tags")
+
+
+@admin.register(EngagementModel)
+class EngagementModelAdmin(OrderedAdmin):
+    list_display = ("title", "icon_name", "order_position", "is_active")
+    search_fields = ("title", "text")
+
+
+@admin.register(Capability)
+class CapabilityAdmin(OrderedAdmin):
+    list_display = ("label", "icon_name", "order_position", "is_active")
+    search_fields = ("label",)
+
+
+@admin.register(AboutPillar)
+class AboutPillarAdmin(OrderedAdmin):
+    list_display = ("title", "tag", "order_position", "is_active")
+    search_fields = ("title", "tag", "text")
+
+
+@admin.register(AboutHighlight)
+class AboutHighlightAdmin(OrderedAdmin):
+    list_display = ("title", "order_position", "is_active")
+    search_fields = ("title", "text")
+
+
+@admin.register(SocialLink)
+class SocialLinkAdmin(OrderedAdmin):
+    list_display = ("label", "url", "order_position", "is_active")
+    search_fields = ("label", "url")
+
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ("name", "created_at")
+    search_fields = ("name", "mini_bio")
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("title", "author", "tag", "published_at", "is_active")
+    list_editable = ("is_active",)
+    list_filter = ("is_active", "tag", "author")
+    search_fields = ("title", "subtitle", "slug")
+    prepopulated_fields = {"slug": ("title",)}
+    date_hierarchy = "published_at"
+    readonly_fields = ("created_by", "created_at", "updated_at")
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
 
 
 class SingletonAdmin(admin.ModelAdmin):

@@ -117,8 +117,8 @@ class Testimonial(OrderedModel):
         return f"{self.name} · {self.company}"
 
 
-# Same values the frontend knows how to draw (src/lib/service-icons.ts).
-SERVICE_ICONS = [
+# Every icon a model can use; same values the frontend knows how to draw (src/lib/service-icons.ts).
+ICONS = [
     ("seo", "SEO"),
     ("cro", "CRO & Testes A/B"),
     ("analytics", "Digital Analytics"),
@@ -134,6 +134,12 @@ SERVICE_ICONS = [
     ("testing", "Testes"),
     ("growth", "Growth"),
     ("signal", "Sinal & Métrica"),
+    ("compass", "Bússola"),
+    ("target", "Alvo"),
+    ("radio", "Sinal de rádio"),
+    ("users", "Pessoas"),
+    ("briefcase", "Maleta"),
+    ("trending-up", "Tendência de alta"),
 ]
 
 RICH_TEXT_HELP = (
@@ -142,21 +148,23 @@ RICH_TEXT_HELP = (
 )
 
 
-class RichTextModel(OrderedModel):
+class SanitizedContentMixin:
     """content_html is sanitized on every save (API, admin, shell), since the site renders it as raw HTML."""
-
-    class Meta(OrderedModel.Meta):
-        abstract = True
 
     def save(self, *args, **kwargs):
         self.content_html = sanitize_html(self.content_html)
         super().save(*args, **kwargs)
 
 
+class RichTextModel(SanitizedContentMixin, OrderedModel):
+    class Meta(OrderedModel.Meta):
+        abstract = True
+
+
 class Service(RichTextModel):
     title = models.CharField("título", max_length=255)
     slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /servicos/<slug>")
-    icon_name = models.CharField("ícone", max_length=40, choices=SERVICE_ICONS)
+    icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
     excerpt = models.TextField("resumo")
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
 
@@ -184,6 +192,160 @@ class Case(RichTextModel):
     class Meta(RichTextModel.Meta):
         verbose_name = "case"
         verbose_name_plural = "cases"
+
+    def __str__(self):
+        return self.title
+
+
+class MethodStep(OrderedModel):
+    """Seção Método da home. O número exibido (01, 02…) é a ordem por posição."""
+
+    title = models.CharField("título", max_length=120)
+    text = models.TextField("texto")
+    icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
+    tags = models.CharField("tags", max_length=255, blank=True, help_text="Separe com vírgula. Ex.: Stack audit, Data quality")
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "passo do método"
+        verbose_name_plural = "passos do método"
+
+    def __str__(self):
+        return self.title
+
+
+class EngagementModel(OrderedModel):
+    """Seção "Modelos de contratação" da home. O número exibido é a ordem por posição."""
+
+    title = models.CharField("título", max_length=120)
+    text = models.TextField("texto")
+    icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "modelo de contratação"
+        verbose_name_plural = "modelos de contratação"
+
+    def __str__(self):
+        return self.title
+
+
+class Capability(OrderedModel):
+    """Faixa laranja de capacidades logo abaixo do topo da home."""
+
+    label = models.CharField("rótulo", max_length=80)
+    icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "capacidade"
+        verbose_name_plural = "capacidades"
+
+    def __str__(self):
+        return self.label
+
+
+class AboutPillar(OrderedModel):
+    """Cards de "O que fazemos" no Quem Somos."""
+
+    tag = models.CharField("tag", max_length=60)
+    title = models.CharField("título", max_length=120)
+    text = models.TextField("texto")
+    image = models.ImageField("imagem", upload_to="about/")
+    image_alt = models.CharField("texto alternativo da imagem", max_length=255, blank=True)
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "pilar do Quem Somos"
+        verbose_name_plural = "pilares do Quem Somos"
+
+    def __str__(self):
+        return self.title
+
+
+class AboutHighlight(OrderedModel):
+    """Diferenciais de "Por que escolher a Metricaz" no Quem Somos."""
+
+    title = models.CharField("título", max_length=120)
+    text = models.TextField("texto")
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "diferencial do Quem Somos"
+        verbose_name_plural = "diferenciais do Quem Somos"
+
+    def __str__(self):
+        return self.title
+
+
+class SocialLink(OrderedModel):
+    """Links do rodapé (redes sociais, privacidade)."""
+
+    label = models.CharField("rótulo", max_length=60)
+    url = models.CharField("link", max_length=500, help_text="URL completa ou caminho do site (ex.: /privacidade).")
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "link do rodapé"
+        verbose_name_plural = "links do rodapé"
+
+    def __str__(self):
+        return self.label
+
+
+# --- Blog ---------------------------------------------------------------------------------------
+
+class Author(models.Model):
+    name = models.CharField("nome", max_length=120)
+    mini_bio = models.TextField("minibio", blank=True)
+    created_at = models.DateTimeField("criado em", auto_now_add=True)
+    updated_at = models.DateTimeField("atualizado em", auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "autor"
+        verbose_name_plural = "autores"
+
+    def __str__(self):
+        return self.name
+
+
+class Tag(models.Model):
+    name = models.CharField("nome", max_length=60, unique=True)
+    slug = models.SlugField("slug", max_length=80, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "tag"
+        verbose_name_plural = "tags"
+
+    def __str__(self):
+        return self.name
+
+
+class Post(SanitizedContentMixin, models.Model):
+    """Post do blog: /blog/<slug>. Lista do mais recente para o mais antigo (data de publicação)."""
+
+    title = models.CharField("título", max_length=255)
+    slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /blog/<slug>")
+    subtitle = models.CharField("subtítulo", max_length=255, blank=True)
+    author = models.ForeignKey(Author, verbose_name="autor", null=True, blank=True, on_delete=models.SET_NULL, related_name="posts")
+    tag = models.ForeignKey(Tag, verbose_name="tag", null=True, blank=True, on_delete=models.SET_NULL, related_name="posts")
+    featured_image = models.ImageField("imagem principal", upload_to="blog/")
+    featured_image_alt = models.CharField("texto alternativo da imagem", max_length=255, blank=True)
+    content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
+    published_at = models.DateField("data de publicação")
+    is_active = models.BooleanField("publicado", default=True, help_text="Desmarcado = não aparece no site.")
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="criado por",
+        null=True,
+        blank=True,
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    created_at = models.DateTimeField("criado em", auto_now_add=True)
+    updated_at = models.DateTimeField("atualizado em", auto_now=True)
+
+    class Meta:
+        ordering = ["-published_at", "-created_at"]
+        verbose_name = "post"
+        verbose_name_plural = "posts"
 
     def __str__(self):
         return self.title
@@ -240,12 +402,15 @@ class CompanyAddress(OrderedModel):
 
 OPTION_KEY = RegexValidator(r"^[a-z0-9_]+(\.[a-z0-9_]+)*$", "Use o formato secao.campo (minúsculas, números, _ e .).")
 
+OPTION_VALUE_HELP = "Texto: *asteriscos* marcam o destaque (laranja/itálico) e Enter quebra a linha. Números: só o número (ex.: 312)."
+
 
 class SiteOption(models.Model):
     """Loose site text/number read by key in the templates (wp_options style). Empty value = not shown."""
 
     key = models.CharField("chave", max_length=120, unique=True, validators=[OPTION_KEY])
-    value = models.TextField("valor", blank=True)
+    label = models.CharField("rótulo", max_length=255, blank=True, help_text="Texto que acompanha o valor (ex.: \"Receita orgânica média\").")
+    value = models.TextField("valor", blank=True, help_text=OPTION_VALUE_HELP)
     description = models.CharField("descrição", max_length=255, blank=True, help_text="O que é e onde aparece.")
     updated_at = models.DateTimeField("atualizado em", auto_now=True)
 
@@ -253,6 +418,24 @@ class SiteOption(models.Model):
         ordering = ["key"]
         verbose_name = "opção do site"
         verbose_name_plural = "opções do site"
+
+    def __str__(self):
+        return self.key
+
+
+class SiteImage(models.Model):
+    """Single site image read by key in the templates (like SiteOption, for images)."""
+
+    key = models.CharField("chave", max_length=120, unique=True, validators=[OPTION_KEY])
+    image = models.ImageField("imagem", upload_to="site/")
+    alt = models.CharField("texto alternativo", max_length=255, blank=True)
+    description = models.CharField("descrição", max_length=255, blank=True, help_text="O que é e onde aparece.")
+    updated_at = models.DateTimeField("atualizado em", auto_now=True)
+
+    class Meta:
+        ordering = ["key"]
+        verbose_name = "imagem do site"
+        verbose_name_plural = "imagens do site"
 
     def __str__(self):
         return self.key
