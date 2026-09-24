@@ -173,3 +173,31 @@ export type SocialLink = Ordered & {
   label: string;
   url: string;
 };
+
+export type Author = {
+  id: number;
+  name: string;
+  mini_bio: string;
+};
+
+export type Tag = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type Post = {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle: string;
+  author: Author | null;
+  tag: Tag | null;
+  featured_image: string;
+  featured_image_alt: string;
+  content_html: string;
+  published_at: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};

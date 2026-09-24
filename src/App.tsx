@@ -19,6 +19,8 @@ const About = lazy(() => import("./pages/About"));
 const ServicesPage = lazy(() => import("./pages/Services"));
 const ServicePage = lazy(() => import("./pages/ServicePage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+const BlogPage = lazy(() => import("./pages/Blog"));
+const BlogPostPage = lazy(() => import("./pages/BlogPost"));
 
 const queryClient = new QueryClient();
 
@@ -82,6 +84,8 @@ const App = () => (
               <Route path="/servicos/:slug" element={<ServicePage />} />
               <Route path="/contato" element={<ContactPage />} />
               <Route path="/cases/:slug" element={<CasePage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
               <Route
                 path="/dashboard/:section"
