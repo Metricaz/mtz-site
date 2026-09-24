@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import { WhatsAppFloatingButton } from "@/components/site/WhatsAppFloatingButton";
 
-// Code-split routes so heavy, dashboard-only dependencies (recharts, tiptap, supabase forms)
+// Code-split routes so heavy, dashboard-only dependencies (recharts, dashboard lists)
 // don't ship in the public site's initial bundle.
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));

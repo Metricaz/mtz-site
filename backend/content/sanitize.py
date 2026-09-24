@@ -1,7 +1,7 @@
 """
 HTML sanitizing for rich text (services and cases), which the site renders as raw HTML.
 
-The allowlist matches what the dashboard's editor produces (Tiptap StarterKit + Image): anything else
+The allowlist covers the rich text the site renders (headings, paragraphs, lists, quotes, links, images): anything else
 — <script>, event handlers (onclick…), javascript: links, styles, iframes — is removed.
 """
 

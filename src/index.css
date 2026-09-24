@@ -200,40 +200,6 @@
 .rise-2 { animation: rise 0.9s var(--transition-smooth) 0.1s both; }
 .rise-3 { animation: rise 0.9s var(--transition-smooth) 0.2s both; }
 
-.tiptap-editor h2 {
-  font-size: 1.6rem;
-  line-height: 1.25;
-  margin-top: 1.2rem;
-  margin-bottom: 0.6rem;
-  font-weight: 700;
-}
-
-.tiptap-editor h3 {
-  font-size: 1.25rem;
-  line-height: 1.35;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
-
-.tiptap-editor p {
-  margin: 0.6rem 0;
-}
-
-.tiptap-editor ul,
-.tiptap-editor ol {
-  padding-left: 1.2rem;
-  margin: 0.8rem 0;
-}
-
-.tiptap-editor blockquote {
-  border-left: 3px solid hsl(var(--primary));
-  padding-left: 0.9rem;
-  color: hsl(var(--muted-foreground));
-  margin: 0.8rem 0;
-}
-
-.tiptap-editor img,
 .prose img {
   max-width: 100%;
   border-radius: 0.9rem;
