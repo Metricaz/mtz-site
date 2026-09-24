@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 interface TestimonialFormProps {
   testimonial?: Testimonial | null;
-  userId?: string;
+  userId?: number;
   onClose: () => void;
   onSuccess: () => void;
 }

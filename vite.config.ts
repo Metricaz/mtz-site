@@ -12,6 +12,13 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    // Django (backend/, `manage.py runserver`) behind the same origin, so its session cookie works in dev.
+    proxy: Object.fromEntries(
+      ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout"].map((path) => [
+        path,
+        process.env.DJANGO_DEV_SERVER || "http://127.0.0.1:8000",
+      ]),
+    ),
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

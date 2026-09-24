@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from PIL import Image
 from rest_framework.test import APIClient
 
@@ -306,3 +306,63 @@ class SanitizeApiTests(ApiTestCase):
         )
         self.assertEqual(response.status_code, 201, response.content)
         self.assertEqual(response.json()["content_html"], "<p>a</p>")
+
+
+class DjangoLoginTests(TestCase):
+    """Login is 100% Django (LoginView/LogoutView); the API only reads the session."""
+
+    def setUp(self):
+        self.client = Client(enforce_csrf_checks=True)
+        self.staff = User.objects.create_user("admin", password="senha-forte-123", is_staff=True)
+
+    def post_login(self, username="admin", password="senha-forte-123", **extra):
+        self.client.get("/dashboard/login/")
+        return self.client.post(
+            "/dashboard/login/",
+            {"username": username, "password": password, "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value, **extra},
+        )
+
+    def me(self):
+        return self.client.get("/api/auth/me/").json()["user"]
+
+    def test_login_page_uses_our_template(self):
+        response = self.client.get("/dashboard/login/?next=/dashboard/cases")
+        self.assertTemplateUsed(response, "registration/login.html")
+        self.assertContains(response, 'name="username"')
+        self.assertContains(response, 'value="/dashboard/cases"')
+
+    def test_me_logged_out_sets_csrf_cookie(self):
+        response = self.client.get("/api/auth/me/")
+        self.assertEqual(response.json(), {"user": None})
+        self.assertIn("csrftoken", response.cookies)
+
+    def test_login_redirects_and_me_reads_session(self):
+        response = self.post_login()
+        self.assertRedirects(response, "/dashboard", fetch_redirect_response=False)
+        self.assertEqual(self.me(), {"id": self.staff.pk, "username": "admin", "email": ""})
+
+    def test_login_honours_next(self):
+        response = self.post_login(next="/dashboard/cases")
+        self.assertRedirects(response, "/dashboard/cases", fetch_redirect_response=False)
+
+    def test_wrong_password_shows_django_error(self):
+        response = self.post_login(password="errada")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].non_field_errors())
+        self.assertIsNone(self.me())
+
+    def test_login_requires_csrf(self):
+        response = self.client.post("/dashboard/login/", {"username": "admin", "password": "senha-forte-123"})
+        self.assertEqual(response.status_code, 403)
+
+    def test_logout(self):
+        self.post_login()
+        response = self.client.post("/dashboard/logout/", {"csrfmiddlewaretoken": self.client.cookies["csrftoken"].value})
+        self.assertRedirects(response, "/dashboard/login/", fetch_redirect_response=False)
+        self.assertIsNone(self.me())
+
+    def test_non_staff_is_logged_in_by_django_but_not_a_dashboard_user(self):
+        User.objects.create_user("visitante", password="senha-forte-123")
+        self.post_login("visitante")
+        self.assertIsNone(self.me())
+        self.assertEqual(self.client.get("/api/contact-submissions/").status_code, 403)

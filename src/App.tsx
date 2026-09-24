@@ -12,7 +12,6 @@ import { WhatsAppFloatingButton } from "@/components/site/WhatsAppFloatingButton
 // Code-split routes so heavy, dashboard-only dependencies (recharts, tiptap, supabase forms)
 // don't ship in the public site's initial bundle.
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
-const DashboardLogin = lazy(() => import("./pages/DashboardLogin").then((m) => ({ default: m.DashboardLogin })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));
 const CasePage = lazy(() => import("./pages/CasePage"));
 const About = lazy(() => import("./pages/About"));
@@ -81,7 +80,6 @@ const App = () => (
               <Route path="/servicos/:slug" element={<ServicePage />} />
               <Route path="/contato" element={<ContactPage />} />
               <Route path="/cases/:slug" element={<CasePage />} />
-              <Route path="/dashboard/login" element={<DashboardLogin />} />
               <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
               <Route
                 path="/dashboard/:section"

@@ -1,7 +1,8 @@
+// Django auth.User, as returned by /api/auth/me/
 export type User = {
-  id: string;
+  id: number;
+  username: string;
   email: string;
-  created_at: string;
 };
 
 export type Sector = {
@@ -127,7 +128,6 @@ export type ContactSubmission = {
 export type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 };

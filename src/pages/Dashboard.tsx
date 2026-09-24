@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { redirectToLogin } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { Company, ContactSubmission, Sector, SiteCase, SiteService, SiteSettings, TeamMember, Testimonial } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -230,9 +231,9 @@ export const Dashboard = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!user && !loading) {
-      navigate('/dashboard/login');
+      redirectToLogin();
     }
-  }, [user, loading, navigate]);
+  }, [user, loading]);
 
   useEffect(() => {
     if (!section || !validTabs.includes(section as Tab)) {
@@ -349,7 +350,6 @@ export const Dashboard = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/dashboard/login');
   };
 
   const handleTabChange = (tab: Tab) => {
@@ -946,7 +946,7 @@ export const Dashboard = () => {
                         <ShieldCheck className="h-4 w-4 text-primary" />
                         Sessão ativa
                       </div>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">{user?.email}</p>
+                      <p className="mt-1 truncate text-xs text-muted-foreground">{user?.username}</p>
                     </div>
                   )}
                   <Button

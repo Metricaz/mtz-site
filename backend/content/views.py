@@ -1,4 +1,6 @@
 from django.utils.dateparse import parse_datetime
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import mixins, status, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
@@ -44,6 +46,24 @@ from .serializers import (
 )
 
 FILE_PARSERS = [JSONParser, MultiPartParser, FormParser]
+
+
+# --- Session -------------------------------------------------------------------------------------
+
+@method_decorator(ensure_csrf_cookie, name="dispatch")
+class MeView(APIView):
+    """
+    Who is logged in (through Django's login page), or null. Read-only: it never logs anyone in.
+    Also sets the CSRF cookie the dashboard sends back on writes.
+    """
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        user = request.user
+        if not is_staff(user):
+            return Response({"user": None})
+        return Response({"user": {"id": user.pk, "username": user.get_username(), "email": user.email}})
 
 
 # --- Content ------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 interface SectorFormProps {
   sector?: Sector | null;
-  userId?: string;
+  userId?: number;
   onClose: () => void;
   onSuccess: () => void;
 }

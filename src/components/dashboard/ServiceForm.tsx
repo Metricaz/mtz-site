@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 interface ServiceFormProps {
   service?: SiteService | null;
-  userId?: string;
+  userId?: number;
   onClose: () => void;
   onSuccess: () => void;
 }

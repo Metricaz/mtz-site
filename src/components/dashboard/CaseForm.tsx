@@ -10,7 +10,7 @@ import { Loader2, Upload, X } from 'lucide-react';
 
 interface CaseFormProps {
   caseItem?: SiteCase | null;
-  userId?: string;
+  userId?: number;
   onClose: () => void;
   onSuccess: () => void;
 }
