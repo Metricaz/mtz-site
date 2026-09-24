@@ -1,9 +1,21 @@
-from django.test import TestCase
+import io
+import tempfile
+
+from django.contrib.auth.models import User
+from django.core.cache import cache
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
+from PIL import Image
+from rest_framework.test import APIClient
 
 from .models import (
-    CompanyAddress,
     Company,
+    CompanyAddress,
     ContactSettings,
+    ContactSubmission,
+    ContentImage,
+    Lead,
+    NewsletterSubscriber,
     Sector,
     Service,
     SiteOption,
@@ -48,3 +60,194 @@ class InitialContentFixtureTests(TestCase):
         for model in (Sector, Company, TeamMember, Testimonial, Service, CompanyAddress, SiteOption):
             for obj in model.objects.all():
                 obj.full_clean()
+
+
+def png(name="foto.png"):
+    buffer = io.BytesIO()
+    Image.new("RGB", (4, 4), "orange").save(buffer, format="PNG")
+    return SimpleUploadedFile(name, buffer.getvalue(), content_type="image/png")
+
+
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class ApiTestCase(TestCase):
+    def setUp(self):
+        cache.clear()  # throttling counters
+        self.client = APIClient(enforce_csrf_checks=True)
+        self.staff = User.objects.create_user("admin", password="senha-forte-123", is_staff=True)
+
+    def login(self):
+        """Session login + a CSRF cookie/header pair, like the dashboard will send."""
+        self.client.force_login(self.staff)
+        self.client.cookies["csrftoken"] = "x" * 32
+        self.csrf = {"HTTP_X_CSRFTOKEN": "x" * 32}
+
+
+class PublicContentApiTests(ApiTestCase):
+    def test_public_sees_only_active_by_position(self):
+        Sector.objects.create(name="B", order_position=2)
+        Sector.objects.create(name="A", order_position=1)
+        Sector.objects.create(name="Oculto", order_position=0, is_active=False)
+        self.assertEqual([s["name"] for s in self.client.get("/api/sectors/").json()], ["A", "B"])
+
+    def test_staff_also_sees_inactive(self):
+        Sector.objects.create(name="Oculto", is_active=False)
+        self.login()
+        self.assertEqual([s["name"] for s in self.client.get("/api/sectors/").json()], ["Oculto"])
+
+    def test_team_placement(self):
+        TeamMember.objects.create(name="Home", role="r", show_on_home=True, show_on_about=False)
+        TeamMember.objects.create(name="Ambos", role="r", show_on_home=True, show_on_about=True)
+        names = lambda p: [m["name"] for m in self.client.get(f"/api/team/?placement={p}").json()]
+        self.assertEqual(names("home"), ["Home", "Ambos"])
+        self.assertEqual(names("about"), ["Ambos"])
+        self.assertEqual(self.client.get("/api/team/?placement=nope").status_code, 400)
+
+    def test_testimonial_placement(self):
+        Testimonial.objects.create(name="Painel", role="r", company="c", text="t", show_in_client_panel=True, show_in_testimonials=False)
+        Testimonial.objects.create(name="Sobre", role="r", company="c", text="t", show_in_testimonials=False, show_on_about=True)
+        get = lambda p: [t["name"] for t in self.client.get(f"/api/testimonials/?placement={p}").json()]
+        self.assertEqual(get("client_panel"), ["Painel"])
+        self.assertEqual(get("about"), ["Sobre"])
+        self.assertEqual(get("testimonials"), [])
+
+    def test_slug_and_limit(self):
+        for i in range(3):
+            Service.objects.create(title=f"S{i}", slug=f"s{i}", icon_name="seo", excerpt="e", content_html="<p>x</p>", order_position=i)
+        self.assertEqual(len(self.client.get("/api/services/?limit=2").json()), 2)
+        self.assertEqual([s["slug"] for s in self.client.get("/api/services/?slug=s1").json()], ["s1"])
+        self.assertEqual(self.client.get("/api/services/?slug=nope").json(), [])
+
+    def test_first_address(self):
+        CompanyAddress.objects.create(label="Orlando", street="x", city="Orlando", state="FL", country="US", order_position=2)
+        CompanyAddress.objects.create(label="São Paulo", street="x", city="SP", state="SP", country="Brasil", order_position=1)
+        self.assertEqual([a["label"] for a in self.client.get("/api/addresses/?limit=1").json()], ["São Paulo"])
+
+    def test_options_skip_empty_for_public(self):
+        SiteOption.objects.create(key="contact.email", value="comercial@metricaz.com")
+        SiteOption.objects.create(key="logos.brands_count", value="")
+        data = self.client.get("/api/options/").json()
+        self.assertEqual([(o["key"], o["value"]) for o in data], [("contact.email", "comercial@metricaz.com")])
+        self.assertEqual(self.client.get("/api/options/contact.email/").json()["value"], "comercial@metricaz.com")
+
+    def test_whatsapp_settings_public_contact_settings_private(self):
+        self.assertEqual(self.client.get("/api/whatsapp-settings/").status_code, 200)
+        self.assertEqual(self.client.get("/api/contact-settings/").status_code, 403)
+
+
+class StaffWriteApiTests(ApiTestCase):
+    def test_anonymous_cannot_write(self):
+        response = self.client.post("/api/sectors/", {"name": "x"}, format="json")
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(Sector.objects.exists())
+
+    def test_staff_write_requires_csrf(self):
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.post("/api/sectors/", {"name": "x"}, format="json").status_code, 403)
+
+    def test_non_staff_user_cannot_write(self):
+        self.client.force_login(User.objects.create_user("visitante", password="x"))
+        self.client.cookies["csrftoken"] = "x" * 32
+        response = self.client.post("/api/sectors/", {"name": "x"}, format="json", HTTP_X_CSRFTOKEN="x" * 32)
+        self.assertEqual(response.status_code, 403)
+
+    def test_staff_crud_sets_created_by(self):
+        self.login()
+        response = self.client.post("/api/sectors/", {"name": "Varejo"}, format="json", **self.csrf)
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual(response.json()["created_by"], self.staff.pk)
+        sector_id = response.json()["id"]
+        self.client.patch(f"/api/sectors/{sector_id}/", {"is_active": False}, format="json", **self.csrf)
+        self.assertFalse(Sector.objects.get(pk=sector_id).is_active)
+        self.assertEqual(self.client.delete(f"/api/sectors/{sector_id}/", **self.csrf).status_code, 204)
+
+    def test_image_upload_on_model(self):
+        self.login()
+        response = self.client.post("/api/companies/", {"name": "ACME", "logo": png()}, format="multipart", **self.csrf)
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertIn("/media/companies/", response.json()["logo"])
+
+    def test_whatsapp_settings_update(self):
+        self.login()
+        response = self.client.put("/api/whatsapp-settings/", {"number": "5511999999999"}, format="json", **self.csrf)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(WhatsAppSettings.load().number, "5511999999999")
+
+
+class RichTextApiTests(ApiTestCase):
+    def service(self, html):
+        return self.client.post(
+            "/api/services/",
+            {"title": "SEO", "slug": "seo", "icon_name": "seo", "excerpt": "e", "content_html": html},
+            format="json",
+            **self.csrf,
+        )
+
+    def test_upload_then_reference_by_id(self):
+        self.login()
+        upload = self.client.post("/api/content-images/", {"image": png()}, format="multipart", **self.csrf)
+        self.assertEqual(upload.status_code, 201, upload.content)
+        image_id = upload.json()["id"]
+        self.assertEqual(ContentImage.objects.get(pk=image_id).uploaded_by, self.staff)
+
+        # the editor may send the src back; only the reference is stored
+        response = self.service(f'<p>a</p><img src="http://old/x.png" data-image-id="{image_id}" alt="x">')
+        self.assertEqual(response.status_code, 201, response.content)
+        stored = Service.objects.get().content_html
+        self.assertEqual(stored, f'<p>a</p><img data-image-id="{image_id}" alt="x">')
+
+        served = self.client.get("/api/services/").json()[0]["content_html"]
+        self.assertIn(f'<img src="http://testserver/media/content/', served)
+        self.assertIn(f'data-image-id="{image_id}"', served)
+
+    def test_unknown_image_id_is_rejected(self):
+        self.login()
+        self.assertEqual(self.service('<img data-image-id="999">').status_code, 400)
+
+    def test_deleted_image_disappears_from_html(self):
+        image = ContentImage.objects.create(image=png())
+        Service.objects.create(title="S", slug="s", icon_name="seo", excerpt="e", content_html=f'<p>a</p><img data-image-id="{image.pk}">')
+        image.delete()
+        self.assertEqual(self.client.get("/api/services/").json()[0]["content_html"], "<p>a</p>")
+
+    def test_content_images_are_staff_only(self):
+        self.assertEqual(self.client.get("/api/content-images/").status_code, 403)
+
+
+class ReceivedApiTests(ApiTestCase):
+    def test_contact_submission_saved_as_queued_returns_only_id(self):
+        payload = {"name": "Ana", "email": "ana@acme.com", "message": "Olá", "source_page": "/contato", "extra": "x"}
+        response = self.client.post("/api/contact-submissions/", payload, format="json")
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual(list(response.json()), ["id"])
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.status, "queued")
+        self.assertEqual(submission.payload["extra"], "x")
+
+    def test_contact_submission_requires_fields(self):
+        response = self.client.post("/api/contact-submissions/", {"name": "Ana"}, format="json")
+        self.assertEqual(response.status_code, 400)
+
+    def test_received_data_is_staff_only_to_read(self):
+        for url in ("/api/contact-submissions/", "/api/newsletter/", "/api/leads/", "/api/whatsapp-clicks/"):
+            self.assertEqual(self.client.get(url).status_code, 403, url)
+
+    def test_newsletter_is_idempotent(self):
+        for _ in range(2):
+            response = self.client.post("/api/newsletter/", {"email": "Ana@Acme.com"}, format="json")
+            self.assertEqual(response.status_code, 201)
+        self.assertEqual(list(NewsletterSubscriber.objects.values_list("email", flat=True)), ["ana@acme.com"])
+
+    def test_lead(self):
+        self.assertEqual(self.client.post("/api/leads/", {"email": "a@b.com", "source_page": "/"}, format="json").status_code, 201)
+        self.assertEqual(Lead.objects.get().source_page, "/")
+
+    def test_whatsapp_click_and_since_filter(self):
+        body = {"page_path": "/", "button_context": "floating"}
+        self.assertEqual(self.client.post("/api/whatsapp-clicks/", body, format="json").status_code, 201)
+        self.login()
+        self.assertEqual(len(self.client.get("/api/whatsapp-clicks/").json()), 1)
+        self.assertEqual(self.client.get("/api/whatsapp-clicks/?since=2999-01-01T00:00:00Z").json(), [])
+
+    def test_public_forms_are_throttled(self):
+        codes = [self.client.post("/api/leads/", {"email": f"a{i}@b.com"}, format="json").status_code for i in range(11)]
+        self.assertEqual(codes[-1], 429)

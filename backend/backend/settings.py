@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'content',
 ]
 
@@ -116,6 +117,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# API (Django REST Framework): Django session auth; anyone reads, only staff writes.
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': ['content.permissions.IsStaffOrReadOnly'],
+    'DEFAULT_THROTTLE_RATES': {
+        'public_forms': '10/min',
+        'whatsapp_clicks': '60/min',
+    },
+}
 
 # Uploaded files (logos, team photos, case images, rich-text images)
 
