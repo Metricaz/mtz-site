@@ -38,8 +38,8 @@ def normalize(html):
     return IMG_TAG.sub(strip_src, html or ""), missing
 
 
-def resolve(html, build_url):
-    """Fill in src for every referenced image; `build_url` turns a media URL into the final one."""
+def resolve(html):
+    """Fill in src (relative media URL) for every referenced image."""
     ids = image_ids(html)
     images = {img.pk: img for img in ContentImage.objects.filter(pk__in=ids)}
 
@@ -51,7 +51,7 @@ def resolve(html, build_url):
         image = images.get(int(found.group(1)))
         if image is None:
             return ""
-        attrs = f' src="{escape(build_url(image.image.url))}"'
+        attrs = f' src="{escape(image.image.url)}"'
         if image.width and image.height:
             attrs += f' width="{image.width}" height="{image.height}"'
         return re.sub(r"^<img\b", lambda _: f"<img{attrs}", SERVER_ATTRS.sub("", tag), flags=re.IGNORECASE)

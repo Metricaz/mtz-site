@@ -208,7 +208,7 @@ class StaffWriteApiTests(ApiTestCase):
         self.login()
         response = self.client.post("/api/companies/", {"name": "ACME", "logo": png()}, format="multipart", **self.csrf)
         self.assertEqual(response.status_code, 201, response.content)
-        self.assertIn("/media/companies/", response.json()["logo"])
+        self.assertTrue(response.json()["logo"].startswith("/media/companies/"))  # relative, whatever the host
 
     def test_whatsapp_settings_update(self):
         self.login()
@@ -240,7 +240,7 @@ class RichTextApiTests(ApiTestCase):
         self.assertEqual(stored, f'<p>a</p><img data-image-id="{image_id}" alt="x">')
 
         served = self.client.get("/api/services/").json()[0]["content_html"]
-        self.assertIn(f'<img src="http://testserver/media/content/', served)
+        self.assertIn(f'<img src="/media/content/', served)
         self.assertIn('width="4" height="4"', served)  # aspect ratio for the browser (avoids layout shift)
         self.assertIn(f'data-image-id="{image_id}"', served)
 
@@ -469,7 +469,7 @@ class SiteContentApiTests(ApiTestCase):
 
     def test_site_image_by_key(self):
         image = self.client.get("/api/site-images/about.why_image/").json()
-        self.assertTrue(image["image"].endswith("/media/site/por-que-escolher.webp"))
+        self.assertEqual(image["image"], "/media/site/por-que-escolher.webp")
         self.assertEqual(image["alt"], "Metricaz")
 
 

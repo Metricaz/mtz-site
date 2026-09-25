@@ -1,3 +1,4 @@
+from django.db import models
 from rest_framework import serializers
 
 from . import rich_text
@@ -31,7 +32,21 @@ from .models import (
 ORDERED_READ_ONLY = ("id", "created_by", "created_at", "updated_at")
 
 
-class OrderedSerializer(serializers.ModelSerializer):
+class MediaImageField(serializers.ImageField):
+    """Served as the relative media URL (/media/...), whatever host the request came through."""
+
+    def to_representation(self, value):
+        return value.url if value else None
+
+
+class ModelSerializer(serializers.ModelSerializer):
+    serializer_field_mapping = {
+        **serializers.ModelSerializer.serializer_field_mapping,
+        models.ImageField: MediaImageField,
+    }
+
+
+class OrderedSerializer(ModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
@@ -46,9 +61,7 @@ class RichTextMixin:
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        request = self.context.get("request")
-        build_url = request.build_absolute_uri if request else (lambda url: url)
-        data["content_html"] = rich_text.resolve(data["content_html"], build_url)
+        data["content_html"] = rich_text.resolve(data["content_html"])
         return data
 
 
@@ -101,7 +114,7 @@ class CompanyAddressSerializer(OrderedSerializer):
         read_only_fields = ORDERED_READ_ONLY
 
 
-class ContentImageSerializer(serializers.ModelSerializer):
+class ContentImageSerializer(ModelSerializer):
     uploaded_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
@@ -110,14 +123,14 @@ class ContentImageSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "uploaded_by", "uploaded_at"]
 
 
-class SiteOptionSerializer(serializers.ModelSerializer):
+class SiteOptionSerializer(ModelSerializer):
     class Meta:
         model = SiteOption
         fields = ["key", "label", "value", "description", "updated_at"]
         read_only_fields = ["updated_at"]
 
 
-class SiteImageSerializer(serializers.ModelSerializer):
+class SiteImageSerializer(ModelSerializer):
     class Meta:
         model = SiteImage
         fields = ["key", "image", "alt", "description", "updated_at"]
@@ -168,19 +181,19 @@ class SocialLinkSerializer(OrderedSerializer):
 
 # --- Blog ---------------------------------------------------------------------------------------
 
-class AuthorSerializer(serializers.ModelSerializer):
+class AuthorSerializer(ModelSerializer):
     class Meta:
         model = Author
         fields = ["id", "name", "mini_bio"]
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = ["id", "name", "slug"]
 
 
-class PostSerializer(RichTextMixin, serializers.ModelSerializer):
+class PostSerializer(RichTextMixin, ModelSerializer):
     """Author and tag come nested on reads; writes take their ids (author_id, tag_id)."""
 
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -203,7 +216,7 @@ class PostSerializer(RichTextMixin, serializers.ModelSerializer):
         read_only_fields = ["id", "created_by", "created_at", "updated_at"]
 
 
-class WhatsAppSettingsSerializer(serializers.ModelSerializer):
+class WhatsAppSettingsSerializer(ModelSerializer):
     class Meta:
         model = WhatsAppSettings
         fields = ["number", "enabled", "message", "updated_at"]
@@ -212,7 +225,7 @@ class WhatsAppSettingsSerializer(serializers.ModelSerializer):
 
 # --- Received from visitors ---------------------------------------------------------------------
 
-class ContactSubmissionSerializer(serializers.ModelSerializer):
+class ContactSubmissionSerializer(ModelSerializer):
     class Meta:
         model = ContactSubmission
         fields = "__all__"
@@ -221,14 +234,14 @@ class ContactSubmissionSerializer(serializers.ModelSerializer):
         ]
 
 
-class WhatsAppClickSerializer(serializers.ModelSerializer):
+class WhatsAppClickSerializer(ModelSerializer):
     class Meta:
         model = WhatsAppClick
         fields = "__all__"
         read_only_fields = ["id", "clicked_at"]
 
 
-class NewsletterSubscriberSerializer(serializers.ModelSerializer):
+class NewsletterSubscriberSerializer(ModelSerializer):
     class Meta:
         model = NewsletterSubscriber
         fields = ["id", "email", "source_page", "created_at"]
@@ -237,7 +250,7 @@ class NewsletterSubscriberSerializer(serializers.ModelSerializer):
         extra_kwargs = {"email": {"validators": []}}
 
 
-class LeadSerializer(serializers.ModelSerializer):
+class LeadSerializer(ModelSerializer):
     class Meta:
         model = Lead
         fields = ["id", "email", "source_page", "created_at"]
