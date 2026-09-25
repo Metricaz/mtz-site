@@ -1,0 +1,1782 @@
+[
+  {
+    "model": "content.sector",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "SEO Técnico"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "CRO & Testes A/B"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "GA4 + GTM"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Server-Side Tracking"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Looker Studio"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "BigQuery"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Consent Mode v2"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Core Web Vitals"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 9,
+    "fields": {
+      "order_position": 8,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Desenvolvimento"
+    }
+  },
+  {
+    "model": "content.sector",
+    "pk": 10,
+    "fields": {
+      "order_position": 9,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "BI & Dashboards"
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Whirlpool",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Claro",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Veloe",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Lavazza",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Ambev",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Bradesco",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Natura",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Itaú",
+      "logo": "",
+      "logo_alt": "",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Founder · Head de Analytics",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de SEO",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de CRO & Produto",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Conteúdo",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Mídia Paga",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Desenvolvimento",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 7,
+    "fields": {
+      "order_position": 6,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Engenharia de Dados",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.teammember",
+    "pk": 8,
+    "fields": {
+      "order_position": 7,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Nome Sobrenome",
+      "role": "Head de Operações",
+      "bio": "",
+      "photo": "",
+      "photo_alt": "",
+      "show_on_home": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Marina Costa",
+      "role": "Head of Growth",
+      "company": "Whirlpool",
+      "text": "A Metricaz levou nossa operação de analytics a outro nível. Decisões viraram dado, não opinião.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": true
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Lucas Andrade",
+      "role": "CMO",
+      "company": "Veloe",
+      "text": "Precisão técnica + visão de negócio. Em 6 meses dobramos a conversão do nosso e-commerce.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.testimonial",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "name": "Renata Silva",
+      "role": "Diretora Digital",
+      "company": "Claro",
+      "text": "O time é cirúrgico. Implementação de GA4 e server-side impecável, sem gambiarra.",
+      "show_in_client_panel": true,
+      "show_in_testimonials": true,
+      "show_on_about": false
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "SEO",
+      "slug": "seo",
+      "icon_name": "seo",
+      "excerpt": "Auditoria técnica, estratégia de conteúdo e link building com foco em crescimento orgânico previsível.",
+      "content_html": "<h2>SEO orientado a negócio</h2>\n<p>Estruturamos a presença orgânica para gerar demanda qualificada, apoiar a jornada de compra e ampliar previsibilidade de receita.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria técnica e correção de gargalos</li>\n  <li>Arquitetura de conteúdo e clusters temáticos</li>\n  <li>Estratégia de autoridade e desempenho orgânico</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "CRO & Testes A/B",
+      "slug": "cro",
+      "icon_name": "cro",
+      "excerpt": "Hipóteses baseadas em dados, experimentação contínua e otimização da jornada de conversão.",
+      "content_html": "<h2>Conversão com método</h2>\n<p>Testamos, priorizamos e ajustamos a experiência para transformar mais tráfego em resultado real.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria de UX e comportamento</li>\n  <li>Hipóteses ICE e roadmap de testes</li>\n  <li>Experimentação e leitura estatística</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Digital Analytics",
+      "slug": "analytics",
+      "icon_name": "analytics",
+      "excerpt": "Mensuração ponta a ponta com GA4, GTM, server-side tracking e dashboards acionáveis.",
+      "content_html": "<h2>Mensuração confiável</h2>\n<p>Construímos uma base de dados clara para que marketing, produto e liderança tomem decisão com segurança.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Setup e migração para GA4</li>\n  <li>Tagueamento e governança</li>\n  <li>Integração com mídia e BI</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.service",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Desenvolvimento",
+      "slug": "desenvolvimento",
+      "icon_name": "development",
+      "excerpt": "Software sob medida, integrações e automações que sustentam a operação data-driven.",
+      "content_html": "<h2>Produto e automação</h2>\n<p>Desenvolvemos camadas técnicas que conectam sistemas, simplificam fluxos e sustentam operações mais inteligentes.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Integrações com APIs e dados</li>\n  <li>Web apps e ferramentas internas</li>\n  <li>Automação de processos e relatórios</li>\n</ul>"
+    }
+  },
+  {
+    "model": "content.companyaddress",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "São Paulo",
+      "street": "Rua Cardeal Arcoverde, 2365",
+      "complement": "3º andar",
+      "district": "Pinheiros",
+      "city": "São Paulo",
+      "state": "SP",
+      "postal_code": "05408-003",
+      "country": "Brasil",
+      "phone": "",
+      "hours": "Seg–Sex · 9h às 18h",
+      "map_url": "https://www.google.com/maps?q=Rua%20Cardeal%20Arcoverde%2C%202365%20-%20Pinheiros%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2005408-003&z=15&output=embed"
+    }
+  },
+  {
+    "model": "content.companyaddress",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Orlando",
+      "street": "7901 Kingspointe Pkwy",
+      "complement": "Ste 14",
+      "district": "",
+      "city": "Orlando",
+      "state": "FL",
+      "postal_code": "32819",
+      "country": "US",
+      "phone": "",
+      "hours": "",
+      "map_url": "https://www.google.com/maps?q=7901%20Kingspointe%20Pkwy%20Ste%2014%2C%20Orlando%2C%20FL%2032819&z=15&output=embed"
+    }
+  },
+  {
+    "model": "content.whatsappsettings",
+    "pk": 1,
+    "fields": {
+      "number": "",
+      "enabled": true,
+      "message": "Olá, vim pelo site da Metricaz e gostaria de conversar.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 1,
+    "fields": {
+      "key": "contact.email",
+      "label": "E-mail de contato",
+      "value": "comercial@metricaz.com",
+      "description": "Seção Contato e página Contato.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 2,
+    "fields": {
+      "key": "marcasatendidas",
+      "label": "Marcas atendidas",
+      "value": "80",
+      "description": "Número. Hero, painel Em números, Quem confia e Quem Somos.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 3,
+    "fields": {
+      "key": "idade",
+      "label": "Anos de método",
+      "value": "12",
+      "description": "Número. Hero, painel Em números e Quem Somos.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 4,
+    "fields": {
+      "key": "receitaorganica",
+      "label": "Receita orgânica média",
+      "value": "312",
+      "description": "Número (percentual). Hero e painel Em números.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 5,
+    "fields": {
+      "key": "liftcro",
+      "label": "Lift médio pós-CRO",
+      "value": "1.8",
+      "description": "Número (multiplicador). Hero.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 6,
+    "fields": {
+      "key": "ganhoprojetos",
+      "label": "Média de ganho em projetos estratégicos",
+      "value": "300",
+      "description": "Número (percentual). Quem Somos.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 7,
+    "fields": {
+      "key": "confiabilidadecoleta",
+      "label": "Confiabilidade de coleta em setups críticos",
+      "value": "99.8",
+      "description": "Número (percentual). Quem Somos.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 8,
+    "fields": {
+      "key": "seo.title",
+      "label": "",
+      "value": "Metricaz · Consultoria de SEO, CRO e Digital Analytics",
+      "description": "Título da aba e dos resultados de busca.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 9,
+    "fields": {
+      "key": "seo.description",
+      "label": "",
+      "value": "Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.",
+      "description": "Descrição para buscadores e compartilhamento.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 10,
+    "fields": {
+      "key": "hero.location",
+      "label": "",
+      "value": "São Paulo · BR",
+      "description": "Home · linha pequena acima do título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 11,
+    "fields": {
+      "key": "hero.title",
+      "label": "",
+      "value": "Dados que viram\n*vantagem* competitiva.",
+      "description": "Home · título principal.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 12,
+    "fields": {
+      "key": "hero.subtitle",
+      "label": "",
+      "value": "Consultoria de *SEO, CRO, Digital Analytics e Desenvolvimento*. Há 12 anos transformando números em decisões — e decisões em receita previsível.",
+      "description": "Home · texto abaixo do título (destaque = negrito).",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 13,
+    "fields": {
+      "key": "services.eyebrow",
+      "label": "",
+      "value": "// SERVIÇOS",
+      "description": "Home · Serviços · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 14,
+    "fields": {
+      "key": "services.title",
+      "label": "",
+      "value": "Quatro pilares.\n*Um único objetivo:* resultado.",
+      "description": "Home · Serviços · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 15,
+    "fields": {
+      "key": "services.description",
+      "label": "",
+      "value": "Atuamos de ponta a ponta no funil digital com método, rigor analítico e governança.",
+      "description": "Home · Serviços · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 16,
+    "fields": {
+      "key": "statssplit.client_eyebrow",
+      "label": "",
+      "value": "// Cliente",
+      "description": "Home · painel de depoimento de cliente · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 17,
+    "fields": {
+      "key": "statssplit.numbers_eyebrow",
+      "label": "",
+      "value": "// Em números",
+      "description": "Home · painel Em números · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 18,
+    "fields": {
+      "key": "statssplit.numbers_title",
+      "label": "",
+      "value": "Mais de *uma década* construindo operações data-driven.",
+      "description": "Home · painel Em números · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 19,
+    "fields": {
+      "key": "method.eyebrow",
+      "label": "",
+      "value": "// Método",
+      "description": "Home · Método · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 20,
+    "fields": {
+      "key": "method.title",
+      "label": "",
+      "value": "Um workflow *simples e estratégico.*",
+      "description": "Home · Método · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 21,
+    "fields": {
+      "key": "method.description",
+      "label": "",
+      "value": "Conformidade com LGPD, governança e um método transparente. Você sabe sempre o que está sendo medido, como e por quê.",
+      "description": "Home · Método · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 22,
+    "fields": {
+      "key": "method.footnote",
+      "label": "",
+      "value": "LGPD · Consent Mode v2 · Server-side",
+      "description": "Home · Método · linha final.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 23,
+    "fields": {
+      "key": "models.eyebrow",
+      "label": "",
+      "value": "// Modelos de contratação",
+      "description": "Home · Modelos · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 24,
+    "fields": {
+      "key": "models.title",
+      "label": "",
+      "value": "Como *trabalhamos* juntos.",
+      "description": "Home · Modelos · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 25,
+    "fields": {
+      "key": "logos.eyebrow",
+      "label": "",
+      "value": "// Quem confia",
+      "description": "Home · Quem confia · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 26,
+    "fields": {
+      "key": "logos.title",
+      "label": "",
+      "value": "Marcas que decidem com *dado, não com achismo.*",
+      "description": "Home · Quem confia · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 27,
+    "fields": {
+      "key": "team.eyebrow",
+      "label": "",
+      "value": "// Time",
+      "description": "Home · Time · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 28,
+    "fields": {
+      "key": "team.title",
+      "label": "",
+      "value": "Quem constrói *com você.*",
+      "description": "Home · Time · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 29,
+    "fields": {
+      "key": "team.subtitle",
+      "label": "",
+      "value": "Especialistas seniores. Sem repasse. Sem terceirização.",
+      "description": "Home · Time · linha ao lado das setas.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 30,
+    "fields": {
+      "key": "testimonials.eyebrow",
+      "label": "",
+      "value": "// Depoimentos",
+      "description": "Home · Depoimentos · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 31,
+    "fields": {
+      "key": "testimonials.title",
+      "label": "",
+      "value": "O que *dizem* sobre nós.",
+      "description": "Home · Depoimentos · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 32,
+    "fields": {
+      "key": "cases.eyebrow",
+      "label": "",
+      "value": "// Cases selecionados",
+      "description": "Home · Cases · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 33,
+    "fields": {
+      "key": "cases.title",
+      "label": "",
+      "value": "Projetos que *movem negócios.*",
+      "description": "Home · Cases · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 34,
+    "fields": {
+      "key": "content.eyebrow",
+      "label": "",
+      "value": "// INSIGHTS & IDEIAS",
+      "description": "Home · Blog · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 35,
+    "fields": {
+      "key": "content.title",
+      "label": "",
+      "value": "Onde estratégia encontra\n*imaginação*.",
+      "description": "Home · Blog · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 36,
+    "fields": {
+      "key": "footercta.eyebrow",
+      "label": "",
+      "value": "// Próximo passo",
+      "description": "Home · Próximo passo · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 37,
+    "fields": {
+      "key": "footercta.title",
+      "label": "",
+      "value": "Vamos construir *o que vem* a seguir?",
+      "description": "Home · Próximo passo · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 38,
+    "fields": {
+      "key": "footercta.description",
+      "label": "",
+      "value": "Conte sobre o desafio em uma frase. Retornamos em até 1 dia útil.",
+      "description": "Home · Próximo passo · texto acima do e-mail.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 39,
+    "fields": {
+      "key": "contact.eyebrow",
+      "label": "",
+      "value": "// Contato",
+      "description": "Seção Contato · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 40,
+    "fields": {
+      "key": "contact.title",
+      "label": "",
+      "value": "Vamos\n*conversar?*",
+      "description": "Seção Contato · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 41,
+    "fields": {
+      "key": "contact.description",
+      "label": "",
+      "value": "Conte rapidamente sobre o desafio. Em até 1 dia útil retornamos com próximos passos.",
+      "description": "Seção Contato · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 42,
+    "fields": {
+      "key": "footer.tagline",
+      "label": "",
+      "value": "Transformamos dados em *conhecimento*, ações e resultados.",
+      "description": "Rodapé · frase grande.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 43,
+    "fields": {
+      "key": "footer.newsletter_eyebrow",
+      "label": "",
+      "value": "// Newsletter",
+      "description": "Rodapé · newsletter · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 44,
+    "fields": {
+      "key": "footer.newsletter_text",
+      "label": "",
+      "value": "Boas práticas em SEO, CRO e Analytics direto no seu e-mail. Sem spam.",
+      "description": "Rodapé · newsletter · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 45,
+    "fields": {
+      "key": "footer.copyright",
+      "label": "",
+      "value": "© 2026 Metricaz · Todos os direitos reservados",
+      "description": "Rodapé · copyright.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 46,
+    "fields": {
+      "key": "about.eyebrow",
+      "label": "",
+      "value": "Quem Somos",
+      "description": "Quem Somos · topo · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 47,
+    "fields": {
+      "key": "about.title",
+      "label": "",
+      "value": "Somos uma consultoria de performance que mistura *estratégia, dados e execução.*",
+      "description": "Quem Somos · topo · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 48,
+    "fields": {
+      "key": "about.description",
+      "label": "",
+      "value": "A Metricaz nasceu para resolver o intervalo entre intenção e resultado: menos vaidade, mais impacto real em receita, eficiência e previsibilidade.",
+      "description": "Quem Somos · topo · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 49,
+    "fields": {
+      "key": "about.whatwedo_eyebrow",
+      "label": "",
+      "value": "// O que fazemos",
+      "description": "Quem Somos · O que fazemos · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 50,
+    "fields": {
+      "key": "about.whatwedo_title",
+      "label": "",
+      "value": "Crescimento sustentável com *método e precisão.*",
+      "description": "Quem Somos · O que fazemos · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 51,
+    "fields": {
+      "key": "about.why_eyebrow",
+      "label": "",
+      "value": "// Por que escolher a Metricaz",
+      "description": "Quem Somos · Por que escolher · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 52,
+    "fields": {
+      "key": "about.why_title",
+      "label": "",
+      "value": "Nosso diferencial é unir técnica profunda com leitura de negócio.",
+      "description": "Quem Somos · Por que escolher · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 53,
+    "fields": {
+      "key": "about.why_description",
+      "label": "",
+      "value": "Não entregamos só relatório. Entregamos direção, decisão e execução para transformar dados em lucro.",
+      "description": "Quem Somos · Por que escolher · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 54,
+    "fields": {
+      "key": "about.leads_eyebrow",
+      "label": "",
+      "value": "// Heads da operação",
+      "description": "Quem Somos · time · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 55,
+    "fields": {
+      "key": "about.leads_title",
+      "label": "",
+      "value": "Lideranças que constroem o *resultado com você.*",
+      "description": "Quem Somos · time · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 56,
+    "fields": {
+      "key": "about.testimonial_eyebrow",
+      "label": "",
+      "value": "// O que nossos clientes dizem",
+      "description": "Quem Somos · depoimento em destaque · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 57,
+    "fields": {
+      "key": "servicespage.eyebrow",
+      "label": "",
+      "value": "Metricaz / Serviços",
+      "description": "Página Serviços · etiqueta do topo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 58,
+    "fields": {
+      "key": "servicespage.title",
+      "label": "",
+      "value": "O que fazemos",
+      "description": "Página Serviços · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 59,
+    "fields": {
+      "key": "servicespage.description",
+      "label": "",
+      "value": "Estruturamos serviços de marketing e tecnologia para conectar estratégia, mensuração e execução de forma consistente.",
+      "description": "Página Serviços · texto do topo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 60,
+    "fields": {
+      "key": "servicespage.list_eyebrow",
+      "label": "",
+      "value": "Serviços disponíveis",
+      "description": "Página Serviços · lista · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 61,
+    "fields": {
+      "key": "servicespage.list_title",
+      "label": "",
+      "value": "Escolha a frente de trabalho",
+      "description": "Página Serviços · lista · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 62,
+    "fields": {
+      "key": "servicespage.list_description",
+      "label": "",
+      "value": "Cada serviço possui sua própria página para detalhar escopo, entregas e conteúdo de apoio.",
+      "description": "Página Serviços · lista · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 63,
+    "fields": {
+      "key": "servicepage.eyebrow",
+      "label": "",
+      "value": "Metricaz / Serviço",
+      "description": "Página de cada serviço · etiqueta do topo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 64,
+    "fields": {
+      "key": "servicepage.cta_eyebrow",
+      "label": "",
+      "value": "Próximo passo",
+      "description": "Página de cada serviço · bloco final · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 65,
+    "fields": {
+      "key": "servicepage.cta_title",
+      "label": "",
+      "value": "Quer aplicar este serviço no seu cenário?",
+      "description": "Página de cada serviço · bloco final · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 66,
+    "fields": {
+      "key": "contactpage.eyebrow",
+      "label": "",
+      "value": "Contato",
+      "description": "Página Contato · topo · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 67,
+    "fields": {
+      "key": "contactpage.title",
+      "label": "",
+      "value": "Vamos transformar o seu próximo desafio em *um plano claro.*",
+      "description": "Página Contato · topo · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 68,
+    "fields": {
+      "key": "contactpage.description",
+      "label": "",
+      "value": "Use o formulário para briefing, fale com a equipe no WhatsApp ou venha visitar nossa localização.",
+      "description": "Página Contato · topo · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 69,
+    "fields": {
+      "key": "contactpage.location_eyebrow",
+      "label": "",
+      "value": "// Localização",
+      "description": "Página Contato · localização · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 70,
+    "fields": {
+      "key": "contactpage.location_title",
+      "label": "",
+      "value": "Onde estamos",
+      "description": "Página Contato · localização · título.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 71,
+    "fields": {
+      "key": "contactpage.location_description",
+      "label": "",
+      "value": "A base da Metricaz fica em São Paulo e atende projetos em todo o Brasil de forma remota e híbrida.",
+      "description": "Página Contato · localização · texto.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 72,
+    "fields": {
+      "key": "contactpage.email_note",
+      "label": "",
+      "value": "Retorno em até 1 dia útil",
+      "description": "Página Contato · linha abaixo do e-mail.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 73,
+    "fields": {
+      "key": "contactpage.whatsapp_eyebrow",
+      "label": "",
+      "value": "// WhatsApp",
+      "description": "Página Contato · cartão do WhatsApp · rótulo.",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.methodstep",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Diagnóstico",
+      "text": "Auditoria de stack, dados e funil. Identificamos os gargalos reais antes de propor qualquer ação.",
+      "icon_name": "compass",
+      "tags": "Stack audit, Data quality, Funnel review"
+    }
+  },
+  {
+    "model": "content.methodstep",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Estratégia",
+      "text": "Roadmap priorizado por impacto, com hipóteses, KPIs claros e responsabilidades definidas.",
+      "icon_name": "target",
+      "tags": "Roadmap, OKRs, Hipóteses"
+    }
+  },
+  {
+    "model": "content.methodstep",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Execução",
+      "text": "Times integrados executando em sprints, com rituais de QA e governança técnica.",
+      "icon_name": "growth",
+      "tags": "Sprints, QA, Governança"
+    }
+  },
+  {
+    "model": "content.methodstep",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Mensuração",
+      "text": "Dashboards vivos, leitura de resultados e iteração contínua sobre o que importa.",
+      "icon_name": "performance",
+      "tags": "Dashboards, Iteração, Insights"
+    }
+  },
+  {
+    "model": "content.engagementmodel",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Alocação de Equipe",
+      "text": "Squads dedicados que se integram ao seu time, com cadência semanal e governança clara.",
+      "icon_name": "users"
+    }
+  },
+  {
+    "model": "content.engagementmodel",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Projetos Especiais",
+      "text": "Entregas com escopo fechado: migrações, implementações, auditorias e tracking.",
+      "icon_name": "briefcase"
+    }
+  },
+  {
+    "model": "content.engagementmodel",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Success Fee",
+      "text": "Modelo híbrido em que parte da remuneração é atrelada à performance e a metas.",
+      "icon_name": "trending-up"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "SEO Técnico",
+      "icon_name": "seo"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "CRO & A/B",
+      "icon_name": "cro"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "GA4 + GTM",
+      "icon_name": "analytics"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Server-Side",
+      "icon_name": "radio"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 5,
+    "fields": {
+      "order_position": 4,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "BI & Dashboards",
+      "icon_name": "performance"
+    }
+  },
+  {
+    "model": "content.capability",
+    "pk": 6,
+    "fields": {
+      "order_position": 5,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Desenvolvimento",
+      "icon_name": "development"
+    }
+  },
+  {
+    "model": "content.aboutpillar",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "tag": "Planejamento",
+      "title": "Mapeamento de alavancas",
+      "text": "Diagnóstico técnico e de negócio para priorizar o que realmente move resultado.",
+      "image": "about/planejamento.jpg",
+      "image_alt": "Mapeamento de alavancas"
+    }
+  },
+  {
+    "model": "content.aboutpillar",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "tag": "Execução",
+      "title": "Operação multidisciplinar",
+      "text": "SEO, CRO, Analytics e Dev em uma mesma esteira para reduzir ruído e acelerar entregas.",
+      "image": "about/execucao.jpg",
+      "image_alt": "Operação multidisciplinar"
+    }
+  },
+  {
+    "model": "content.aboutpillar",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "tag": "Evolução",
+      "title": "Crescimento contínuo",
+      "text": "Ritual de melhoria permanente com indicadores, experimentos e ajustes de alta velocidade.",
+      "image": "about/evolucao.jpg",
+      "image_alt": "Crescimento contínuo"
+    }
+  },
+  {
+    "model": "content.abouthighlight",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "SEO técnico de verdade",
+      "text": "Estruturamos arquitetura, rastreabilidade e performance para escalar crescimento orgânico sem fragilidade."
+    }
+  },
+  {
+    "model": "content.abouthighlight",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Analytics orientado a decisão",
+      "text": "Dados limpos, governança e painéis acionáveis para liderança operar com clareza de margem e receita."
+    }
+  },
+  {
+    "model": "content.abouthighlight",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "CRO com método",
+      "text": "Experimentação contínua com hipótese, priorização e leitura estatística para crescimento previsível."
+    }
+  },
+  {
+    "model": "content.abouthighlight",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "title": "Time sênior no projeto",
+      "text": "Sem repasse. Você fala com quem planeja, executa e mede. Menos ruído, mais velocidade com qualidade."
+    }
+  },
+  {
+    "model": "content.sociallink",
+    "pk": 1,
+    "fields": {
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "LinkedIn",
+      "url": "https://br.linkedin.com/company/metricaz"
+    }
+  },
+  {
+    "model": "content.sociallink",
+    "pk": 2,
+    "fields": {
+      "order_position": 1,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/metricaz.mtz/"
+    }
+  },
+  {
+    "model": "content.sociallink",
+    "pk": 3,
+    "fields": {
+      "order_position": 2,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Privacidade",
+      "url": "#"
+    }
+  },
+  {
+    "model": "content.siteimage",
+    "pk": 1,
+    "fields": {
+      "key": "about.why_image",
+      "image": "site/por-que-escolher.webp",
+      "alt": "Metricaz",
+      "description": "Quem Somos · imagem de \"Por que escolher a Metricaz\".",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.tag",
+    "pk": 1,
+    "fields": {
+      "name": "Privacidade",
+      "slug": "privacidade"
+    }
+  },
+  {
+    "model": "content.tag",
+    "pk": 2,
+    "fields": {
+      "name": "Tag Manager",
+      "slug": "tag-manager"
+    }
+  },
+  {
+    "model": "content.tag",
+    "pk": 3,
+    "fields": {
+      "name": "Analytics",
+      "slug": "analytics"
+    }
+  },
+  {
+    "model": "content.tag",
+    "pk": 4,
+    "fields": {
+      "name": "SEO",
+      "slug": "seo"
+    }
+  },
+  {
+    "model": "content.tag",
+    "pk": 5,
+    "fields": {
+      "name": "CRO",
+      "slug": "cro"
+    }
+  },
+  {
+    "model": "content.author",
+    "pk": 1,
+    "fields": {
+      "name": "Nome Sobrenome",
+      "mini_bio": "Especialista em Digital Analytics e privacidade de dados na Metricaz. (Autor de exemplo.)",
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.post",
+    "pk": 1,
+    "fields": {
+      "title": "Google Consent Mode v2: o que muda e por que sua empresa precisa disso agora",
+      "slug": "google-consent-mode-v2",
+      "subtitle": "Post de exemplo: um guia rápido sobre consentimento, mensuração e o que ajustar no seu setup.",
+      "author": 1,
+      "tag": 1,
+      "featured_image": "blog/consent-mode-v2.jpg",
+      "featured_image_alt": "Painel de dados de analytics",
+      "content_html": "<p>Este é um post de exemplo, criado para mostrar o layout completo do blog.</p><h2>O que é o Consent Mode v2</h2><p>É o mecanismo do Google que ajusta a coleta de dados de acordo com o consentimento do visitante, mantendo a mensuração possível mesmo quando o usuário recusa cookies.</p><h2>O que muda na prática</h2><ul><li>Novos sinais de consentimento para anúncios e personalização</li><li>Modelagem de conversões quando não há consentimento</li><li>Exigência para quem anuncia no Espaço Econômico Europeu</li></ul><h3>Checklist rápido</h3><ol><li>Revise a plataforma de gestão de consentimento (CMP)</li><li>Atualize as tags no Google Tag Manager</li><li>Valide os sinais no modo de visualização</li></ol><blockquote><p>Mensuração sem consentimento bem configurado é dado que você não pode usar.</p></blockquote><p>Quer revisar o seu setup? <a href=\"/contato\" rel=\"noopener noreferrer\">Fale com a gente</a>.</p>",
+      "published_at": "2026-05-12",
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.case",
+    "pk": 1,
+    "fields": {
+      "title": "Case de exemplo: mensuração de ponta a ponta para e-commerce",
+      "slug": "case-de-exemplo",
+      "tag": "Digital Analytics",
+      "excerpt": "Case de exemplo: como uma base de dados confiável mudou as decisões de mídia e conversão.",
+      "kpi_value": "+40%",
+      "kpi_label": "conversão (exemplo)",
+      "client_name": "Cliente Exemplo",
+      "service_stack": "GA4, GTM Server-Side, Looker Studio",
+      "featured_image": "cases/case-exemplo.jpg",
+      "featured_image_alt": "Dashboard de analytics",
+      "content_html": "<p>Este é um case de exemplo, criado para mostrar o layout completo da página de case.</p><h2>Contexto</h2><p>Uma operação de e-commerce com dados de mídia, analytics e CRM desconectados, sem uma leitura única do funil.</p><h2>O que fizemos</h2><ul><li>Diagnóstico do tagueamento e da qualidade dos dados</li><li>Migração para GA4 com server-side tracking</li><li>Dashboards de funil para marketing e liderança</li></ul><h2>Resultado</h2><p>Decisões de mídia passaram a ser tomadas com base em dados confiáveis, com ganho de conversão no período.</p><blockquote><p>Números de exemplo: substitua por um case real no admin.</p></blockquote>",
+      "order_position": 0,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z"
+    }
+  }
+]

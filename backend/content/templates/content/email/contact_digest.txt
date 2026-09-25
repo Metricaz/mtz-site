@@ -1,0 +1,14 @@
+{% autoescape off %}Resumo do site Metricaz
+{% if submissions %}
+MENSAGENS DE CONTATO ({{ submissions|length }})
+{% for s in submissions %}
+- {{ s.name }} <{{ s.email }}>{% if s.company %} · {{ s.company }}{% endif %}{% if s.phone %} · {{ s.phone }}{% endif %}
+  {{ s.created_at|date:"d/m/Y H:i" }} · página {{ s.source_page|default:"-" }}
+  {{ s.message }}
+{% endfor %}{% endif %}{% if leads %}
+LEADS ({{ leads|length }})
+{% for lead in leads %}- {{ lead.email }} · {{ lead.created_at|date:"d/m/Y H:i" }} · página {{ lead.source_page|default:"-" }}
+{% endfor %}{% endif %}{% if subscribers %}
+NOVOS INSCRITOS NA NEWSLETTER ({{ subscribers|length }})
+{% for sub in subscribers %}- {{ sub.email }} · {{ sub.created_at|date:"d/m/Y H:i" }}
+{% endfor %}{% endif %}{% endautoescape %}

@@ -4,13 +4,17 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { Contact } from "@/components/site/Contact";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
-
-const mapEmbedUrl =
-  "https://www.google.com/maps?q=Av.%20Paulista%2C%201000%2C%20S%C3%A3o%20Paulo%20-%20SP&z=15&output=embed";
+import { useCompanyAddress } from "@/hooks/useCompanyAddress";
+import { useSiteOptions } from "@/hooks/useSiteOptions";
+import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
+import { OptionText } from "@/components/site/OptionText";
 
 const ContactPage = () => {
-  const { settings } = useSiteSettings();
+  const { settings } = useWhatsAppSettings();
+  const { options } = useSiteOptions();
+  // First active address (Django admin → Endereços)
+  const { address } = useCompanyAddress();
+  const email = options['contact.email'];
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -19,14 +23,14 @@ const ContactPage = () => {
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
         <div className="container-x">
           <div className="max-w-4xl">
-            <p className="mono-tag text-muted-foreground">Contato</p>
-            <h1 className="editorial mt-6 text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.95]">
-              Vamos transformar o seu próximo desafio em
-              <span className="editorial-italic text-primary"> um plano claro.</span>
-            </h1>
-            <p className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg">
-              Use o formulário para briefing, fale com a equipe no WhatsApp ou venha visitar nossa localização.
-            </p>
+            <OptionText k="contactpage.eyebrow" as="p" className="mono-tag text-muted-foreground" />
+            <OptionText
+              k="contactpage.title"
+              as="h1"
+              className="editorial mt-6 text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.95]"
+              accentClassName="editorial-italic text-primary"
+            />
+            <OptionText k="contactpage.description" as="p" className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg" />
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -37,9 +41,9 @@ const ContactPage = () => {
                 Ir para o formulário
               </Link>
               <WhatsAppButton
-                number={settings.whatsapp_number}
-                enabled={settings.whatsapp_enabled}
-                message={settings.whatsapp_message}
+                number={settings?.number}
+                enabled={settings?.enabled}
+                message={settings?.message}
                 buttonContext="contact-page-hero"
                 label="Falar com a gente"
               />
@@ -53,58 +57,75 @@ const ContactPage = () => {
       <section className="py-16 md:py-24">
         <div className="container-x grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
           <div className="rounded-3xl border border-border bg-card/55 p-8 shadow-card">
-            <div className="eyebrow">// Localização</div>
-            <h2 className="editorial mt-4 text-4xl md:text-5xl">Onde estamos</h2>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground md:text-base">
-              A base da Metricaz fica em São Paulo e atende projetos em todo o Brasil de forma remota e híbrida.
-            </p>
+            <OptionText k="contactpage.location_eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="contactpage.location_title"
+              as="h2"
+              className="editorial mt-4 text-4xl md:text-5xl"
+              accentClassName="editorial-italic text-primary"
+            />
+            <OptionText
+              k="contactpage.location_description"
+              as="p"
+              className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground md:text-base"
+            />
 
             <div className="mt-8 space-y-4">
-              <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
-                <MapPin className="mt-0.5 h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-sm font-medium">Av. Paulista, 1000</p>
-                  <p className="text-sm text-muted-foreground">São Paulo, SP</p>
+              {address && (
+                <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
+                  <MapPin className="mt-0.5 h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium">{[address.street, address.complement].filter(Boolean).join(' – ')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {[address.district, `${address.city}, ${address.state}`, address.postal_code].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
-                <Mail className="mt-0.5 h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-sm font-medium">contato@metricaz.com</p>
-                  <p className="text-sm text-muted-foreground">Retorno em até 1 dia útil</p>
+              )}
+              {email && (
+                <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
+                  <Mail className="mt-0.5 h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium">{email}</p>
+                    <OptionText k="contactpage.email_note" as="p" className="text-sm text-muted-foreground" />
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
-                <PhoneCall className="mt-0.5 h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-sm font-medium">Telefone comercial</p>
-                  <p className="text-sm text-muted-foreground">Atendimento de seg a sex, 9h às 18h</p>
+              )}
+              {(address?.phone || address?.hours) && (
+                <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
+                  <PhoneCall className="mt-0.5 h-5 w-5 text-primary" />
+                  <div>
+                    {address.phone && <p className="text-sm font-medium">{address.phone}</p>}
+                    {address.hours && <p className="text-sm text-muted-foreground">{address.hours}</p>}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="mt-8 rounded-3xl border border-border bg-ink-deep/55 p-5">
-              <p className="eyebrow">// WhatsApp</p>
+              <OptionText k="contactpage.whatsapp_eyebrow" as="p" className="eyebrow" />
               <div className="mt-5">
                 <WhatsAppButton
-                  number={settings.whatsapp_number}
-                  enabled={settings.whatsapp_enabled}
-                  message={settings.whatsapp_message}
+                  number={settings?.number}
+                  enabled={settings?.enabled}
+                  message={settings?.message}
                   buttonContext="contact-page-card"
                 />
               </div>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-3xl border border-border bg-card/55 shadow-card">
-            <iframe
-              title="Localização da Metricaz"
-              src={mapEmbedUrl}
-              className="h-[420px] w-full border-0 md:h-full"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
+          {address?.map_url && (
+            <div className="overflow-hidden rounded-3xl border border-border bg-card/55 shadow-card">
+              <iframe
+                title="Localização da Metricaz"
+                src={address.map_url}
+                className="h-[420px] w-full border-0 md:h-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          )}
         </div>
       </section>
 

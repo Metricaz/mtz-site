@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import caseFallback from "@/assets/case-1.jpg";
 import { useCases } from "@/hooks/useCases";
+import { OptionText } from "@/components/site/OptionText";
 
 const spans = [
   "md:col-span-8 aspect-[16/10]",
@@ -12,9 +12,9 @@ const spans = [
 ];
 
 export const Cases = () => {
-  const { cases, loading } = useCases({ limit: 6 });
+  const { cases } = useCases({ limit: 6 });
 
-  if (!loading && cases.length === 0) {
+  if (cases.length === 0) {
     return null;
   }
 
@@ -23,12 +23,13 @@ export const Cases = () => {
       <div className="container-x">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
           <div>
-            <div className="eyebrow">{"// Cases selecionados"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-8xl">
-              Projetos que{" "}
-              <span className="editorial-italic text-primary">movem</span>{" "}
-              <span className="editorial-italic">negócios.</span>
-            </h2>
+            <OptionText k="cases.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="cases.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-8xl"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
           <a href="#contato" className="mono-tag text-muted-foreground hover:text-primary inline-flex items-center gap-2 self-start md:self-end">
             Todos os cases <span>→</span>
@@ -36,11 +37,7 @@ export const Cases = () => {
         </div>
 
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
-          {(loading ? Array.from({ length: 3 }) : cases).map((c, i) => {
-            if (loading) {
-              return <div key={i} className={`rounded-3xl border border-border bg-card/40 animate-pulse ${spans[i % spans.length]}`} />;
-            }
-
+          {cases.map((c, i) => {
             return (
             <Link
               key={c.id}
@@ -48,7 +45,7 @@ export const Cases = () => {
               className={`group relative rounded-3xl overflow-hidden border border-border bg-card block ${spans[i % spans.length]}`}
             >
               <img
-                src={c.featured_image_url || caseFallback}
+                src={c.featured_image}
                 alt={c.featured_image_alt || c.title}
                 width={1024}
                 height={768}

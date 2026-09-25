@@ -4,11 +4,9 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/metricaz/' : '/',
+// Vite runs inside server.js (SSR), which also proxies the Django paths.
+export default defineConfig(({ mode, isSsrBuild }) => ({
   server: {
-    host: "::",
-    port: 8080,
     hmr: {
       overlay: false,
     },
@@ -21,14 +19,17 @@ export default defineConfig(({ mode }) => ({
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
   },
   build: {
+    copyPublicDir: !isSsrBuild,
     rollupOptions: {
-      output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "supabase-vendor": ["@supabase/supabase-js"],
-          "framer-motion": ["framer-motion"],
-        },
-      },
+      // The server build (dist/server) imports its dependencies from node_modules.
+      output: isSsrBuild
+        ? {}
+        : {
+            manualChunks: {
+              "react-vendor": ["react", "react-dom", "react-router-dom"],
+              "framer-motion": ["framer-motion"],
+            },
+          },
     },
   },
 }));

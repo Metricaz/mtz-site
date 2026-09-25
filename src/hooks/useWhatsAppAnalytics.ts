@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { WhatsAppClick } from '@/lib/types';
-import { isMissingSupabaseTableError } from '@/lib/supabase-errors';
+import { api } from '@/lib/api';
+import { WhatsAppClick } from '@/lib/api-types';
 
 type CountItem = { label: string; count: number };
 
@@ -36,24 +35,10 @@ export const useWhatsAppAnalytics = () => {
         const since = new Date();
         since.setDate(since.getDate() - 90);
 
-        const { data, error } = await supabase
-          .from('s_whatsapp_clicks')
-          .select('*')
-          .gte('clicked_at', since.toISOString())
-          .order('clicked_at', { ascending: false });
-
-        if (error) {
-          if (isMissingSupabaseTableError(error)) {
-            setAvailable(false);
-            setClicks([]);
-            return;
-          }
-
-          throw error;
-        }
+        const data = await api.get<WhatsAppClick[]>('/whatsapp-clicks/', { since: since.toISOString() });
 
         setAvailable(true);
-        setClicks((data || []) as WhatsAppClick[]);
+        setClicks(data);
       } catch (error) {
         console.error('Error fetching WhatsApp analytics:', error);
         setClicks([]);

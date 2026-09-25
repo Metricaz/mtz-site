@@ -1,6 +1,32 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import mSymbol from "@/assets/m-metricaz.png";
+import { api } from "@/lib/api";
+import { OptionText } from "@/components/site/OptionText";
 
 export const FooterCTA = () => {
+  const [loading, setLoading] = useState(false);
+
+  // Saves the e-mail as a Lead, then takes the visitor to the contact form (as the link did before).
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = String(new FormData(form).get("email") || "").trim();
+
+    setLoading(true);
+    try {
+      await api.post("/leads/", { email, source_page: `${window.location.pathname}${window.location.hash}` });
+      form.reset();
+      toast.success("Recebemos seu e-mail! Conte um pouco mais abaixo.");
+      document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
+    } catch (error) {
+      console.error("Error saving lead:", error);
+      toast.error("Nao foi possivel enviar agora.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="relative bg-ink-deep overflow-hidden">
       {/* faixa colorida no topo */}
@@ -19,30 +45,31 @@ export const FooterCTA = () => {
       <div className="container-x relative py-24 md:py-36">
         <div className="grid md:grid-cols-12 gap-10 items-end">
           <div className="md:col-span-8">
-            <div className="eyebrow">{"// Próximo passo"}</div>
-            <h2 className="editorial mt-6 text-5xl md:text-8xl leading-[0.95]">
-              Vamos construir{" "}
-              <span className="editorial-italic">o que vem</span>{" "}
-              a seguir?
-            </h2>
+            <OptionText k="footercta.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="footercta.title"
+              as="h2"
+              className="editorial mt-6 text-5xl md:text-8xl leading-[0.95]"
+              accentClassName="editorial-italic"
+            />
           </div>
           <div className="md:col-span-4">
-            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              Conte sobre o desafio em uma frase. Retornamos em até 1 dia útil.
-            </p>
-            <form className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
+            <OptionText k="footercta.description" as="p" className="text-muted-foreground text-lg leading-relaxed mb-6" />
+            <form onSubmit={onSubmit} className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
               <input
                 type="email"
+                name="email"
                 placeholder="seu@email.com"
                 className="flex-1 bg-transparent outline-none px-4 text-sm text-foreground"
                 required
               />
-              <a
-                href="#contato"
-                className="px-5 h-11 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-glow transition-colors inline-flex items-center"
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-5 h-11 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-glow transition-colors inline-flex items-center disabled:opacity-60"
               >
                 Começar →
-              </a>
+              </button>
             </form>
           </div>
         </div>

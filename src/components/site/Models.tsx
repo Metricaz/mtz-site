@@ -1,36 +1,34 @@
-import { Users, Briefcase, TrendingUp } from "lucide-react";
-
-const models = [
-  {
-    icon: Users,
-    n: "01",
-    t: "Alocação de Equipe",
-    d: "Squads dedicados que se integram ao seu time, com cadência semanal e governança clara.",
-  },
-  {
-    icon: Briefcase,
-    n: "02",
-    t: "Projetos Especiais",
-    d: "Entregas com escopo fechado: migrações, implementações, auditorias e tracking.",
-  },
-  {
-    icon: TrendingUp,
-    n: "03",
-    t: "Success Fee",
-    d: "Modelo híbrido em que parte da remuneração é atrelada à performance e a metas.",
-  },
-];
+import { OptionText } from "@/components/site/OptionText";
+import { useApiList } from "@/hooks/useApiList";
+import { EngagementModel } from "@/lib/api-types";
+import { getServiceIcon } from "@/lib/service-icons";
 
 export const Models = () => {
+  const items = useApiList<EngagementModel>("/engagement-models/");
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  // Number shown = position in the list (01, 02…).
+  const models = items.map((model, index) => ({
+    icon: getServiceIcon(model.icon_name),
+    n: String(index + 1).padStart(2, "0"),
+    t: model.title,
+    d: model.text,
+  }));
+
   return (
     <section className="py-24 md:py-36 bg-ink-deep border-y border-border">
       <div className="container-x">
         <div className="max-w-3xl mb-16 md:mb-20">
-          <div className="eyebrow">{"// Modelos de contratação"}</div>
-          <h2 className="editorial mt-5 text-5xl md:text-7xl">
-            Como{" "}
-            <span className="editorial-italic text-primary">trabalhamos</span> juntos.
-          </h2>
+          <OptionText k="models.eyebrow" as="div" className="eyebrow" />
+          <OptionText
+            k="models.title"
+            as="h2"
+            className="editorial mt-5 text-5xl md:text-7xl"
+            accentClassName="editorial-italic text-primary"
+          />
         </div>
 
         <div className="grid md:grid-cols-3 gap-px bg-border border border-border rounded-3xl overflow-hidden">

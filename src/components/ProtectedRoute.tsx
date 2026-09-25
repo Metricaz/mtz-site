@@ -1,5 +1,6 @@
-import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { redirectToLogin } from '@/lib/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -8,7 +9,14 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) {
+  // Not logged in: go to Django's login page, which sends the user back here afterwards.
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      redirectToLogin();
+    }
+  }, [loading, isAuthenticated]);
+
+  if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -16,10 +24,6 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         </div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/dashboard/login" replace />;
   }
 
   return <>{children}</>;

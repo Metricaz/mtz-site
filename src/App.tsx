@@ -1,26 +1,26 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { lazy, ReactElement, ReactNode, Suspense, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SiteOptionsProvider } from "@/components/SiteOptionsProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import { WhatsAppFloatingButton } from "@/components/site/WhatsAppFloatingButton";
 
-// Code-split routes so heavy, dashboard-only dependencies (recharts, tiptap, supabase forms)
+// Code-split routes so heavy, dashboard-only dependencies (recharts, dashboard lists)
 // don't ship in the public site's initial bundle.
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
-const DashboardLogin = lazy(() => import("./pages/DashboardLogin").then((m) => ({ default: m.DashboardLogin })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));
 const CasePage = lazy(() => import("./pages/CasePage"));
 const About = lazy(() => import("./pages/About"));
 const ServicesPage = lazy(() => import("./pages/Services"));
 const ServicePage = lazy(() => import("./pages/ServicePage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
-
-const queryClient = new QueryClient();
+const BlogPage = lazy(() => import("./pages/Blog"));
+const BlogPostPage = lazy(() => import("./pages/BlogPost"));
 
 const MetricazPrefixRedirect = () => {
   const location = useLocation();
@@ -64,39 +64,52 @@ const ScrollToTop = () => {
 
 const isRootBase = import.meta.env.BASE_URL === "/";
 
-const App = () => (
+type AppProps = {
+  queryClient: QueryClient;
+  /** Wraps the routes in BrowserRouter in the browser (entry-client), StaticRouter on the server (entry-server). */
+  router: (children: ReactNode) => ReactElement;
+};
+
+const App = ({ queryClient, router }: AppProps) => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+        <SiteOptionsProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <ScrollToTop />
-          <Suspense fallback={null}>
-            <Routes>
-              {isRootBase && <Route path="/metricaz/*" element={<MetricazPrefixRedirect />} />}
-              <Route path="/" element={<Index />} />
-              <Route path="/quem-somos" element={<About />} />
-              <Route path="/servicos" element={<ServicesPage />} />
-              <Route path="/servicos/:slug" element={<ServicePage />} />
-              <Route path="/contato" element={<ContactPage />} />
-              <Route path="/cases/:slug" element={<CasePage />} />
-              <Route path="/dashboard/login" element={<DashboardLogin />} />
-              <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
-              <Route
-                path="/dashboard/:section"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <WhatsAppFloatingButton />
-        </BrowserRouter>
+        {router(
+          <>
+            <ScrollToTop />
+            <Suspense fallback={null}>
+              <Routes>
+                {isRootBase && <Route path="/metricaz/*" element={<MetricazPrefixRedirect />} />}
+                <Route path="/" element={<Index />} />
+                <Route path="/quem-somos" element={<About />} />
+                <Route path="/servicos" element={<ServicesPage />} />
+                <Route path="/servicos/:slug" element={<ServicePage />} />
+                <Route path="/contato" element={<ContactPage />} />
+                <Route path="/cases/:slug" element={<CasePage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
+                <Route
+                  path="/dashboard/:section"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+            <Suspense fallback={null}>
+              <WhatsAppFloatingButton />
+            </Suspense>
+          </>,
+        )}
+        </SiteOptionsProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

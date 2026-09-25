@@ -1,56 +1,13 @@
-import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { SiteCase } from '@/lib/types';
+import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 
 const CasePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [caseItem, setCaseItem] = useState<SiteCase | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCase = async () => {
-      if (!slug) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('s_cases')
-          .select('*')
-          .eq('slug', slug)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (error) throw error;
-        setCaseItem(data || null);
-      } catch (err) {
-        console.error('Error fetching case by slug:', err);
-        setCaseItem(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCase();
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background text-foreground">
-        <Nav useHomeSectionLinks />
-        <div className="container-x py-20">
-          <div className="h-10 w-56 animate-pulse rounded bg-card/60" />
-          <div className="mt-8 h-[360px] animate-pulse rounded-3xl bg-card/60" />
-          <div className="mt-10 h-6 w-2/3 animate-pulse rounded bg-card/60" />
-          <div className="mt-4 h-6 w-1/2 animate-pulse rounded bg-card/60" />
-        </div>
-        <Footer useHomeSectionLinks />
-      </main>
-    );
-  }
+  const { cases } = useCases({ slug, enabled: Boolean(slug) });
+  const caseItem = cases[0] ?? null;
 
   if (!caseItem) {
     return (
@@ -121,7 +78,7 @@ const CasePage = () => {
         <div className="container-x">
           <figure className="overflow-hidden rounded-3xl border border-border bg-card/45">
             <img
-              src={caseItem.featured_image_url}
+              src={caseItem.featured_image}
               alt={caseItem.featured_image_alt || caseItem.title}
               className="h-[260px] w-full object-cover md:h-[500px]"
             />

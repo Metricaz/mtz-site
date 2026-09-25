@@ -1,44 +1,31 @@
 import { useTestimonials } from "@/hooks/useTestimonials";
-
-const fallbackItems = [
-  {
-    q: "A Metricaz levou nossa operação de analytics a outro nível. Decisões viraram dado, não opinião.",
-    a: "Marina Costa",
-    r: "Head of Growth · Whirlpool",
-  },
-  {
-    q: "Precisão técnica + visão de negócio. Em 6 meses dobramos a conversão do nosso e-commerce.",
-    a: "Lucas Andrade",
-    r: "CMO · Veloe",
-  },
-  {
-    q: "O time é cirúrgico. Implementação de GA4 e server-side impecável, sem gambiarra.",
-    a: "Renata Silva",
-    r: "Diretora Digital · Claro",
-  },
-];
+import { OptionText } from "@/components/site/OptionText";
 
 export const Testimonials = () => {
-  const { testimonials: testimonialsData } = useTestimonials({ section: 'testimonials' });
+  const { testimonials: testimonialsData } = useTestimonials({ placement: 'testimonials' });
 
-  // Use dynamic data if available, otherwise use fallback
-  const items = testimonialsData.length > 0
-    ? testimonialsData.map(t => ({
-        q: t.testimonial,
-        a: t.name,
-        r: `${t.role} · ${t.company}`,
-      }))
-    : fallbackItems;
+  if (testimonialsData.length === 0) {
+    return null;
+  }
+
+  const items = testimonialsData.map((t) => ({
+    q: t.text,
+    a: t.name,
+    r: `${t.role} · ${t.company}`,
+  }));
 
   return (
     <section className="surface-cream py-24 md:py-36">
       <div className="container-x">
         <div className="grid md:grid-cols-12 items-end gap-10 mb-16">
           <div className="md:col-span-8">
-            <div className="eyebrow">{"// Depoimentos"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-7xl text-cream-foreground">
-              O que <span className="editorial-italic text-primary">dizem</span> sobre nós.
-            </h2>
+            <OptionText k="testimonials.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="testimonials.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-7xl text-cream-foreground"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
         </div>
 

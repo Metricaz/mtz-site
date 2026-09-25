@@ -1,26 +1,13 @@
 import { useSectors } from '@/hooks/useSectors';
 
-// Fallback para quando não há setores cadastrados
-const fallbackSectors = [
-  "SEO Técnico",
-  "CRO & Testes A/B",
-  "GA4 + GTM",
-  "Server-Side Tracking",
-  "Looker Studio",
-  "BigQuery",
-  "Consent Mode v2",
-  "Core Web Vitals",
-  "Desenvolvimento",
-  "BI & Dashboards",
-];
-
 export const Marquee = () => {
   const { sectors } = useSectors();
 
-  // Usar setores do Supabase, ou fallback para tags estáticas
-  const displayItems = sectors.length > 0 
-    ? sectors.map(s => s.name)
-    : fallbackSectors;
+  if (sectors.length === 0) {
+    return null;
+  }
+
+  const displayItems = sectors.map((s) => s.name);
 
   // Duplicar items para efeito de loop infinito
   const items = [...displayItems, ...displayItems];

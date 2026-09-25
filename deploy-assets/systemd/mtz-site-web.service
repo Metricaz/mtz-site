@@ -1,0 +1,22 @@
+# /etc/systemd/system/mtz-site-web.service — the site pages (Node, server-side rendering), behind nginx.
+# Needs the build (npm run build) and Django (mtz-site-django) running.
+
+[Unit]
+Description=Metricaz site - Node SSR
+After=network.target mtz-site-django.service
+
+[Service]
+User=mtz-site
+Group=mtz-site
+WorkingDirectory=/srv/mtz-site
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=8100
+Environment=DJANGO_URL=http://127.0.0.1:8101
+# Same time zone as Django, so dates render the same on the server and in the browser.
+Environment=TZ=America/Sao_Paulo
+ExecStart=/usr/bin/env node server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

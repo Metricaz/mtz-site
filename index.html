@@ -3,10 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metricaz · Consultoria de SEO, CRO e Digital Analytics</title>
-    <meta name="description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
+    <!-- Title and description come from "Opções do site" (seo.*), filled in by server.js -->
+    <!--app-head-->
     <meta name="author" content="Metricaz" />
     <link rel="canonical" href="https://metricaz.com/" />
+
+    <!-- Icons: same as the production site (metricaz.com) -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="msapplication-TileImage" content="/mstile-270x270.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,14 +34,11 @@
     <meta property="og:locale" content="pt_BR" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:title" content="Metricaz · Consultoria de SEO, CRO e Digital Analytics">
-  <meta name="twitter:title" content="Metricaz · Consultoria de SEO, CRO e Digital Analytics">
-  <meta property="og:description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
-  <meta name="twitter:description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
-</head>
+  </head>
 
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="root"><!--app-html--></div>
+    <!--app-state-->
+    <script type="module" src="/src/entry-client.tsx"></script>
   </body>
 </html>

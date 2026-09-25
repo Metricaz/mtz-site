@@ -1,32 +1,23 @@
 import { type PointerEvent, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTeam } from "@/hooks/useTeam";
-
-const fallbackTeam = [
-  { name: "Nome Sobrenome", role: "Founder · Head of Analytics", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of SEO", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of CRO & Product", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Content", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Paid Media", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Development", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Data Engineering", initials: "NS" },
-  { name: "Nome Sobrenome", role: "Head of Operations", initials: "NS" },
-];
+import { OptionText } from "@/components/site/OptionText";
 
 export const Team = () => {
-  const { team: teamData } = useTeam();
+  const { team: teamData } = useTeam({ placement: 'home' });
   const trackRef = useRef<HTMLDivElement>(null);
   const stepRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+  // Known only in the browser (set on mount), so the server and the first client render match.
+  const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  // Use dynamic team data if available, otherwise use fallback
-  const displayTeam = teamData.length > 0 ? teamData : fallbackTeam;
+  const displayTeam = teamData;
+  const hasTrack = displayTeam.length > 0;
 
   // Cache the card width + gap so we don't force a layout read on every auto-scroll tick.
   const getStep = (track: HTMLDivElement) => {
@@ -69,7 +60,8 @@ export const Team = () => {
       window.removeEventListener("resize", invalidateStep);
       mediaQuery.removeEventListener?.("change", updateViewport);
     };
-  }, []);
+    // The track only exists once the team has loaded.
+  }, [hasTrack]);
 
   const scrollByPage = (direction: number) => {
     const track = trackRef.current;
@@ -136,21 +128,25 @@ export const Team = () => {
       .toUpperCase();
   };
 
+  if (displayTeam.length === 0) {
+    return null;
+  }
+
   return (
     <section id="time" className="bg-ink-deep border-y border-border py-24 md:py-36 overflow-hidden">
       <div className="container-x">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
           <div>
-            <div className="eyebrow">{"// Time"}</div>
-            <h2 className="editorial mt-5 text-5xl md:text-7xl">
-              Quem constrói{" "}
-              <span className="editorial-italic text-primary">com você.</span>
-            </h2>
+            <OptionText k="team.eyebrow" as="div" className="eyebrow" />
+            <OptionText
+              k="team.title"
+              as="h2"
+              className="editorial mt-5 text-5xl md:text-7xl"
+              accentClassName="editorial-italic text-primary"
+            />
           </div>
           <div className="flex items-end justify-between md:justify-end gap-6">
-            <p className="mono-tag text-muted-foreground max-w-xs">
-              Especialistas seniores. Sem repasse. Sem terceirização.
-            </p>
+            <OptionText k="team.subtitle" as="p" className="mono-tag text-muted-foreground max-w-xs" />
             <div className="flex items-center gap-2 shrink-0">
               <button
                 aria-label="Anterior"
@@ -185,8 +181,8 @@ export const Team = () => {
             style={{ touchAction: "pan-x" }}
           >
             {displayTeam.map((person, i) => {
-              const initials = "initials" in person ? person.initials : getInitials(person.name);
-              const hasImage = "image_url" in person && person.image_url;
+              const initials = getInitials(person.name);
+              const hasImage = Boolean(person.photo);
 
               return (
                 <div
@@ -197,8 +193,8 @@ export const Team = () => {
                   {hasImage ? (
                     <>
                       <img
-                        src={person.image_url}
-                        alt={person.image_alt || person.name}
+                        src={person.photo}
+                        alt={person.photo_alt || person.name}
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{
                           filter: 'grayscale(100%) hue-rotate(200deg) saturate(0.6) brightness(1.1) contrast(1.1)'

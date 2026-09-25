@@ -1,57 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { SiteService } from '@/lib/types';
+import { useServices } from '@/hooks/useServices';
+import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
-import { DEFAULT_SERVICES, getServiceIcon } from '@/lib/service-icons';
+import { getServiceIcon } from '@/lib/service-icons';
 
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [service, setService] = useState<SiteService | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchService = async () => {
-      if (!slug) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('s_services')
-          .select('*')
-          .eq('slug', slug)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (error) throw error;
-        setService(data || DEFAULT_SERVICES.find((item) => item.slug === slug) || null);
-      } catch (err) {
-        console.error('Error fetching service by slug:', err);
-        setService(DEFAULT_SERVICES.find((item) => item.slug === slug) || null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchService();
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background text-foreground">
-        <Nav useHomeSectionLinks />
-        <div className="container-x py-20">
-          <div className="h-10 w-56 animate-pulse rounded bg-card/60" />
-          <div className="mt-8 h-[320px] animate-pulse rounded-3xl bg-card/60" />
-          <div className="mt-10 h-6 w-2/3 animate-pulse rounded bg-card/60" />
-          <div className="mt-4 h-6 w-1/2 animate-pulse rounded bg-card/60" />
-        </div>
-        <Footer useHomeSectionLinks />
-      </main>
-    );
-  }
+  const { services } = useServices({ slug, enabled: Boolean(slug) });
+  const service = services[0] ?? null;
 
   if (!service) {
     return (
@@ -81,7 +39,7 @@ const ServicePage = () => {
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
         <div className="container-x">
           <div className="mb-6">
-            <span className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground">Metricaz / Serviço</span>
+            <OptionText k="servicepage.eyebrow" className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground" />
           </div>
           <div className="flex items-start gap-4 md:gap-6">
             <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
@@ -102,8 +60,13 @@ const ServicePage = () => {
           <div className="mt-14 rounded-3xl border border-border bg-card/55 p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="eyebrow">Próximo passo</p>
-                <h2 className="editorial mt-3 text-3xl md:text-5xl">Quer aplicar este serviço no seu cenário?</h2>
+                <OptionText k="servicepage.cta_eyebrow" as="p" className="eyebrow" />
+                <OptionText
+                  k="servicepage.cta_title"
+                  as="h2"
+                  className="editorial mt-3 text-3xl md:text-5xl"
+                  accentClassName="editorial-italic text-primary"
+                />
               </div>
               <Link
                 to="/#contato"

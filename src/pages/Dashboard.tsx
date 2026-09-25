@@ -1,24 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase';
-import { Company, ContactSubmission, Sector, SiteCase, SiteService, SiteSettings, TeamMember, Testimonial } from '@/lib/types';
+import { redirectToLogin } from '@/lib/auth';
+import { api } from '@/lib/api';
+import { Case, Company, ContactSubmission, Sector, Service, TeamMember, Testimonial, WhatsAppSettings } from '@/lib/api-types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { toast } from '@/components/ui/sonner';
-import {
   ChevronRight,
+  ExternalLink,
   Building2,
   LayoutGrid,
   LogOut,
@@ -27,7 +18,6 @@ import {
   ArrowUpDown,
   PanelLeftClose,
   PanelLeftOpen,
-  Plus,
   RefreshCcw,
   Search,
   ShieldCheck,
@@ -35,23 +25,16 @@ import {
   PhoneCall,
   Users2,
 } from 'lucide-react';
-import { CompanyForm } from '@/components/dashboard/CompanyForm';
 import { CompanyList } from '@/components/dashboard/CompanyList';
-import { SectorForm } from '@/components/dashboard/SectorForm';
 import { SectorList } from '@/components/dashboard/SectorList';
-import { TeamForm } from '@/components/dashboard/TeamForm';
 import { TeamList } from '@/components/dashboard/TeamList';
-import { TestimonialForm } from '@/components/dashboard/TestimonialForm';
 import { TestimonialList } from '@/components/dashboard/TestimonialList';
-import { CaseForm } from '@/components/dashboard/CaseForm';
 import { CaseList } from '@/components/dashboard/CaseList';
-import { ServiceForm } from '@/components/dashboard/ServiceForm';
 import { ServiceList } from '@/components/dashboard/ServiceList';
-import { ContactSettingsForm } from '@/components/dashboard/ContactSettingsForm';
+import { WhatsAppSettingsCard } from '@/components/dashboard/WhatsAppSettingsCard';
 import { WhatsAppAnalyticsPanel } from '@/components/dashboard/WhatsAppAnalyticsPanel';
 import { ContactSubmissionList } from '@/components/dashboard/ContactSubmissionList';
 import logoMetricaz from '@/assets/logo-metricaz.webp';
-import { isMissingSupabaseTableError } from '@/lib/supabase-errors';
 
 type Tab = 'sectors' | 'companies' | 'team' | 'testimonials' | 'services' | 'cases' | 'whatsapp' | 'contact';
 type SortDirection = 'asc' | 'desc';
@@ -96,7 +79,6 @@ const sortOptions: Record<Tab, Array<{ value: string; label: string }>> = {
   testimonials: [
     { value: 'name', label: 'Nome' },
     { value: 'company', label: 'Empresa' },
-    { value: 'section', label: 'Secao' },
     { value: 'order_position', label: 'Posicao' },
   ],
   services: [
@@ -121,50 +103,42 @@ const pageSize = 6;
 const sections = {
   sectors: {
     title: 'Setores / Segmentos',
-    description: 'Gerencie os setores exibidos no carousel (Marquee)',
-    actionLabel: 'Adicionar Setor',
+    description: 'Veja os setores exibidos no carousel (Marquee)',
     icon: LayoutGrid,
   },
   companies: {
     title: 'Empresas / Logos',
-    description: 'Gerencie as empresas clientes da seção "Quem Confia"',
-    actionLabel: 'Adicionar Empresa',
+    description: 'Veja as empresas clientes da seção "Quem Confia"',
     icon: Building2,
   },
   team: {
     title: 'Time',
-    description: 'Gerencie os membros da seção "Quem constrói com você"',
-    actionLabel: 'Adicionar Membro',
+    description: 'Veja os membros do time e onde cada um aparece no site',
     icon: Users2,
   },
   testimonials: {
     title: 'Depoimentos',
-    description: 'Gerencie depoimentos das seções //clientes e //Depoimentos',
-    actionLabel: 'Adicionar Depoimento',
+    description: 'Veja os depoimentos e onde cada um aparece no site',
     icon: MessageSquareQuote,
   },
   services: {
     title: 'Serviços',
-    description: 'Gerencie os serviços públicos e as páginas internas por slug',
-    actionLabel: 'Adicionar Serviço',
+    description: 'Veja os serviços públicos e as páginas internas por slug',
     icon: Sparkles,
   },
   cases: {
     title: 'Cases',
-    description: 'Gerencie os cards da home e as páginas internas de case por slug',
-    actionLabel: 'Adicionar Case',
+    description: 'Veja os cards da home e as páginas internas de case por slug',
     icon: FolderKanban,
   },
   whatsapp: {
     title: 'WhatsApp',
-    description: 'Configure o botão, a mensagem padrão e veja o relatório de cliques',
-    actionLabel: 'Salvar configurações',
+    description: 'Veja a configuração do botão e o relatório de cliques',
     icon: PhoneCall,
   },
   contact: {
     title: 'Contato',
     description: 'Veja as mensagens recebidas pelo formulário da home e das páginas internas',
-    actionLabel: 'Atualizar mensagens',
     icon: MessageSquareQuote,
   },
 } as const;
@@ -175,47 +149,16 @@ export const Dashboard = () => {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('sectors');
   
-  // Companies state
+  // Read-only: content is edited in the Django admin; staff sees active and inactive items.
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [showCompanyForm, setShowCompanyForm] = useState(false);
-  const [editingCompany, setEditingCompany] = useState<Company | null>(null);
-  
-  // Sectors state
   const [sectors, setSectors] = useState<Sector[]>([]);
-  const [showSectorForm, setShowSectorForm] = useState(false);
-  const [editingSector, setEditingSector] = useState<Sector | null>(null);
-  
-  // Team state
   const [team, setTeam] = useState<TeamMember[]>([]);
-  const [showTeamForm, setShowTeamForm] = useState(false);
-  const [editingTeamMember, setEditingTeamMember] = useState<TeamMember | null>(null);
-  
-  // Testimonials state
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [showTestimonialForm, setShowTestimonialForm] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
-
-  // Services state
-  const [services, setServices] = useState<SiteService[]>([]);
-  const [showServiceForm, setShowServiceForm] = useState(false);
-  const [editingService, setEditingService] = useState<SiteService | null>(null);
-
-  // Cases state
-  const [cases, setCases] = useState<SiteCase[]>([]);
-  const [showCaseForm, setShowCaseForm] = useState(false);
-  const [editingCase, setEditingCase] = useState<SiteCase | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [cases, setCases] = useState<Case[]>([]);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
-  const [contactSettings, setContactSettings] = useState<SiteSettings>({
-    id: 1,
-    whatsapp_number: '',
-    whatsapp_enabled: true,
-    whatsapp_message: 'Olá, vim pelo site da Metricaz e gostaria de conversar.',
-    created_at: '',
-    updated_at: '',
-  });
-  const [siteSettingsAvailable, setSiteSettingsAvailable] = useState(true);
-  const [savingContactSettings, setSavingContactSettings] = useState(false);
-  
+  const [whatsappSettings, setWhatsappSettings] = useState<WhatsAppSettings | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -223,16 +166,13 @@ export const Dashboard = () => {
   const [sortBy, setSortBy] = useState<Record<Tab, string>>(defaultSortBy);
   const [sortDirection, setSortDirection] = useState<Record<Tab, SortDirection>>(defaultSortDirection);
   const [currentPage, setCurrentPage] = useState(1);
-  const [refreshingContactInbox, setRefreshingContactInbox] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<{ type: Tab; id: string; label: string } | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
     if (!user && !loading) {
-      navigate('/dashboard/login');
+      redirectToLogin();
     }
-  }, [user, loading, navigate]);
+  }, [user, loading]);
 
   useEffect(() => {
     if (!section || !validTabs.includes(section as Tab)) {
@@ -243,96 +183,30 @@ export const Dashboard = () => {
     setActiveTab(section as Tab);
   }, [section, navigate]);
 
-  // Fetch companies, sectors and team
   const fetchData = async () => {
     try {
       setLoading(true);
-      
-      const [companiesRes, sectorsRes, teamRes, testimonialsRes, servicesRes, casesRes, settingsRes, submissionsRes] = await Promise.all([
-        supabase
-          .from('s_companies')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_sectors')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_team')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_testimonials')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_services')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_cases')
-          .select('*')
-          .eq('is_active', true)
-          .order('order_position', { ascending: true }),
-        supabase
-          .from('s_site_settings')
-          .select('*')
-          .eq('id', 1)
-          .maybeSingle(),
-        supabase
-          .from('s_contact_submissions')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(50),
-      ]);
 
-      if (companiesRes.error) throw companiesRes.error;
-      if (sectorsRes.error) throw sectorsRes.error;
-      if (teamRes.error) throw teamRes.error;
-      if (testimonialsRes.error) throw testimonialsRes.error;
-      if (servicesRes.error) throw servicesRes.error;
-      if (casesRes.error) throw casesRes.error;
-      if (submissionsRes.error) throw submissionsRes.error;
-      
-      setCompanies(companiesRes.data || []);
-      setSectors(sectorsRes.data || []);
-      setTeam(teamRes.data || []);
-      setTestimonials(testimonialsRes.data || []);
-      setServices(servicesRes.data || []);
-      setCases(casesRes.data || []);
-      setContactSubmissions((submissionsRes.data || []) as ContactSubmission[]);
-      if (settingsRes.error) {
-        if (isMissingSupabaseTableError(settingsRes.error)) {
-          setSiteSettingsAvailable(false);
-          setContactSettings({
-            id: 1,
-            whatsapp_number: '',
-            whatsapp_enabled: true,
-            whatsapp_message: 'Olá, vim pelo site da Metricaz e gostaria de conversar.',
-            created_at: '',
-            updated_at: '',
-          });
-        } else {
-          throw settingsRes.error;
-        }
-      } else {
-        setSiteSettingsAvailable(true);
-        setContactSettings(
-          settingsRes.data || {
-            id: 1,
-            whatsapp_number: '',
-            whatsapp_enabled: true,
-            whatsapp_message: 'Olá, vim pelo site da Metricaz e gostaria de conversar.',
-            created_at: '',
-            updated_at: '',
-          },
-        );
-      }
+      const [companiesData, sectorsData, teamData, testimonialsData, servicesData, casesData, whatsappData, submissionsData] =
+        await Promise.all([
+          api.get<Company[]>('/companies/'),
+          api.get<Sector[]>('/sectors/'),
+          api.get<TeamMember[]>('/team/'),
+          api.get<Testimonial[]>('/testimonials/'),
+          api.get<Service[]>('/services/'),
+          api.get<Case[]>('/cases/'),
+          api.get<WhatsAppSettings>('/whatsapp-settings/'),
+          api.get<ContactSubmission[]>('/contact-submissions/'),
+        ]);
+
+      setCompanies(companiesData);
+      setSectors(sectorsData);
+      setTeam(teamData);
+      setTestimonials(testimonialsData);
+      setServices(servicesData);
+      setCases(casesData);
+      setWhatsappSettings(whatsappData);
+      setContactSubmissions(submissionsData);
       setLastUpdatedAt(new Date());
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -349,7 +223,6 @@ export const Dashboard = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/dashboard/login');
   };
 
   const handleTabChange = (tab: Tab) => {
@@ -358,246 +231,6 @@ export const Dashboard = () => {
     setSearchQuery('');
     setCurrentPage(1);
     navigate(`/dashboard/${tab}`);
-  };
-
-  const openDeleteDialog = (type: Tab, id: string) => {
-    let label = 'registro';
-
-    if (type === 'companies') {
-      label = companies.find((company) => company.id === id)?.name || 'empresa';
-    }
-
-    if (type === 'sectors') {
-      label = sectors.find((sector) => sector.id === id)?.name || 'setor';
-    }
-
-    if (type === 'team') {
-      label = team.find((member) => member.id === id)?.name || 'membro';
-    }
-
-    if (type === 'testimonials') {
-      label = testimonials.find((testimonial) => testimonial.id === id)?.name || 'depoimento';
-    }
-
-    if (type === 'services') {
-      label = services.find((service) => service.id === id)?.title || 'serviço';
-    }
-
-    if (type === 'cases') {
-      label = cases.find((caseItem) => caseItem.id === id)?.title || 'case';
-    }
-
-    if (type === 'whatsapp') {
-      label = 'configuração de WhatsApp';
-    }
-
-    if (type === 'contact') {
-      label = 'mensagem de contato';
-    }
-
-    setDeleteTarget({ type, id, label });
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!deleteTarget) return;
-
-    if (deleteTarget.type === 'whatsapp' || deleteTarget.type === 'contact') {
-      toast.error('Essa seção não pode ser removida', {
-        description: 'Use os campos do painel para alterar configurações e mensagens.',
-      });
-      setDeleteTarget(null);
-      return;
-    }
-
-    const tableByType: Record<Tab, string> = {
-      sectors: 's_sectors',
-      companies: 's_companies',
-      team: 's_team',
-      testimonials: 's_testimonials',
-      services: 's_services',
-      cases: 's_cases',
-      whatsapp: 's_site_settings',
-      contact: 's_site_settings',
-    };
-
-    const labelByType: Record<Tab, string> = {
-      sectors: 'setor',
-      companies: 'empresa',
-      team: 'membro do time',
-      testimonials: 'depoimento',
-      services: 'serviço',
-      cases: 'case',
-      whatsapp: 'configuração de WhatsApp',
-      contact: 'mensagem de contato',
-    };
-
-    try {
-      setIsDeleting(true);
-
-      const { error } = await supabase
-        .from(tableByType[deleteTarget.type])
-        .update({ is_active: false })
-        .eq('id', deleteTarget.id);
-
-      if (error) throw error;
-
-      if (deleteTarget.type === 'companies') {
-        setCompanies((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      if (deleteTarget.type === 'sectors') {
-        setSectors((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      if (deleteTarget.type === 'team') {
-        setTeam((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      if (deleteTarget.type === 'testimonials') {
-        setTestimonials((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      if (deleteTarget.type === 'services') {
-        setServices((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      if (deleteTarget.type === 'cases') {
-        setCases((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-      }
-
-      toast.success('Item removido com sucesso', {
-        description: `O ${labelByType[deleteTarget.type]} foi desativado com sucesso.`,
-      });
-
-      setDeleteTarget(null);
-    } catch (error) {
-      console.error('Error deleting record:', error);
-      toast.error('Nao foi possivel remover o item', {
-        description: 'Tente novamente em instantes.',
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  // Company handlers
-  const handleCompanyFormClose = () => {
-    setShowCompanyForm(false);
-    setEditingCompany(null);
-  };
-
-  const handleCompanyFormSuccess = () => {
-    handleCompanyFormClose();
-    fetchData();
-  };
-
-  // Sector handlers
-  const handleSectorFormClose = () => {
-    setShowSectorForm(false);
-    setEditingSector(null);
-  };
-
-  const handleSectorFormSuccess = () => {
-    handleSectorFormClose();
-    fetchData();
-  };
-
-  // Team handlers
-  const handleTeamFormClose = () => {
-    setShowTeamForm(false);
-    setEditingTeamMember(null);
-  };
-
-  const handleTeamFormSuccess = () => {
-    handleTeamFormClose();
-    fetchData();
-  };
-
-  // Testimonial handlers
-  const handleTestimonialFormClose = () => {
-    setShowTestimonialForm(false);
-    setEditingTestimonial(null);
-  };
-
-  const handleTestimonialFormSuccess = () => {
-    handleTestimonialFormClose();
-    fetchData();
-  };
-
-  // Service handlers
-  const handleServiceFormClose = () => {
-    setShowServiceForm(false);
-    setEditingService(null);
-  };
-
-  const handleServiceFormSuccess = () => {
-    handleServiceFormClose();
-    fetchData();
-  };
-
-  // Case handlers
-  const handleCaseFormClose = () => {
-    setShowCaseForm(false);
-    setEditingCase(null);
-  };
-
-  const handleCaseFormSuccess = () => {
-    handleCaseFormClose();
-    fetchData();
-  };
-
-  const handleContactSettingsSave = async () => {
-    try {
-      if (!siteSettingsAvailable) {
-        toast.error('A configuração de contato ainda não foi criada no banco', {
-          description: 'Aplique o bloco `s_site_settings` de `database.sql` no Supabase e tente novamente.',
-        });
-        return;
-      }
-
-      setSavingContactSettings(true);
-
-      const { error } = await supabase.from('s_site_settings').upsert({
-        id: 1,
-        whatsapp_number: contactSettings.whatsapp_number,
-        whatsapp_enabled: contactSettings.whatsapp_enabled,
-        whatsapp_message: contactSettings.whatsapp_message,
-        updated_at: new Date().toISOString(),
-      });
-
-      if (error) throw error;
-
-      toast.success('Configurações salvas com sucesso');
-      fetchData();
-    } catch (error) {
-      console.error('Error saving site settings:', error);
-      toast.error('Nao foi possivel salvar as configuracoes', {
-        description: 'Confira se a tabela `s_site_settings` já foi aplicada no banco.',
-      });
-    } finally {
-      setSavingContactSettings(false);
-    }
-  };
-
-  const handleRefreshContactInbox = async () => {
-    try {
-      setRefreshingContactInbox(true);
-      const { data, error } = await supabase
-        .from('s_contact_submissions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-
-      setContactSubmissions((data || []) as ContactSubmission[]);
-      toast.success('Caixa de entrada atualizada');
-    } catch (error) {
-      console.error('Error refreshing contact inbox:', error);
-      toast.error('Nao foi possivel atualizar as mensagens');
-    } finally {
-      setRefreshingContactInbox(false);
-    }
   };
 
   const sectionCount = {
@@ -612,29 +245,6 @@ export const Dashboard = () => {
   };
 
   const currentSection = sections[activeTab];
-
-  const openCreateForm = () => {
-    if (activeTab === 'sectors') setShowSectorForm(true);
-    if (activeTab === 'companies') setShowCompanyForm(true);
-    if (activeTab === 'team') setShowTeamForm(true);
-    if (activeTab === 'testimonials') setShowTestimonialForm(true);
-    if (activeTab === 'services') setShowServiceForm(true);
-    if (activeTab === 'cases') setShowCaseForm(true);
-  };
-
-  const handlePrimaryAction = () => {
-    if (activeTab === 'whatsapp') {
-      void handleContactSettingsSave();
-      return;
-    }
-
-    if (activeTab === 'contact') {
-      void handleRefreshContactInbox();
-      return;
-    }
-
-    openCreateForm();
-  };
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -651,7 +261,7 @@ export const Dashboard = () => {
   );
 
   const filteredTestimonials = testimonials.filter((testimonial) =>
-    [testimonial.name, testimonial.role, testimonial.company, testimonial.testimonial]
+    [testimonial.name, testimonial.role, testimonial.company, testimonial.text]
       .join(' ')
       .toLowerCase()
       .includes(normalizedQuery)
@@ -680,8 +290,8 @@ export const Dashboard = () => {
       .includes(normalizedQuery)
   );
 
-  const filteredContact = contactSettings ? [contactSettings] : [];
-  const filteredWhatsApp = contactSettings ? [contactSettings] : [];
+  const filteredContact = whatsappSettings ? [whatsappSettings] : [];
+  const filteredWhatsApp = whatsappSettings ? [whatsappSettings] : [];
   const filteredSubmissions = contactSubmissions.filter((submission) =>
     [submission.name, submission.company || '', submission.email, submission.phone || '', submission.message, submission.source_page || '', submission.source_context || '', submission.status]
       .join(' ')
@@ -763,111 +373,15 @@ export const Dashboard = () => {
 
   const renderActiveList = () => {
     if (activeTab === 'whatsapp' || activeTab === 'contact') {
-      return (
-        <ContactSettingsForm
-          whatsappNumber={contactSettings.whatsapp_number || ''}
-          whatsappEnabled={contactSettings.whatsapp_enabled}
-          whatsappMessage={contactSettings.whatsapp_message || ''}
-          onWhatsappNumberChange={(value) =>
-            setContactSettings((prev) => ({
-              ...prev,
-              whatsapp_number: value,
-            }))
-          }
-          onWhatsappEnabledChange={(value) =>
-            setContactSettings((prev) => ({
-              ...prev,
-              whatsapp_enabled: value,
-            }))
-          }
-          onWhatsappMessageChange={(value) =>
-            setContactSettings((prev) => ({
-              ...prev,
-              whatsapp_message: value,
-            }))
-          }
-          onSave={handleContactSettingsSave}
-          available={siteSettingsAvailable}
-          saving={savingContactSettings}
-        />
-      );
+      return <WhatsAppSettingsCard settings={whatsappSettings} />;
     }
 
-    if (activeTab === 'sectors') {
-      return (
-        <SectorList
-          sectors={pagedSectors}
-          onEdit={(sector) => {
-            setEditingSector(sector);
-            setShowSectorForm(true);
-          }}
-          onDelete={(id) => openDeleteDialog('sectors', id)}
-        />
-      );
-    }
-
-    if (activeTab === 'companies') {
-      return (
-        <CompanyList
-          companies={pagedCompanies}
-          onEdit={(company) => {
-            setEditingCompany(company);
-            setShowCompanyForm(true);
-          }}
-          onDelete={(id) => openDeleteDialog('companies', id)}
-        />
-      );
-    }
-
-    if (activeTab === 'team') {
-      return (
-        <TeamList
-          team={pagedTeam}
-          onEdit={(member) => {
-            setEditingTeamMember(member);
-            setShowTeamForm(true);
-          }}
-          onDelete={(id) => openDeleteDialog('team', id)}
-        />
-      );
-    }
-
-    if (activeTab === 'services') {
-      return (
-        <ServiceList
-          services={pagedServices}
-          onEdit={(service) => {
-            setEditingService(service);
-            setShowServiceForm(true);
-          }}
-          onDelete={(id) => openDeleteDialog('services', id)}
-        />
-      );
-    }
-
-    if (activeTab === 'cases') {
-      return (
-        <CaseList
-          cases={pagedCases}
-          onEdit={(caseItem) => {
-            setEditingCase(caseItem);
-            setShowCaseForm(true);
-          }}
-          onDelete={(id) => openDeleteDialog('cases', id)}
-        />
-      );
-    }
-
-    return (
-      <TestimonialList
-        testimonials={pagedTestimonials}
-        onEdit={(testimonial) => {
-          setEditingTestimonial(testimonial);
-          setShowTestimonialForm(true);
-        }}
-        onDelete={(id) => openDeleteDialog('testimonials', id)}
-      />
-    );
+    if (activeTab === 'sectors') return <SectorList sectors={pagedSectors} />;
+    if (activeTab === 'companies') return <CompanyList companies={pagedCompanies} />;
+    if (activeTab === 'team') return <TeamList team={pagedTeam} />;
+    if (activeTab === 'services') return <ServiceList services={pagedServices} />;
+    if (activeTab === 'cases') return <CaseList cases={pagedCases} />;
+    return <TestimonialList testimonials={pagedTestimonials} />;
   };
 
   const hasSearchResults = filteredCount[activeTab] > 0;
@@ -940,13 +454,23 @@ export const Dashboard = () => {
                 </div>
 
                 <div className="mt-auto space-y-3 border-t border-border/70 pt-5">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className={`gap-2 border-border/90 bg-card/70 hover:bg-card ${sidebarCollapsed ? 'w-full px-0' : 'w-full justify-center'}`}
+                  >
+                    <a href="/admin/" aria-label="Abrir admin do Django">
+                      <ExternalLink className="h-4 w-4" />
+                      {!sidebarCollapsed && 'Admin'}
+                    </a>
+                  </Button>
                   {!sidebarCollapsed && (
                     <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4">
                       <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                         <ShieldCheck className="h-4 w-4 text-primary" />
                         Sessão ativa
                       </div>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">{user?.email}</p>
+                      <p className="mt-1 truncate text-xs text-muted-foreground">{user?.username}</p>
                     </div>
                   )}
                   <Button
@@ -997,10 +521,6 @@ export const Dashboard = () => {
                     <RefreshCcw className="h-4 w-4" />
                     Atualizar
                   </Button>
-                  <Button onClick={handlePrimaryAction} className="h-11 gap-2 px-5 text-sm">
-                    <Plus className="h-4 w-4" />
-                    {currentSection.actionLabel}
-                  </Button>
                 </div>
               </div>
             </section>
@@ -1032,7 +552,7 @@ export const Dashboard = () => {
               </div>
               <div className="rounded-2xl border border-border/80 bg-card/60 p-4 shadow-card">
                 <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Contato</p>
-                <p className="mt-3 text-3xl font-semibold">{contactSettings.whatsapp_enabled ? 'Ativo' : 'Inativo'}</p>
+                <p className="mt-3 text-3xl font-semibold">{whatsappSettings?.enabled ? 'Ativo' : 'Inativo'}</p>
               </div>
             </section>
 
@@ -1154,79 +674,6 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusao</AlertDialogTitle>
-            <AlertDialogDescription>
-              {deleteTarget
-                ? `Tem certeza que deseja remover "${deleteTarget.label}"? Esta acao desativa o item no painel.`
-                : 'Tem certeza que deseja remover este item?'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} disabled={isDeleting}>
-              {isDeleting ? 'Removendo...' : 'Remover'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Forms */}
-      {showSectorForm && (
-        <SectorForm 
-          sector={editingSector}
-          userId={user?.id}
-          onClose={handleSectorFormClose}
-          onSuccess={handleSectorFormSuccess}
-        />
-      )}
-
-      {showCompanyForm && (
-        <CompanyForm 
-          company={editingCompany}
-          userId={user?.id}
-          onClose={handleCompanyFormClose}
-          onSuccess={handleCompanyFormSuccess}
-        />
-      )}
-
-      {showTeamForm && (
-        <TeamForm 
-          member={editingTeamMember}
-          userId={user?.id}
-          onClose={handleTeamFormClose}
-          onSuccess={handleTeamFormSuccess}
-        />
-      )}
-
-      {showTestimonialForm && (
-        <TestimonialForm 
-          testimonial={editingTestimonial}
-          userId={user?.id}
-          onClose={handleTestimonialFormClose}
-          onSuccess={handleTestimonialFormSuccess}
-        />
-      )}
-
-      {showServiceForm && (
-        <ServiceForm
-          service={editingService}
-          userId={user?.id}
-          onClose={handleServiceFormClose}
-          onSuccess={handleServiceFormSuccess}
-        />
-      )}
-
-      {showCaseForm && (
-        <CaseForm
-          caseItem={editingCase}
-          userId={user?.id}
-          onClose={handleCaseFormClose}
-          onSuccess={handleCaseFormSuccess}
-        />
-      )}
     </div>
   );
 };

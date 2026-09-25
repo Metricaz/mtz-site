@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card';
-import { ContactSubmission } from '@/lib/types';
+import { ContactSubmission } from '@/lib/api-types';
 
 interface ContactSubmissionListProps {
   submissions: ContactSubmission[];
