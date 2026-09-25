@@ -270,3 +270,6 @@ pyrightconfig.json
 
 # The env template is committed (the root .gitignore ignores .env.*); the real .env is not.
 !.env.example
+
+# collectstatic output (STATIC_ROOT)
+staticfiles/

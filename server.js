@@ -5,7 +5,7 @@
  *   npm run dev    development, with Vite (hot reload)
  *   npm start      production, from the build (npm run build)
  *
- * Environment: PORT (default 8080), DJANGO_URL (default http://127.0.0.1:8000).
+ * Environment: PORT (default 8080), HOST (default: all interfaces), DJANGO_URL (default http://127.0.0.1:8000).
  */
 import fs from "node:fs/promises";
 import http from "node:http";
@@ -18,6 +18,7 @@ import express from "express";
 const root = path.dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env.NODE_ENV === "production";
 const port = Number(process.env.PORT || 8080);
+const host = process.env.HOST; // on the server: 127.0.0.1, only nginx talks to it
 const djangoUrl = process.env.DJANGO_URL || "http://127.0.0.1:8000";
 
 // Paths answered by Django. In production nginx sends them straight to gunicorn; the proxy below
@@ -120,6 +121,6 @@ app.use(async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, host, () => {
   console.log(`Site: http://localhost:${port} (${isProduction ? "produção" : "desenvolvimento"}) · Django: ${djangoUrl}`);
 });

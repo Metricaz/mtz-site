@@ -144,4 +144,92 @@ npm run build
 
 ## Deploy (UAT e produção)
 
-A fazer: VPS com nginx + gunicorn + systemd + PostgreSQL. O nginx manda as rotas do Django para o gunicorn e o resto para o servidor Node (`npm start`, outro serviço systemd), mais o cron do resumo de e-mail. O mesmo roteiro vale para UAT (homologação) e produção; muda só o `.env` de cada servidor.
+Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
+
+| Arquivo | Vai para | O que é |
+|---|---|---|
+| `sites-available/mtz-site.conf` | `/etc/nginx/sites-available/` | nginx: `/api`, `/admin` e login/logout → Django; `/static`, `/media`, `/assets` → disco; o resto → Node |
+| `systemd/mtz-site-django.service` | `/etc/systemd/system/` | Django (gunicorn) em `127.0.0.1:8101` |
+| `systemd/mtz-site-web.service` | `/etc/systemd/system/` | páginas (Node, SSR) em `127.0.0.1:8100` |
+| `cron.d/mtz-site` | `/etc/cron.d/` | resumo de e-mail de hora em hora |
+| `deploy.sh` | — | atualização (pull, dependências, migrate, collectstatic, build, restart) |
+
+O projeto fica em `/srv/mtz-site`, com o usuário de sistema `mtz-site`. UAT: `https://mtz-site.dev.i.metricaz.com`, com SQLite. O mesmo roteiro vale para produção; muda o `.env` (e o `server_name`/certificado do nginx).
+
+### Primeira instalação (como root)
+
+**1. Python 3.13.** O Django 6.1 exige Python ≥ 3.12. O `uv` instala à parte, sem mexer no Python do sistema:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
+UV_PYTHON_INSTALL_DIR=/opt/uv-python uv python install 3.13
+```
+
+Node: ≥ 20 (`node -v`).
+
+**2. Usuário e código.** O repositório é privado: gere uma chave para o usuário `mtz-site` e cadastre a pública em GitHub → repositório → Settings → Deploy keys (só leitura).
+
+```bash
+useradd --system --create-home --shell /usr/sbin/nologin mtz-site
+sudo -u mtz-site -H ssh-keygen -t ed25519 -N "" -f /home/mtz-site/.ssh/id_ed25519
+cat /home/mtz-site/.ssh/id_ed25519.pub        # → Deploy key no GitHub
+
+mkdir /srv/mtz-site && chown mtz-site: /srv/mtz-site
+sudo -u mtz-site -H git clone -b django-backend git@github.com:Metricaz/mtz-site.git /srv/mtz-site
+```
+
+**3. Backend.**
+
+```bash
+cd /srv/mtz-site/backend
+sudo -u mtz-site -H env UV_PYTHON_INSTALL_DIR=/opt/uv-python uv venv --seed --python 3.13 env
+sudo -u mtz-site -H env/bin/pip install -r requirements
+sudo -u mtz-site -H cp .env.example .env && chmod 600 .env
+```
+
+No `.env` do servidor:
+
+- `DJANGO_SECRET_KEY`: uma nova (comando na seção de desenvolvimento)
+- `DJANGO_DEBUG=false`
+- `DJANGO_ALLOWED_HOSTS=mtz-site.dev.i.metricaz.com,127.0.0.1` (o `127.0.0.1` é o servidor Node chamando o Django)
+- `DJANGO_CSRF_TRUSTED_ORIGINS=https://mtz-site.dev.i.metricaz.com`
+- E-mail: no UAT, `EMAIL_HOST` vazio ou `CONTACT_DIGEST_TO` apontando para quem está testando, para dado de teste não chegar ao comercial.
+
+```bash
+sudo -u mtz-site -H env/bin/python manage.py migrate
+sudo -u mtz-site -H env/bin/python manage.py loaddata initial_content
+sudo -u mtz-site -H cp -R content/fixtures/media/. media/
+sudo -u mtz-site -H env/bin/python manage.py collectstatic --noinput
+sudo -u mtz-site -H env/bin/python manage.py createsuperuser
+```
+
+**4. Frontend.**
+
+```bash
+cd /srv/mtz-site
+sudo -u mtz-site -H npm ci
+sudo -u mtz-site -H npm run build
+```
+
+**5. Serviços, nginx e cron.**
+
+```bash
+cp deploy-assets/systemd/*.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now mtz-site-django mtz-site-web
+
+cp deploy-assets/sites-available/mtz-site.conf /etc/nginx/sites-available/
+ln -s /etc/nginx/sites-available/mtz-site.conf /etc/nginx/sites-enabled/
+grep -h ssl_certificate /etc/nginx/sites-enabled/*   # confira o caminho do certificado *.dev.i.metricaz.com
+nginx -t && systemctl reload nginx
+
+cp deploy-assets/cron.d/mtz-site /etc/cron.d/
+```
+
+### Atualizar
+
+```bash
+sudo /srv/mtz-site/deploy-assets/deploy.sh
+```
+
+Logs: `journalctl -u mtz-site-django -f` e `journalctl -u mtz-site-web -f`.

@@ -1,0 +1,2 @@
+# /etc/cron.d/mtz-site — hourly digest of contacts, leads and newsletter sign-ups (see README).
+0 * * * * mtz-site cd /srv/mtz-site/backend && env/bin/python manage.py send_contact_digest
