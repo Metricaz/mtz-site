@@ -14,7 +14,8 @@ const SPLIT_STATS = [
 ];
 
 export const StatsSplit = () => {
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+  // Known only in the browser (set on mount), so the server and the first client render match.
+  const [isMobile, setIsMobile] = useState(false);
   const { testimonials: testimonialsData } = useTestimonials({ placement: 'client_panel' });
   const { options, labels } = useSiteOptions();
 

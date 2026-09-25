@@ -1,46 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { api, Query } from '@/lib/api';
+
+/**
+ * GET from the Django API through the react-query cache (key = path + query), so the same
+ * request is shared by every component that asks for it.
+ */
+export const useApiGet = <T>(path: string, query?: Query, enabled = true) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [path, query ?? {}],
+    queryFn: () => api.get<T>(path, query),
+    enabled,
+  });
+
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error ? error.message || 'Erro ao carregar dados' : null,
+  };
+};
 
 /**
  * GET a list from the Django API. While loading `items` is empty; on error it stays empty
  * (sections render nothing without data — there is no fallback content).
  */
 export const useApiList = <T>(path: string, query?: Query, enabled = true) => {
-  const [items, setItems] = useState<T[]>([]);
-  const [loading, setLoading] = useState(enabled);
-  const [error, setError] = useState<string | null>(null);
-  const queryKey = JSON.stringify(query || {});
-
-  useEffect(() => {
-    if (!enabled) {
-      setLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-
-    api
-      .get<T[]>(path, JSON.parse(queryKey))
-      .then((data) => {
-        if (!cancelled) setItems(data);
-      })
-      .catch((err) => {
-        console.error(`Error fetching ${path}:`, err);
-        if (!cancelled) {
-          setItems([]);
-          setError(err instanceof Error ? err.message : 'Erro ao carregar dados');
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [path, queryKey, enabled]);
-
-  return { items, loading, error };
+  const { data, loading, error } = useApiGet<T[]>(path, query, enabled);
+  return { items: data ?? [], loading, error };
 };

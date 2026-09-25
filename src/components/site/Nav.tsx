@@ -18,7 +18,8 @@ interface NavProps {
 export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+  // Known only in the browser (set on mount), so the server and the first client render match.
+  const [isMobile, setIsMobile] = useState(false);
   const homeBase = import.meta.env.BASE_URL;
   const resolveHref = (href: string, isPage?: boolean) => {
     if (isPage) {

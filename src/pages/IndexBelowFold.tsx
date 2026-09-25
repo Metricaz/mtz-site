@@ -10,7 +10,7 @@ import { FooterCTA } from "@/components/site/FooterCTA";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
 
-const IndexDesktop = () => (
+const IndexBelowFold = () => (
   <>
     <StatsSplit />
     <Method />
@@ -26,4 +26,4 @@ const IndexDesktop = () => (
   </>
 );
 
-export default IndexDesktop;
+export default IndexBelowFold;

@@ -8,7 +8,8 @@ export const Team = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const stepRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches);
+  // Known only in the browser (set on mount), so the server and the first client render match.
+  const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -16,6 +17,7 @@ export const Team = () => {
   const [canScrollNext, setCanScrollNext] = useState(false);
 
   const displayTeam = teamData;
+  const hasTrack = displayTeam.length > 0;
 
   // Cache the card width + gap so we don't force a layout read on every auto-scroll tick.
   const getStep = (track: HTMLDivElement) => {
@@ -58,7 +60,8 @@ export const Team = () => {
       window.removeEventListener("resize", invalidateStep);
       mediaQuery.removeEventListener?.("change", updateViewport);
     };
-  }, []);
+    // The track only exists once the team has loaded.
+  }, [hasTrack]);
 
   const scrollByPage = (direction: number) => {
     const track = trackRef.current;

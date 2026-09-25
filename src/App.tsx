@@ -22,7 +22,10 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const BlogPage = lazy(() => import("./pages/Blog"));
 const BlogPostPage = lazy(() => import("./pages/BlogPost"));
 
-const queryClient = new QueryClient();
+// Site content changes rarely: no refetch on focus, no retries (a missing item is a 404, not a glitch).
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 60_000, retry: false, refetchOnWindowFocus: false } },
+});
 
 const MetricazPrefixRedirect = () => {
   const location = useLocation();
