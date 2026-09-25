@@ -6,23 +6,8 @@ import { Footer } from '@/components/site/Footer';
 
 const CasePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { cases, loading } = useCases({ slug, enabled: Boolean(slug) });
+  const { cases } = useCases({ slug, enabled: Boolean(slug) });
   const caseItem = cases[0] ?? null;
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background text-foreground">
-        <Nav useHomeSectionLinks />
-        <div className="container-x py-20">
-          <div className="h-10 w-56 animate-pulse rounded bg-card/60" />
-          <div className="mt-8 h-[360px] animate-pulse rounded-3xl bg-card/60" />
-          <div className="mt-10 h-6 w-2/3 animate-pulse rounded bg-card/60" />
-          <div className="mt-4 h-6 w-1/2 animate-pulse rounded bg-card/60" />
-        </div>
-        <Footer useHomeSectionLinks />
-      </main>
-    );
-  }
 
   if (!caseItem) {
     return (

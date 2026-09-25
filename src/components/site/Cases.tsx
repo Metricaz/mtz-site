@@ -12,9 +12,9 @@ const spans = [
 ];
 
 export const Cases = () => {
-  const { cases, loading } = useCases({ limit: 6 });
+  const { cases } = useCases({ limit: 6 });
 
-  if (!loading && cases.length === 0) {
+  if (cases.length === 0) {
     return null;
   }
 
@@ -37,10 +37,7 @@ export const Cases = () => {
         </div>
 
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
-          {loading && Array.from({ length: 3 }, (_, i) => (
-            <div key={i} className={`rounded-3xl border border-border bg-card/40 animate-pulse ${spans[i % spans.length]}`} />
-          ))}
-          {!loading && cases.map((c, i) => {
+          {cases.map((c, i) => {
             return (
             <Link
               key={c.id}

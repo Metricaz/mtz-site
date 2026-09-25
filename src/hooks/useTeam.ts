@@ -11,6 +11,6 @@ interface UseTeamOptions {
  * ("home" = seção Time da home, "about" = Heads da operação no Quem Somos)
  */
 export const useTeam = ({ placement, enabled = true }: UseTeamOptions) => {
-  const { items: team, loading, error } = useApiList<TeamMember>('/team/', { placement }, enabled);
-  return { team, loading, error };
+  const team = useApiList<TeamMember>('/team/', { placement }, enabled);
+  return { team };
 };

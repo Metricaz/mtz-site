@@ -1,6 +1,6 @@
 # Metricaz — site
 
-Site institucional da Metricaz: frontend em **React + Vite + Tailwind** (`src/`) e backend em **Django + Django REST Framework** (`backend/`).
+Site institucional da Metricaz: frontend em **React + Vite + Tailwind** (`src/`), renderizado no servidor (SSR) por um servidor Node (`server.js`), e backend em **Django + Django REST Framework** (`backend/`).
 
 - Todo o conteúdo do site (textos, números, listas, imagens, serviços, cases, blog…) vem do banco de dados e é editado no **admin do Django** (`/admin/`).
 - O **dashboard** (`/dashboard`) é só leitura: mostra o conteúdo, as mensagens de contato e os cliques de WhatsApp.
@@ -11,6 +11,9 @@ Site institucional da Metricaz: frontend em **React + Vite + Tailwind** (`src/`)
 ```
 .
 ├── src/                     # frontend React (Vite)
+│   ├── entry-client.tsx     # navegador: hidrata o HTML que veio do servidor
+│   └── entry-server.tsx     # servidor: renderiza a página com os dados do Django
+├── server.js                # servidor Node (SSR) + proxy para o Django
 ├── public/
 ├── backend/
 │   ├── manage.py
@@ -23,7 +26,7 @@ Site institucional da Metricaz: frontend em **React + Vite + Tailwind** (`src/`)
 │       │   └── media/                 # imagens usadas pela fixture
 │       ├── management/commands/send_contact_digest.py
 │       └── templates/
-└── vite.config.ts           # dev server na porta 8080, com proxy para o Django
+└── vite.config.ts
 ```
 
 ## Requisitos
@@ -65,7 +68,7 @@ env/bin/python manage.py runserver           # http://127.0.0.1:8000
 > O `loaddata` pode ser repetido: os registros mantêm os mesmos IDs e são atualizados, não duplicados.
 > Sem o `cp` das imagens, os textos aparecem mas as imagens (Quem Somos, case, blog) ficam quebradas.
 
-### 2. Frontend (Vite)
+### 2. Frontend (Node + Vite)
 
 Em outro terminal, na raiz do projeto:
 
@@ -74,7 +77,18 @@ npm ci
 npm run dev                                  # http://localhost:8080
 ```
 
-O Vite repassa para o Django (`127.0.0.1:8000`) as rotas `/api`, `/admin`, `/static`, `/media`, `/dashboard/login` e `/dashboard/logout`, então o site, o login e o admin funcionam todos por `http://localhost:8080`. Para apontar para outro endereço do Django: `DJANGO_DEV_SERVER=http://127.0.0.1:8001 npm run dev`.
+O `npm run dev` roda o `server.js` com o Vite embutido (recarrega ao salvar). Cada página é renderizada no servidor, já com o conteúdo do Django, e o React assume no navegador.
+
+O `server.js` repassa para o Django as rotas `/api`, `/admin`, `/static`, `/media`, `/dashboard/login` e `/dashboard/logout`, então o site, o login e o admin funcionam todos por `http://localhost:8080`. Variáveis: `PORT` (padrão `8080`) e `DJANGO_URL` (padrão `http://127.0.0.1:8000`), ex.: `DJANGO_URL=http://127.0.0.1:8001 npm run dev`.
+
+> O Django precisa estar de pé: sem ele as páginas saem vazias. O servidor Node chama o Django por `127.0.0.1`, que precisa estar no `DJANGO_ALLOWED_HOSTS`.
+
+Para testar o build de produção na máquina:
+
+```bash
+npm run build                                # gera dist/client (navegador) e dist/server (SSR)
+npm start                                    # http://localhost:8080, a partir do build
+```
 
 ### Endereços
 
@@ -130,4 +144,4 @@ npm run build
 
 ## Deploy (UAT e produção)
 
-A fazer: VPS com nginx + gunicorn + systemd + PostgreSQL, Django servindo o build do React (com título e descrição de SEO vindos do banco) e o cron do resumo de e-mail. O mesmo roteiro vale para UAT (homologação) e produção; muda só o `.env` de cada servidor.
+A fazer: VPS com nginx + gunicorn + systemd + PostgreSQL. O nginx manda as rotas do Django para o gunicorn e o resto para o servidor Node (`npm start`, outro serviço systemd), mais o cron do resumo de e-mail. O mesmo roteiro vale para UAT (homologação) e produção; muda só o `.env` de cada servidor.

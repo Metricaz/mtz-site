@@ -24,8 +24,8 @@ const About = () => {
   // Only one testimonial is shown here: the first flagged "destaque do Quem Somos", by position.
   const { testimonials } = useTestimonials({ placement: "about" });
   const highlightedTestimonial = testimonials[0];
-  const { items: whatWeDo } = useApiList<AboutPillar>("/about-pillars/");
-  const { items: highlights } = useApiList<AboutHighlight>("/about-highlights/");
+  const whatWeDo = useApiList<AboutPillar>("/about-pillars/");
+  const highlights = useApiList<AboutHighlight>("/about-highlights/");
   const whyImage = useSiteImage("about.why_image");
   const { options, labels } = useSiteOptions();
   const stats = buildStats(ABOUT_STATS, options, labels);

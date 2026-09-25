@@ -6,6 +6,6 @@ import { Company } from '@/lib/api-types';
  * Usado na seção "Quem Confia"
  */
 export const useCompanies = () => {
-  const { items: companies, loading, error } = useApiList<Company>('/companies/');
-  return { companies, loading, error };
+  const companies = useApiList<Company>('/companies/');
+  return { companies };
 };

@@ -3,7 +3,7 @@ import { Capability } from "@/lib/api-types";
 import { getServiceIcon } from "@/lib/service-icons";
 
 export const ServicesBar = () => {
-  const { items } = useApiList<Capability>("/capabilities/");
+  const items = useApiList<Capability>("/capabilities/");
 
   if (items.length === 0) {
     return null;

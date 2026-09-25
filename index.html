@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metricaz · Consultoria de SEO, CRO e Digital Analytics</title>
-    <meta name="description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
+    <!-- Title and description come from "Opções do site" (seo.*), filled in by server.js -->
+    <!--app-head-->
     <meta name="author" content="Metricaz" />
     <link rel="canonical" href="https://metricaz.com/" />
 
@@ -34,14 +34,11 @@
     <meta property="og:locale" content="pt_BR" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta property="og:title" content="Metricaz · Consultoria de SEO, CRO e Digital Analytics">
-  <meta name="twitter:title" content="Metricaz · Consultoria de SEO, CRO e Digital Analytics">
-  <meta property="og:description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
-  <meta name="twitter:description" content="Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.">
-</head>
+  </head>
 
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="root"><!--app-html--></div>
+    <!--app-state-->
+    <script type="module" src="/src/entry-client.tsx"></script>
   </body>
 </html>

@@ -5,10 +5,9 @@ export type SiteOptionsValue = {
   options: Record<string, string>;
   /** key → label, the text that goes with a value (e.g. marcasatendidas → "Marcas atendidas") */
   labels: Record<string, string>;
-  loading: boolean;
 };
 
-export const SiteOptionsContext = createContext<SiteOptionsValue>({ options: {}, labels: {}, loading: true });
+export const SiteOptionsContext = createContext<SiteOptionsValue>({ options: {}, labels: {} });
 
 /**
  * Loose site values by key (Django admin → "Opções do site"), loaded once by <SiteOptionsProvider>.

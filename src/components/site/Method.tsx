@@ -4,7 +4,7 @@ import { MethodStep } from "@/lib/api-types";
 import { getServiceIcon } from "@/lib/service-icons";
 
 export const Method = () => {
-  const { items } = useApiList<MethodStep>("/method-steps/");
+  const items = useApiList<MethodStep>("/method-steps/");
 
   if (items.length === 0) {
     return null;

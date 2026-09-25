@@ -8,10 +8,10 @@ interface UseCasesOptions {
 }
 
 export const useCases = (options?: UseCasesOptions) => {
-  const { items: cases, loading, error } = useApiList<Case>(
+  const cases = useApiList<Case>(
     '/cases/',
     { limit: options?.limit, slug: options?.slug },
     options?.enabled ?? true,
   );
-  return { cases, loading, error };
+  return { cases };
 };

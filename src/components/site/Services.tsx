@@ -8,10 +8,10 @@ import { OptionText } from '@/components/site/OptionText';
 
 export const Services = () => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const { services, loading } = useServices({ limit: 4 });
+  const { services } = useServices({ limit: 4 });
   const items = services;
 
-  if (!loading && items.length === 0) {
+  if (items.length === 0) {
     return null;
   }
 
@@ -38,54 +38,50 @@ export const Services = () => {
 
         {/* Cards Grid */}
         <div className="grid gap-0 border-y border-border md:grid-cols-4">
-          {loading && services.length === 0
-            ? Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="h-[360px] animate-pulse border-b border-border/80 bg-card/30 md:h-auto md:border-b-0 md:border-r" />
-              ))
-            : items.map((service, i) => {
-                const Icon = getServiceIcon(service.icon_name);
+          {items.map((service, i) => {
+            const Icon = getServiceIcon(service.icon_name);
 
-                return (
-                  <Link
-                    key={service.id}
-                    to={`/servicos/${service.slug}`}
-                    onMouseEnter={() => setHoveredId(service.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                    className={`group relative flex flex-col items-center px-8 py-16 text-center transition-all duration-300 hover:bg-card md:px-10 md:py-20 ${
-                      i !== items.length - 1 ? 'border-r border-border' : ''
-                    }`}
+            return (
+              <Link
+                key={service.id}
+                to={`/servicos/${service.slug}`}
+                onMouseEnter={() => setHoveredId(service.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                className={`group relative flex flex-col items-center px-8 py-16 text-center transition-all duration-300 hover:bg-card md:px-10 md:py-20 ${
+                  i !== items.length - 1 ? 'border-r border-border' : ''
+                }`}
+              >
+                <div className="mb-12 rounded-full bg-primary/10 p-5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
+                  <Icon className="h-12 w-12 text-primary md:h-16 md:w-16" strokeWidth={1.2} fill="none" />
+                </div>
+
+                <h3 className="mb-4 text-xl font-semibold text-foreground md:text-2xl">{service.title}</h3>
+
+                <p className="mb-8 max-w-xs flex-grow text-sm leading-relaxed text-muted-foreground md:text-base">
+                  {service.excerpt}
+                </p>
+
+                <motion.div
+                  initial={false}
+                  animate={{
+                    width: hoveredId === service.id ? 145 : 40,
+                  }}
+                  transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground"
+                >
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: hoveredId === service.id ? 1 : 0 }}
+                    transition={{ duration: 0.15, delay: hoveredId === service.id ? 0.1 : 0 }}
+                    className="whitespace-nowrap text-sm font-semibold"
                   >
-                    <div className="mb-12 rounded-full bg-primary/10 p-5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-                      <Icon className="h-12 w-12 text-primary md:h-16 md:w-16" strokeWidth={1.2} fill="none" />
-                    </div>
-
-                    <h3 className="mb-4 text-xl font-semibold text-foreground md:text-2xl">{service.title}</h3>
-
-                    <p className="mb-8 max-w-xs flex-grow text-sm leading-relaxed text-muted-foreground md:text-base">
-                      {service.excerpt}
-                    </p>
-
-                    <motion.div
-                      initial={false}
-                      animate={{
-                        width: hoveredId === service.id ? 145 : 40,
-                      }}
-                      transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground"
-                    >
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: hoveredId === service.id ? 1 : 0 }}
-                        transition={{ duration: 0.15, delay: hoveredId === service.id ? 0.1 : 0 }}
-                        className="whitespace-nowrap text-sm font-semibold"
-                      >
-                        Saiba Mais
-                      </motion.span>
-                      <ArrowRight className="h-5 w-5 flex-shrink-0" strokeWidth={2} />
-                    </motion.div>
-                  </Link>
-                );
-              })}
+                    Saiba Mais
+                  </motion.span>
+                  <ArrowRight className="h-5 w-5 flex-shrink-0" strokeWidth={2} />
+                </motion.div>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="mt-8 flex justify-center">

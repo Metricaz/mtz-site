@@ -4,7 +4,11 @@
  */
 import { getCookie } from '@/lib/auth';
 
-const API_BASE = '/api';
+// Same origin in the browser; the SSR server (server.js) has no origin, so it sets Django's.
+let apiOrigin = '';
+export const setApiOrigin = (origin: string) => {
+  apiOrigin = origin.replace(/\/$/, '');
+};
 
 type QueryValue = string | number | boolean | null | undefined;
 export type Query = Record<string, QueryValue>;
@@ -27,7 +31,7 @@ const buildUrl = (path: string, query?: Query) => {
     if (value !== undefined && value !== null && value !== '') params.set(key, String(value));
   });
   const search = params.toString();
-  return `${API_BASE}${path}${search ? `?${search}` : ''}`;
+  return `${apiOrigin}/api${path}${search ? `?${search}` : ''}`;
 };
 
 const request = async <T>(method: 'GET' | 'POST', path: string, options: { query?: Query; body?: unknown } = {}) => {

@@ -8,9 +8,9 @@ import { formatShortDate } from "@/lib/dates";
 const HOME_POSTS = 5;
 
 export const Content = () => {
-  const { posts, loading } = usePosts({ limit: HOME_POSTS });
+  const { posts } = usePosts({ limit: HOME_POSTS });
 
-  if (!loading && posts.length === 0) {
+  if (posts.length === 0) {
     return null;
   }
 

@@ -22,7 +22,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
   const homeBase = import.meta.env.BASE_URL;
   const resolveHref = (hash: string) => (useHomeSectionLinks ? `${homeBase}${hash}` : hash);
   const [subscribing, setSubscribing] = useState(false);
-  const { items: socialLinks } = useApiList<SocialLink>("/social-links/");
+  const socialLinks = useApiList<SocialLink>("/social-links/");
 
   // Newsletter: only stores the e-mail (sending is done later, outside the site).
   const onSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {

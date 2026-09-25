@@ -8,10 +8,10 @@ interface UseServicesOptions {
 }
 
 export const useServices = (options?: UseServicesOptions) => {
-  const { items: services, loading, error } = useApiList<Service>(
+  const services = useApiList<Service>(
     '/services/',
     { limit: options?.limit, slug: options?.slug },
     options?.enabled ?? true,
   );
-  return { services, loading, error };
+  return { services };
 };

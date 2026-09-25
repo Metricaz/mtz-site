@@ -8,23 +8,8 @@ import { getServiceIcon } from '@/lib/service-icons';
 
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { services, loading } = useServices({ slug, enabled: Boolean(slug) });
+  const { services } = useServices({ slug, enabled: Boolean(slug) });
   const service = services[0] ?? null;
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background text-foreground">
-        <Nav useHomeSectionLinks />
-        <div className="container-x py-20">
-          <div className="h-10 w-56 animate-pulse rounded bg-card/60" />
-          <div className="mt-8 h-[320px] animate-pulse rounded-3xl bg-card/60" />
-          <div className="mt-10 h-6 w-2/3 animate-pulse rounded bg-card/60" />
-          <div className="mt-4 h-6 w-1/2 animate-pulse rounded bg-card/60" />
-        </div>
-        <Footer useHomeSectionLinks />
-      </main>
-    );
-  }
 
   if (!service) {
     return (

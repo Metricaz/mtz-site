@@ -4,7 +4,7 @@ import { EngagementModel } from "@/lib/api-types";
 import { getServiceIcon } from "@/lib/service-icons";
 
 export const Models = () => {
-  const { items } = useApiList<EngagementModel>("/engagement-models/");
+  const items = useApiList<EngagementModel>("/engagement-models/");
 
   if (items.length === 0) {
     return null;

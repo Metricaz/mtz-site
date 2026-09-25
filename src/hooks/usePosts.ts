@@ -10,10 +10,10 @@ interface UsePostsOptions {
 
 /** Published blog posts, newest first (Django admin → Posts). */
 export const usePosts = (options?: UsePostsOptions) => {
-  const { items: posts, loading, error } = useApiList<Post>(
+  const posts = useApiList<Post>(
     '/posts/',
     { limit: options?.limit, slug: options?.slug, tag: options?.tag },
     options?.enabled ?? true,
   );
-  return { posts, loading, error };
+  return { posts };
 };
