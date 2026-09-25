@@ -158,11 +158,10 @@ O projeto fica em `/srv/mtz-site`, com o usuário de sistema `mtz-site`. UAT: `h
 
 ### Primeira instalação (como root)
 
-**1. Python 3.13.** O Django 6.1 exige Python ≥ 3.12. O `uv` instala à parte, sem mexer no Python do sistema:
+**1. Requisitos (Debian 13).** O Django 6.1 exige Python ≥ 3.12; o Debian 13 já vem com o 3.13.
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
-UV_PYTHON_INSTALL_DIR=/opt/uv-python uv python install 3.13
+apt install -y python3 python3-venv git
 ```
 
 Node: ≥ 20 (`node -v`).
@@ -182,7 +181,7 @@ sudo -u mtz-site -H git clone -b django-backend git@github.com:Metricaz/mtz-site
 
 ```bash
 cd /srv/mtz-site/backend
-sudo -u mtz-site -H env UV_PYTHON_INSTALL_DIR=/opt/uv-python uv venv --seed --python 3.13 env
+sudo -u mtz-site -H python3 -m venv env
 sudo -u mtz-site -H env/bin/pip install -r requirements
 sudo -u mtz-site -H cp .env.example .env && chmod 600 .env
 ```
