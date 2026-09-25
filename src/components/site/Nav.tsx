@@ -105,7 +105,8 @@ export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
               width={394}
               height={103}
               loading="eager"
-              fetchPriority="high"
+              // React 18 only passes the lowercase HTML attribute through to the <img>.
+              {...{ fetchpriority: "high" }}
               decoding="async"
               className="h-8 w-auto"
             />
