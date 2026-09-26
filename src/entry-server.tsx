@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import { apiQueryKey } from "@/hooks/useApiList";
 import { setApiOrigin } from "@/lib/api";
 import { SiteOption } from "@/lib/api-types";
+import { HttpStatus, HttpStatusContext } from "@/lib/http-status";
 import { createQueryClient } from "@/lib/query-client";
 import { ROUTER_FUTURE } from "@/lib/router";
 
@@ -15,6 +16,8 @@ export type RenderResult = {
   head: string;
   /** react-query cache, for the browser to hydrate with. */
   state: unknown;
+  /** HTTP status: 404 when the page rendered a "not found" screen. */
+  status: number;
 };
 
 const escapeHtml = (value: string) =>
@@ -43,15 +46,18 @@ export const render = (url: string, apiOrigin: string) =>
   new Promise<RenderResult>((resolve, reject) => {
     setApiOrigin(apiOrigin);
     const queryClient = createQueryClient();
+    const status: HttpStatus = { code: 200 };
     const app = (
-      <App
-        queryClient={queryClient}
-        router={(children) => (
-          <StaticRouter location={url} basename={import.meta.env.BASE_URL} future={ROUTER_FUTURE}>
-            {children}
-          </StaticRouter>
-        )}
-      />
+      <HttpStatusContext.Provider value={status}>
+        <App
+          queryClient={queryClient}
+          router={(children) => (
+            <StaticRouter location={url} basename={import.meta.env.BASE_URL} future={ROUTER_FUTURE}>
+              {children}
+            </StaticRouter>
+          )}
+        />
+      </HttpStatusContext.Provider>
     );
 
     // Django too slow or down: give up waiting, the sections still loading are rendered in the browser.
@@ -60,7 +66,7 @@ export const render = (url: string, apiOrigin: string) =>
       onAllReady() {
         clearTimeout(timeout);
         const options = queryClient.getQueryData<SiteOption[] | null>(apiQueryKey("/options/")) ?? [];
-        resolve({ pipe: stream.pipe, head: renderHead(options), state: dehydrate(queryClient) });
+        resolve({ pipe: stream.pipe, head: renderHead(options), state: dehydrate(queryClient), status: status.code });
       },
       onShellError(error) {
         clearTimeout(timeout);

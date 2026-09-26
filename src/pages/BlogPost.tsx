@@ -4,6 +4,7 @@ import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { usePosts } from '@/hooks/usePosts';
 import { formatShortDate } from '@/lib/dates';
+import { NotFoundStatus } from "@/components/NotFoundStatus";
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -13,6 +14,7 @@ const BlogPostPage = () => {
   if (!post) {
     return (
       <main className="min-h-screen bg-background text-foreground">
+        <NotFoundStatus />
         <Nav useHomeSectionLinks />
         <div className="container-x py-20">
           <Link to="/blog" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
