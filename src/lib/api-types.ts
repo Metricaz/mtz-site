@@ -150,11 +150,6 @@ export type EngagementModel = Ordered & {
   icon_name: string;
 };
 
-export type Capability = Ordered & {
-  label: string;
-  icon_name: string;
-};
-
 export type AboutPillar = Ordered & {
   tag: string;
   title: string;

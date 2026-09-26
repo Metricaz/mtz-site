@@ -13,7 +13,6 @@ from .models import (
     AboutHighlight,
     AboutPillar,
     Author,
-    Capability,
     Case,
     Company,
     CompanyAddress,
@@ -40,7 +39,6 @@ from .serializers import (
     AboutHighlightSerializer,
     AboutPillarSerializer,
     AuthorSerializer,
-    CapabilitySerializer,
     CaseSerializer,
     CompanyAddressSerializer,
     CompanySerializer,
@@ -169,10 +167,6 @@ class MethodStepViewSet(OrderedViewSet):
 
 class EngagementModelViewSet(OrderedViewSet):
     serializer_class = EngagementModelSerializer
-
-
-class CapabilityViewSet(OrderedViewSet):
-    serializer_class = CapabilitySerializer
 
 
 class AboutPillarViewSet(OrderedViewSet):

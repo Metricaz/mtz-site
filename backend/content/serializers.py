@@ -6,7 +6,6 @@ from .models import (
     AboutHighlight,
     AboutPillar,
     Author,
-    Capability,
     Case,
     Company,
     CompanyAddress,
@@ -147,13 +146,6 @@ class MethodStepSerializer(OrderedSerializer):
 class EngagementModelSerializer(OrderedSerializer):
     class Meta:
         model = EngagementModel
-        fields = "__all__"
-        read_only_fields = ORDERED_READ_ONLY
-
-
-class CapabilitySerializer(OrderedSerializer):
-    class Meta:
-        model = Capability
         fields = "__all__"
         read_only_fields = ORDERED_READ_ONLY
 

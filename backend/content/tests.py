@@ -18,7 +18,6 @@ from .models import (
     AboutHighlight,
     AboutPillar,
     Author,
-    Capability,
     Case,
     Company,
     CompanyAddress,
@@ -54,7 +53,6 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(CompanyAddress.objects.count(), 2)
         self.assertEqual(MethodStep.objects.count(), 4)
         self.assertEqual(EngagementModel.objects.count(), 3)
-        self.assertEqual(Capability.objects.count(), 6)
         self.assertEqual(AboutPillar.objects.count(), 3)
         self.assertEqual(AboutHighlight.objects.count(), 4)
         self.assertEqual(SocialLink.objects.count(), 3)
@@ -101,7 +99,7 @@ class InitialContentFixtureTests(TestCase):
     def test_every_record_passes_model_validation(self):
         for model in (
             Sector, Company, TeamMember, Testimonial, Service, Case, CompanyAddress, SiteOption, SiteImage,
-            MethodStep, EngagementModel, Capability, AboutPillar, AboutHighlight, SocialLink, Author, Tag, Post,
+            MethodStep, EngagementModel, AboutPillar, AboutHighlight, SocialLink, Author, Tag, Post,
         ):
             for obj in model.objects.all():
                 obj.full_clean()
@@ -451,7 +449,6 @@ class SiteContentApiTests(ApiTestCase):
         self.assertEqual([s["title"] for s in self.client.get("/api/method-steps/").json()],
                          ["Diagnóstico", "Estratégia", "Execução", "Mensuração"])
         self.assertEqual(len(self.client.get("/api/engagement-models/").json()), 3)
-        self.assertEqual([c["icon_name"] for c in self.client.get("/api/capabilities/").json()][:2], ["seo", "cro"])
         self.assertEqual(len(self.client.get("/api/about-pillars/").json()), 3)
         self.assertEqual(len(self.client.get("/api/about-highlights/").json()), 4)
         links = self.client.get("/api/social-links/").json()

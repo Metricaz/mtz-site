@@ -4,7 +4,6 @@ from .models import (
     AboutHighlight,
     AboutPillar,
     Author,
-    Capability,
     Case,
     Company,
     CompanyAddress,
@@ -135,12 +134,6 @@ class MethodStepAdmin(OrderedAdmin):
 class EngagementModelAdmin(OrderedAdmin):
     list_display = ("title", "icon_name", "order_position", "is_active")
     search_fields = ("title", "text")
-
-
-@admin.register(Capability)
-class CapabilityAdmin(OrderedAdmin):
-    list_display = ("label", "icon_name", "order_position", "is_active")
-    search_fields = ("label",)
 
 
 @admin.register(AboutPillar)

@@ -228,20 +228,6 @@ class EngagementModel(OrderedModel):
         return self.title
 
 
-class Capability(OrderedModel):
-    """Faixa laranja de capacidades logo abaixo do topo da home."""
-
-    label = models.CharField("rótulo", max_length=80)
-    icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
-
-    class Meta(OrderedModel.Meta):
-        verbose_name = "capacidade"
-        verbose_name_plural = "capacidades"
-
-    def __str__(self):
-        return self.label
-
-
 class AboutPillar(OrderedModel):
     """Cards de "O que fazemos" no Quem Somos."""
 

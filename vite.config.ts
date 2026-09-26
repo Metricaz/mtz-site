@@ -1,7 +1,6 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 /**
  * Build only: puts the site CSS inside index.html (<style>) instead of a <link>, so the first paint
@@ -26,13 +25,13 @@ const inlineCss = (): Plugin => ({
 
 // https://vitejs.dev/config/
 // Vite runs inside server.js (SSR), which also proxies the Django paths.
-export default defineConfig(({ mode, isSsrBuild }) => ({
+export default defineConfig(({ isSsrBuild }) => ({
   server: {
     hmr: {
       overlay: false,
     },
   },
-  plugins: [react(), inlineCss(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react(), inlineCss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
