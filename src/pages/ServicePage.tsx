@@ -5,7 +5,7 @@ import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { getServiceIcon } from '@/lib/service-icons';
-import { NotFoundStatus } from "@/components/NotFoundStatus";
+import { NotFoundStatus } from '@/components/NotFoundStatus';
 
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();

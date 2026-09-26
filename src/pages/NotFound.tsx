@@ -1,26 +1,25 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Nav } from "@/components/site/Nav";
+import { Footer } from "@/components/site/Footer";
 import { NotFoundStatus } from "@/components/NotFoundStatus";
 
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <NotFoundStatus />
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
-      </div>
+const NotFound = () => (
+  <main className="min-h-screen bg-background text-foreground">
+    <NotFoundStatus />
+    <Nav useHomeSectionLinks />
+    <div className="container-x py-20">
+      <Link to="/" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
+        <ArrowLeft className="h-4 w-4" />
+        Voltar para o início
+      </Link>
+      <h1 className="mt-10 editorial text-5xl">Página não encontrada</h1>
+      <p className="mt-4 max-w-lg text-muted-foreground">
+        O endereço pode estar errado ou esta página não existe mais.
+      </p>
     </div>
-  );
-};
+    <Footer useHomeSectionLinks />
+  </main>
+);
 
 export default NotFound;

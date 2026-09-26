@@ -3,7 +3,7 @@ import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-
 import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
-import { NotFoundStatus } from "@/components/NotFoundStatus";
+import { NotFoundStatus } from '@/components/NotFoundStatus';
 
 const CasePage = () => {
   const { slug } = useParams<{ slug: string }>();

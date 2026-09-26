@@ -4,7 +4,7 @@ import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { usePosts } from '@/hooks/usePosts';
 import { formatShortDate } from '@/lib/dates';
-import { NotFoundStatus } from "@/components/NotFoundStatus";
+import { NotFoundStatus } from '@/components/NotFoundStatus';
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
