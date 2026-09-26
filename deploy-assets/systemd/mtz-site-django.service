@@ -1,15 +1,15 @@
 # /etc/systemd/system/mtz-site-django.service — Django API/admin (gunicorn), behind nginx.
-# Settings come from /srv/mtz-site/backend/.env.
+# Settings come from /local/dev/mtz-site/backend/.env.
 
 [Unit]
 Description=Metricaz site - Django (gunicorn)
 After=network.target
 
 [Service]
-User=mtz-site
-Group=mtz-site
-WorkingDirectory=/srv/mtz-site/backend
-ExecStart=/srv/mtz-site/backend/env/bin/gunicorn backend.wsgi:application --bind 127.0.0.1:8101 --workers 3 --access-logfile -
+User=www-data
+Group=www-data
+WorkingDirectory=/local/dev/mtz-site/backend
+ExecStart=/local/dev/mtz-site/backend/env/bin/gunicorn backend.wsgi:application --bind 127.0.0.1:8101 --workers 3 --access-logfile -
 Restart=on-failure
 
 [Install]

@@ -152,9 +152,10 @@ Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
 | `systemd/mtz-site-django.service` | `/etc/systemd/system/` | Django (gunicorn) em `127.0.0.1:8101` |
 | `systemd/mtz-site-web.service` | `/etc/systemd/system/` | páginas (Node, SSR) em `127.0.0.1:8100` |
 | `cron.d/mtz-site` | `/etc/cron.d/` | resumo de e-mail de hora em hora |
-| `deploy.sh` | — | atualização (pull, dependências, migrate, collectstatic, build, restart) |
+| `install.sh` | — | copia os arquivos acima para o sistema e reinicia/recarrega |
+| `deploy.sh` | — | atualização (pull, dependências, migrate, collectstatic, build, `install.sh`) |
 
-O projeto fica em `/srv/mtz-site`, com o usuário de sistema `mtz-site`. UAT: `https://mtz-site.dev.i.metricaz.com`, com SQLite. O mesmo roteiro vale para produção; muda o `.env` (e o `server_name`/certificado do nginx).
+O projeto fica em `/local/dev/mtz-site`, e tudo roda com o usuário `www-data`. UAT: `https://mtz-site.dev.i.metricaz.com`, com SQLite. O mesmo roteiro vale para produção; muda o `.env` (e o `server_name`/certificado do nginx).
 
 ### Primeira instalação (como root)
 
@@ -166,24 +167,25 @@ apt install -y python3 python3-venv git
 
 Node: ≥ 20 (`node -v`).
 
-**2. Usuário e código.** O repositório é privado: gere uma chave para o usuário `mtz-site` e cadastre a pública em GitHub → repositório → Settings → Deploy keys (só leitura).
+**2. Código.** O repositório é privado: se o `www-data` ainda não tem chave, gere uma e cadastre a pública em GitHub → repositório → Settings → Deploy keys (só leitura). O home do `www-data` é `/var/www`; ele também guarda os caches do pip e do npm.
 
 ```bash
-useradd --system --create-home --shell /usr/sbin/nologin mtz-site
-sudo -u mtz-site -H ssh-keygen -t ed25519 -N "" -f /home/mtz-site/.ssh/id_ed25519
-cat /home/mtz-site/.ssh/id_ed25519.pub        # → Deploy key no GitHub
+install -d -o www-data -g www-data -m 700 /var/www/.ssh
+install -d -o www-data -g www-data /var/www/.cache /var/www/.npm
+sudo -u www-data -H ssh-keygen -t ed25519 -N "" -f /var/www/.ssh/id_ed25519
+cat /var/www/.ssh/id_ed25519.pub              # → Deploy key no GitHub
 
-mkdir /srv/mtz-site && chown mtz-site: /srv/mtz-site
-sudo -u mtz-site -H git clone -b django-backend git@github.com:Metricaz/mtz-site.git /srv/mtz-site
+mkdir -p /local/dev/mtz-site && chown www-data: /local/dev/mtz-site
+sudo -u www-data -H git clone -b django-backend git@github.com:Metricaz/mtz-site.git /local/dev/mtz-site
 ```
 
 **3. Backend.**
 
 ```bash
-cd /srv/mtz-site/backend
-sudo -u mtz-site -H python3 -m venv env
-sudo -u mtz-site -H env/bin/pip install -r requirements
-sudo -u mtz-site -H cp .env.example .env && chmod 600 .env
+cd /local/dev/mtz-site/backend
+sudo -u www-data -H python3 -m venv env
+sudo -u www-data -H env/bin/pip install -r requirements
+sudo -u www-data -H cp .env.example .env && chmod 600 .env
 ```
 
 No `.env` do servidor:
@@ -195,40 +197,33 @@ No `.env` do servidor:
 - E-mail: no UAT, `EMAIL_HOST` vazio ou `CONTACT_DIGEST_TO` apontando para quem está testando, para dado de teste não chegar ao comercial.
 
 ```bash
-sudo -u mtz-site -H env/bin/python manage.py migrate
-sudo -u mtz-site -H env/bin/python manage.py loaddata initial_content
-sudo -u mtz-site -H cp -R content/fixtures/media/. media/
-sudo -u mtz-site -H env/bin/python manage.py collectstatic --noinput
-sudo -u mtz-site -H env/bin/python manage.py createsuperuser
+sudo -u www-data -H env/bin/python manage.py migrate
+sudo -u www-data -H env/bin/python manage.py loaddata initial_content
+sudo -u www-data -H cp -R content/fixtures/media/. media/
+sudo -u www-data -H env/bin/python manage.py collectstatic --noinput
+sudo -u www-data -H env/bin/python manage.py createsuperuser
 ```
 
 **4. Frontend.**
 
 ```bash
-cd /srv/mtz-site
-sudo -u mtz-site -H npm ci
-sudo -u mtz-site -H npm run build
+cd /local/dev/mtz-site
+sudo -u www-data -H npm ci
+sudo -u www-data -H npm run build
 ```
 
-**5. Serviços, nginx e cron.**
+**5. Serviços, nginx e cron.** Confira antes o caminho do certificado `*.dev.i.metricaz.com` no `mtz-site.conf` (`grep -h ssl_certificate /etc/nginx/sites-enabled/*`).
 
 ```bash
-cp deploy-assets/systemd/*.service /etc/systemd/system/
-systemctl daemon-reload
-systemctl enable --now mtz-site-django mtz-site-web
-
-cp deploy-assets/sites-available/mtz-site.conf /etc/nginx/sites-available/
-ln -s /etc/nginx/sites-available/mtz-site.conf /etc/nginx/sites-enabled/
-grep -h ssl_certificate /etc/nginx/sites-enabled/*   # confira o caminho do certificado *.dev.i.metricaz.com
-nginx -t && systemctl reload nginx
-
-cp deploy-assets/cron.d/mtz-site /etc/cron.d/
+/local/dev/mtz-site/deploy-assets/install.sh
 ```
+
+O `install.sh` copia os serviços systemd, o site do nginx (com o link em `sites-enabled`) e o cron, habilita e reinicia os serviços e recarrega o nginx (depois do `nginx -t`). Pode ser rodado de novo; o `deploy.sh` também o roda.
 
 ### Atualizar
 
 ```bash
-sudo /srv/mtz-site/deploy-assets/deploy.sh
+sudo /local/dev/mtz-site/deploy-assets/deploy.sh
 ```
 
 Logs: `journalctl -u mtz-site-django -f` e `journalctl -u mtz-site-web -f`.
