@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, MapPin, Mail, PhoneCall } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { Contact } from "@/components/site/Contact";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { useCompanyAddress } from "@/hooks/useCompanyAddress";
+import { useCompanyAddresses } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
 import { OptionText } from "@/components/site/OptionText";
@@ -12,9 +13,12 @@ import { OptionText } from "@/components/site/OptionText";
 const ContactPage = () => {
   const { settings } = useWhatsAppSettings();
   const { options } = useSiteOptions();
-  // First active address (Django admin → Endereços)
-  const { address } = useCompanyAddress();
+  // Every active address (Django admin → Endereços), one tab each; the first one starts selected.
+  const { addresses } = useCompanyAddresses();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const address = addresses.find((a) => a.id === selectedId) ?? addresses[0] ?? null;
   const email = options['contact.email'];
+  const hasWhatsApp = Boolean(settings?.enabled && settings.number);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -70,7 +74,31 @@ const ContactPage = () => {
               className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground md:text-base"
             />
 
-            <div className="mt-8 space-y-4">
+            {addresses.length > 1 && (
+              <div role="tablist" aria-label="Endereços" className="mt-8 flex flex-wrap gap-2">
+                {addresses.map((a) => {
+                  const selected = a.id === address?.id;
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={selected}
+                      onClick={() => setSelectedId(a.id)}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                        selected
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-ink-deep/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                      }`}
+                    >
+                      {a.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className={`${addresses.length > 1 ? "mt-4" : "mt-8"} space-y-4`}>
               {address && (
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
                   <MapPin className="mt-0.5 h-5 w-5 text-primary" />
@@ -102,23 +130,25 @@ const ContactPage = () => {
               )}
             </div>
 
-            <div className="mt-8 rounded-3xl border border-border bg-ink-deep/55 p-5">
-              <OptionText k="contactpage.whatsapp_eyebrow" as="p" className="eyebrow" />
-              <div className="mt-5">
-                <WhatsAppButton
-                  number={settings?.number}
-                  enabled={settings?.enabled}
-                  message={settings?.message}
-                  buttonContext="contact-page-card"
-                />
+            {hasWhatsApp && (
+              <div className="mt-8 rounded-3xl border border-border bg-ink-deep/55 p-5">
+                <OptionText k="contactpage.whatsapp_eyebrow" as="p" className="eyebrow" />
+                <div className="mt-5">
+                  <WhatsAppButton
+                    number={settings?.number}
+                    enabled={settings?.enabled}
+                    message={settings?.message}
+                    buttonContext="contact-page-card"
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {address?.map_url && (
             <div className="overflow-hidden rounded-3xl border border-border bg-card/55 shadow-card">
               <iframe
-                title="Localização da Metricaz"
+                title={`Localização da Metricaz – ${address.label}`}
                 src={address.map_url}
                 className="h-[420px] w-full border-0 md:h-full"
                 loading="lazy"
