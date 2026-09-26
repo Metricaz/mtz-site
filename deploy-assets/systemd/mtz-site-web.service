@@ -6,9 +6,9 @@ Description=Metricaz site - Node SSR
 After=network.target mtz-site-django.service
 
 [Service]
-User=mtz-site
-Group=mtz-site
-WorkingDirectory=/srv/mtz-site
+User=www-data
+Group=www-data
+WorkingDirectory=/local/dev/mtz-site
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
 Environment=PORT=8100
