@@ -136,11 +136,8 @@ Cron de hora em hora (ajuste o caminho):
 cd backend && env/bin/python manage.py test content    # backend (e-mails ficam em memória, nada é enviado)
 npx tsc -p tsconfig.app.json --noEmit                   # tipos do frontend
 npm run lint
-npm test
 npm run build
 ```
-
-> O `npm run lint` acusa 3 erros que já existiam no código original (componentes shadcn em `src/components/ui/` e um `require` no `tailwind.config.ts`).
 
 ## Deploy (UAT e produção)
 

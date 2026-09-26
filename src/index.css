@@ -192,12 +192,6 @@
 }
 .pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
 
-.prose img {
-  max-width: 100%;
-  border-radius: 0.9rem;
-  margin: 1rem 0;
-}
-
 .case-content {
   max-width: none;
   color: hsl(var(--foreground) / 0.9);
