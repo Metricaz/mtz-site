@@ -20,7 +20,7 @@ export const Hero = () => {
 
       <div className="container-x relative">
         {/* meta row */}
-        <div className="rise flex items-center justify-end mb-10 md:mb-16">
+        <div className="flex items-center justify-end mb-10 md:mb-16">
           <OptionText k="hero.location" className="mono-tag text-muted-foreground hidden md:block" />
         </div>
 
@@ -28,12 +28,12 @@ export const Hero = () => {
         <OptionText
           k="hero.title"
           as="h1"
-          className="rise editorial text-foreground text-[clamp(2.75rem,10vw,9rem)]"
+          className="editorial text-foreground text-[clamp(2.75rem,10vw,9rem)]"
           accentClassName="editorial-italic"
         />
 
         {/* sub row */}
-        <div className="rise-2 mt-12 md:mt-16 grid md:grid-cols-12 gap-10 items-end">
+        <div className="mt-12 md:mt-16 grid md:grid-cols-12 gap-10 items-end">
           <div className="md:col-span-6">
             <div className="hairline-orange w-16 mb-5" />
             <OptionText
@@ -63,7 +63,7 @@ export const Hero = () => {
 
         {/* KPI band — editorial, no AI image */}
         {stats.length > 0 && (
-        <div className="rise-3 mt-20 md:mt-28 grid grid-cols-2 md:grid-cols-4 border-t border-border">
+        <div className="mt-20 md:mt-28 grid grid-cols-2 md:grid-cols-4 border-t border-border">
           {stats.map(({ key, value: k, label: v }, i) => (
             <div
               key={key}
