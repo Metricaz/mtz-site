@@ -3,6 +3,7 @@ import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-
 import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
+import { NotFoundStatus } from "@/components/NotFoundStatus";
 
 const CasePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -12,6 +13,7 @@ const CasePage = () => {
   if (!caseItem) {
     return (
       <main className="min-h-screen bg-background text-foreground">
+        <NotFoundStatus />
         <Nav useHomeSectionLinks />
         <div className="container-x py-20">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">

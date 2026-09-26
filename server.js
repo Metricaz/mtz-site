@@ -107,13 +107,13 @@ app.use(async (req, res) => {
       render = (await vite.ssrLoadModule("/src/entry-server.tsx")).render;
     }
 
-    const { pipe, head, state } = await render(url, djangoUrl);
+    const { pipe, head, state, status } = await render(url, djangoUrl);
     const html = await collect(pipe);
     const page = template
       .replace("<!--app-head-->", () => head)
       .replace("<!--app-html-->", () => html)
       .replace("<!--app-state-->", () => `<script>window.__REACT_QUERY_STATE__ = ${serializeState(state)}</script>`);
-    res.status(200).set("Content-Type", "text/html; charset=utf-8").end(page);
+    res.status(status).set("Content-Type", "text/html; charset=utf-8").end(page);
   } catch (error) {
     vite?.ssrFixStacktrace(error);
     console.error(`SSR failed for ${url}:`, error);
