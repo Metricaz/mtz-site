@@ -6,6 +6,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 as_owner() { sudo -u www-data -H "$@"; }
 
+# The site runs as www-data; anything run by hand as root (npm, manage.py) leaves root-owned
+# files behind (read-only database, npm unable to replace node_modules). Hand everything back.
+install -d -o www-data -g www-data /var/www/.npm /var/www/.cache
+chown -R www-data: . /var/www/.npm /var/www/.cache
+
 as_owner git pull --ff-only
 as_owner backend/env/bin/pip install -r backend/requirements
 as_owner backend/env/bin/python backend/manage.py migrate --noinput
