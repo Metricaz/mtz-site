@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import mSymbol from "@/assets/m-metricaz.png";
+import mSymbol from "@/assets/m-metricaz.webp";
 import { api } from "@/lib/api";
 import { OptionText } from "@/components/site/OptionText";
 
@@ -37,8 +37,10 @@ export const FooterCTA = () => {
         src={mSymbol}
         alt=""
         aria-hidden
-        width={1834}
-        height={1920}
+        width={917}
+        height={960}
+        loading="lazy"
+        decoding="async"
         className="pointer-events-none select-none absolute -right-20 top-1/2 -translate-y-1/2 h-[120%] w-auto opacity-[0.04] object-contain object-right"
       />
 
