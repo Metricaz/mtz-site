@@ -192,14 +192,6 @@
 }
 .pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.rise { animation: rise 0.9s var(--transition-smooth) both; }
-.rise-2 { animation: rise 0.9s var(--transition-smooth) 0.1s both; }
-.rise-3 { animation: rise 0.9s var(--transition-smooth) 0.2s both; }
-
 .prose img {
   max-width: 100%;
   border-radius: 0.9rem;
