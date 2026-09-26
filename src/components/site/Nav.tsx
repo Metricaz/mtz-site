@@ -66,6 +66,8 @@ export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
       <button
         type="button"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+        aria-expanded={mobileMenuOpen}
         className="relative z-20 flex h-14 w-14 items-center justify-center rounded-full border-[3px] border-primary-foreground bg-primary text-primary-foreground shadow-[0_18px_42px_-18px_rgba(0,0,0,0.85)] focus-visible:outline-none"
         style={{ WebkitTapHighlightColor: "transparent" }}
       >
