@@ -302,6 +302,15 @@ class ReceivedApiTests(ApiTestCase):
         codes = [self.client.post("/api/leads/", {"email": f"a{i}@b.com"}, format="json").status_code for i in range(11)]
         self.assertEqual(codes[-1], 429)
 
+    def test_each_visitor_has_its_own_limit(self):
+        # The visitor is the last X-Forwarded-For entry (nginx appends the real IP): a faked first entry
+        # doesn't make a new visitor, a different real IP does.
+        post = lambda i, ip: self.client.post("/api/leads/", {"email": f"v{i}@b.com"}, format="json", HTTP_X_FORWARDED_FOR=ip)
+        for i in range(10):
+            post(i, "203.0.113.1")
+        self.assertEqual(post(10, "1.2.3.4, 203.0.113.1").status_code, 429)
+        self.assertEqual(post(11, "198.51.100.7").status_code, 201)
+
 
 class SanitizeTests(TestCase):
     def test_dangerous_markup_is_removed(self):

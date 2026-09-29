@@ -162,6 +162,9 @@ LOGOUT_REDIRECT_URL = '/dashboard/login/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'],
     'DEFAULT_PERMISSION_CLASSES': ['content.permissions.IsStaffOrReadOnly'],
+    # Rate limits identify the visitor by the last X-Forwarded-For entry, the one nginx appends (the real IP).
+    # Without this DRF uses the whole header, which the visitor can fake to dodge the limit.
+    'NUM_PROXIES': 1,
     'DEFAULT_THROTTLE_RATES': {
         'public_forms': '10/min',
         'whatsapp_clicks': '60/min',
