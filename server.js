@@ -6,8 +6,10 @@
  *   npm start      production, from the build (npm run build)
  *
  * Environment: PORT (default 8080), HOST (default: all interfaces), DJANGO_URL (default http://127.0.0.1:8000).
+ * In development Vite accepts the same host names as Django: DJANGO_ALLOWED_HOSTS from the environment or backend/.env.
  */
 import fs from "node:fs/promises";
+import { parseEnv } from "node:util";
 import http from "node:http";
 import path from "node:path";
 import { Writable } from "node:stream";
@@ -93,7 +95,13 @@ if (isProduction) {
   productionRender = (await import("./dist/server/entry-server.js")).render;
 } else {
   const { createServer } = await import("vite");
-  vite = await createServer({ server: { middlewareMode: true }, appType: "custom" });
+  // Same precedence as Django (settings.py): the real environment first, then backend/.env. Only this value is used.
+  const djangoEnv = await fs.readFile(path.join(root, "backend/.env"), "utf8").then(parseEnv, () => ({}));
+  const allowedHosts = (process.env.DJANGO_ALLOWED_HOSTS ?? djangoEnv.DJANGO_ALLOWED_HOSTS ?? "")
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
+  vite = await createServer({ server: { middlewareMode: true, allowedHosts }, appType: "custom" });
   app.use(vite.middlewares);
 }
 

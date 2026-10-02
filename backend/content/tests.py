@@ -262,6 +262,52 @@ class RichTextApiTests(ApiTestCase):
     def test_content_images_are_staff_only(self):
         self.assertEqual(self.client.get("/api/content-images/").status_code, 403)
 
+    def rich_text_items(self):
+        """One service, case and post, as the dashboard editor finds them."""
+        service = Service.objects.create(title="S", slug="s", icon_name="seo", excerpt="e", content_html="<p>a</p>")
+        case = Case.objects.create(
+            title="C", slug="c", tag="t", excerpt="e", kpi_value="1", kpi_label="k",
+            featured_image=png(), content_html="<p>a</p>",
+        )
+        post = Post.objects.create(
+            title="P", slug="p", featured_image=png(), content_html="<p>a</p>", published_at="2026-10-01",
+        )
+        return [("/api/services/", service), ("/api/cases/", case), ("/api/posts/", post)]
+
+    def test_dashboard_editor_saves_only_content_html(self):
+        items = self.rich_text_items()
+        self.login()
+        image_id = self.client.post("/api/content-images/", {"image": png()}, format="multipart", **self.csrf).json()["id"]
+        html = f'<h2>T</h2><p><strong>b</strong></p><img src="/media/x.png" data-image-id="{image_id}"><script>x()</script>'
+        for url, obj in items:
+            response = self.client.patch(f"{url}{obj.pk}/", {"content_html": html}, format="json", **self.csrf)
+            self.assertEqual(response.status_code, 200, (url, response.content))
+            obj.refresh_from_db()
+            self.assertEqual(obj.content_html, f'<h2>T</h2><p><strong>b</strong></p><img data-image-id="{image_id}">', url)
+            self.assertEqual(obj.title, {"/api/services/": "S", "/api/cases/": "C", "/api/posts/": "P"}[url])
+
+    def test_dashboard_editor_rejects_unknown_image(self):
+        items = self.rich_text_items()
+        self.login()
+        for url, obj in items:
+            response = self.client.patch(f"{url}{obj.pk}/", {"content_html": '<img data-image-id="999">'}, format="json", **self.csrf)
+            self.assertEqual(response.status_code, 400, url)
+            self.assertIn("content_html", response.json())
+
+    def test_dashboard_editor_needs_staff(self):
+        items = self.rich_text_items()
+        User.objects.create_user("ana", password="senha-forte-123")
+        for login in (None, "ana"):
+            self.client.logout()
+            if login:
+                self.client.force_login(User.objects.get(username=login))
+            self.client.cookies["csrftoken"] = "x" * 32  # a valid CSRF pair: the refusal must come from the permission
+            for url, obj in items:
+                response = self.client.patch(f"{url}{obj.pk}/", {"content_html": "<p>x</p>"}, format="json", HTTP_X_CSRFTOKEN="x" * 32)
+                self.assertEqual(response.status_code, 403, (login, url))
+                obj.refresh_from_db()
+                self.assertEqual(obj.content_html, "<p>a</p>")
+
 
 class ReceivedApiTests(ApiTestCase):
     def test_contact_submission_saved_as_queued_returns_only_id(self):
@@ -301,6 +347,15 @@ class ReceivedApiTests(ApiTestCase):
     def test_public_forms_are_throttled(self):
         codes = [self.client.post("/api/leads/", {"email": f"a{i}@b.com"}, format="json").status_code for i in range(11)]
         self.assertEqual(codes[-1], 429)
+
+    def test_each_visitor_has_its_own_limit(self):
+        # The visitor is the last X-Forwarded-For entry (nginx appends the real IP): a faked first entry
+        # doesn't make a new visitor, a different real IP does.
+        post = lambda i, ip: self.client.post("/api/leads/", {"email": f"v{i}@b.com"}, format="json", HTTP_X_FORWARDED_FOR=ip)
+        for i in range(10):
+            post(i, "203.0.113.1")
+        self.assertEqual(post(10, "1.2.3.4, 203.0.113.1").status_code, 429)
+        self.assertEqual(post(11, "198.51.100.7").status_code, 201)
 
 
 class SanitizeTests(TestCase):

@@ -53,6 +53,7 @@ Edite o `backend/.env`:
 - `DJANGO_DEBUG=true`
 - `DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1`
 - `DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080`
+- Para abrir de outra máquina pelo nome (ex.: `http://macbookpro:8080`), acrescente o nome nas duas: `DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,macbookpro` e `http://macbookpro:8080` em `DJANGO_CSRF_TRUSTED_ORIGINS`. O `npm run dev` aceita os mesmos nomes do `DJANGO_ALLOWED_HOSTS` (o Django pode continuar em `127.0.0.1`: quem atende a rede é o `server.js`, que repassa para ele).
 - Deixe `EMAIL_HOST` **vazio** em desenvolvimento: os e-mails só são impressos no terminal (com ele preenchido, os e-mails são enviados de verdade).
 
 Crie o banco, carregue o conteúdo inicial e crie um usuário:
@@ -96,7 +97,7 @@ npm start                                    # http://localhost:8080, a partir d
 |---|---|
 | `http://localhost:8080/` | site |
 | `http://localhost:8080/admin/` | admin do Django (edição de todo o conteúdo) |
-| `http://localhost:8080/dashboard` | dashboard (só leitura; exige usuário **staff**) |
+| `http://localhost:8080/dashboard` | dashboard (visualização e edição do conteúdo de serviços, cases e posts, com colar formatado e envio de imagens; exige usuário **staff**) |
 | `http://localhost:8080/api/` | API (DRF) |
 
 ## Conteúdo

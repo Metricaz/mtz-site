@@ -1,12 +1,15 @@
 import { Case } from '@/lib/api-types';
+import { Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ItemBadges } from '@/components/dashboard/ItemBadges';
 
 interface CaseListProps {
   cases: Case[];
+  onEdit: (caseItem: Case) => void;
 }
 
-export const CaseList = ({ cases }: CaseListProps) => {
+export const CaseList = ({ cases, onEdit }: CaseListProps) => {
   if (cases.length === 0) {
     return (
       <Card className="p-8 text-center">
@@ -43,6 +46,10 @@ export const CaseList = ({ cases }: CaseListProps) => {
                 KPI: {caseItem.kpi_value} · {caseItem.kpi_label}
               </p>
             </div>
+          <Button type="button" variant="outline" size="sm" className="flex-shrink-0 gap-2" onClick={() => onEdit(caseItem)}>
+            <Pencil className="h-4 w-4" />
+            Editar conteúdo
+          </Button>
           </div>
         </Card>
       ))}

@@ -195,3 +195,10 @@ export type Post = {
   created_at: string;
   updated_at: string;
 };
+
+/** Image uploaded from the rich-text editor; the HTML references it as <img data-image-id="id">. */
+export type ContentImage = {
+  id: number;
+  image: string;
+  uploaded_at: string;
+};
