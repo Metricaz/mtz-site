@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { redirectToLogin } from '@/lib/auth';
 import { api } from '@/lib/api';
-import { Case, Company, ContactSubmission, Sector, Service, TeamMember, Testimonial, WhatsAppSettings } from '@/lib/api-types';
+import { Case, Company, ContactSubmission, Post, Sector, Service, TeamMember, Testimonial, WhatsAppSettings } from '@/lib/api-types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import {
   LogOut,
   MessageSquareQuote,
   FolderKanban,
+  Newspaper,
   ArrowUpDown,
   PanelLeftClose,
   PanelLeftOpen,
@@ -31,15 +32,17 @@ import { TeamList } from '@/components/dashboard/TeamList';
 import { TestimonialList } from '@/components/dashboard/TestimonialList';
 import { CaseList } from '@/components/dashboard/CaseList';
 import { ServiceList } from '@/components/dashboard/ServiceList';
+import { PostList } from '@/components/dashboard/PostList';
+import { ContentEditorDialog, EditableContent } from '@/components/dashboard/ContentEditorDialog';
 import { WhatsAppSettingsCard } from '@/components/dashboard/WhatsAppSettingsCard';
 import { WhatsAppAnalyticsPanel } from '@/components/dashboard/WhatsAppAnalyticsPanel';
 import { ContactSubmissionList } from '@/components/dashboard/ContactSubmissionList';
 import logoMetricaz from '@/assets/logo-metricaz.webp';
 
-type Tab = 'sectors' | 'companies' | 'team' | 'testimonials' | 'services' | 'cases' | 'whatsapp' | 'contact';
+type Tab = 'sectors' | 'companies' | 'team' | 'testimonials' | 'services' | 'cases' | 'posts' | 'whatsapp' | 'contact';
 type SortDirection = 'asc' | 'desc';
 
-const validTabs: Tab[] = ['sectors', 'companies', 'team', 'testimonials', 'services', 'cases', 'whatsapp', 'contact'];
+const validTabs: Tab[] = ['sectors', 'companies', 'team', 'testimonials', 'services', 'cases', 'posts', 'whatsapp', 'contact'];
 const defaultSortBy: Record<Tab, string> = {
   sectors: 'order_position',
   companies: 'order_position',
@@ -47,6 +50,7 @@ const defaultSortBy: Record<Tab, string> = {
   testimonials: 'order_position',
   services: 'order_position',
   cases: 'order_position',
+  posts: 'published_at',
   whatsapp: 'updated_at',
   contact: 'updated_at',
 };
@@ -57,6 +61,7 @@ const defaultSortDirection: Record<Tab, SortDirection> = {
   testimonials: 'asc',
   services: 'asc',
   cases: 'asc',
+  posts: 'desc',
   whatsapp: 'desc',
   contact: 'desc',
 };
@@ -95,6 +100,11 @@ const sortOptions: Record<Tab, Array<{ value: string; label: string }>> = {
     { value: 'order_position', label: 'Posicao' },
     { value: 'created_at', label: 'Data de criacao' },
   ],
+  posts: [
+    { value: 'published_at', label: 'Data de publicacao' },
+    { value: 'title', label: 'Titulo' },
+    { value: 'slug', label: 'Slug' },
+  ],
   whatsapp: [{ value: 'updated_at', label: 'Atualizacao' }],
   contact: [{ value: 'created_at', label: 'Mais recentes' }],
 };
@@ -131,6 +141,11 @@ const sections = {
     description: 'Veja os cards da home e as páginas internas de case por slug',
     icon: FolderKanban,
   },
+  posts: {
+    title: 'Blog',
+    description: 'Veja os posts do blog e edite o conteúdo de cada um',
+    icon: Newspaper,
+  },
   whatsapp: {
     title: 'WhatsApp',
     description: 'Veja a configuração do botão e o relatório de cliques',
@@ -149,13 +164,14 @@ export const Dashboard = () => {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('sectors');
   
-  // Read-only: content is edited in the Django admin; staff sees active and inactive items.
+  // Content is edited in the Django admin, except content_html (the editor below); staff sees active and inactive items.
   const [companies, setCompanies] = useState<Company[]>([]);
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [cases, setCases] = useState<Case[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
   const [whatsappSettings, setWhatsappSettings] = useState<WhatsAppSettings | null>(null);
 
@@ -166,6 +182,8 @@ export const Dashboard = () => {
   const [sortBy, setSortBy] = useState<Record<Tab, string>>(defaultSortBy);
   const [sortDirection, setSortDirection] = useState<Record<Tab, SortDirection>>(defaultSortDirection);
   const [currentPage, setCurrentPage] = useState(1);
+  // The one thing edited here: content_html of services, cases and posts (rich-text paste and images).
+  const [editing, setEditing] = useState<{ endpoint: string; item: EditableContent } | null>(null);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -187,7 +205,7 @@ export const Dashboard = () => {
     try {
       setLoading(true);
 
-      const [companiesData, sectorsData, teamData, testimonialsData, servicesData, casesData, whatsappData, submissionsData] =
+      const [companiesData, sectorsData, teamData, testimonialsData, servicesData, casesData, postsData, whatsappData, submissionsData] =
         await Promise.all([
           api.get<Company[]>('/companies/'),
           api.get<Sector[]>('/sectors/'),
@@ -195,6 +213,7 @@ export const Dashboard = () => {
           api.get<Testimonial[]>('/testimonials/'),
           api.get<Service[]>('/services/'),
           api.get<Case[]>('/cases/'),
+          api.get<Post[]>('/posts/'),
           api.get<WhatsAppSettings>('/whatsapp-settings/'),
           api.get<ContactSubmission[]>('/contact-submissions/'),
         ]);
@@ -205,6 +224,7 @@ export const Dashboard = () => {
       setTestimonials(testimonialsData);
       setServices(servicesData);
       setCases(casesData);
+      setPosts(postsData);
       setWhatsappSettings(whatsappData);
       setContactSubmissions(submissionsData);
       setLastUpdatedAt(new Date());
@@ -220,6 +240,16 @@ export const Dashboard = () => {
       fetchData();
     }
   }, [user]);
+
+  const replaceById = <T extends { id: number }>(items: T[], saved: T) =>
+    items.map((item) => (item.id === saved.id ? saved : item));
+
+  const handleContentSaved = (saved: EditableContent) => {
+    if (editing?.endpoint === '/services/') setServices((items) => replaceById(items, saved as Service));
+    if (editing?.endpoint === '/cases/') setCases((items) => replaceById(items, saved as Case));
+    if (editing?.endpoint === '/posts/') setPosts((items) => replaceById(items, saved as Post));
+    setEditing(null);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -240,6 +270,7 @@ export const Dashboard = () => {
     testimonials: testimonials.length,
     services: services.length,
     cases: cases.length,
+    posts: posts.length,
     whatsapp: 1,
     contact: 1,
   };
@@ -290,6 +321,13 @@ export const Dashboard = () => {
       .includes(normalizedQuery)
   );
 
+  const filteredPosts = posts.filter((post) =>
+    [post.title, post.subtitle, post.slug, post.tag?.name || '', post.author?.name || '']
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedQuery)
+  );
+
   const filteredContact = whatsappSettings ? [whatsappSettings] : [];
   const filteredWhatsApp = whatsappSettings ? [whatsappSettings] : [];
   const filteredSubmissions = contactSubmissions.filter((submission) =>
@@ -306,6 +344,7 @@ export const Dashboard = () => {
     testimonials: filteredTestimonials.length,
     services: filteredServices.length,
     cases: filteredCases.length,
+    posts: filteredPosts.length,
     whatsapp: filteredWhatsApp.length,
     contact: filteredContact.length,
   };
@@ -320,7 +359,7 @@ export const Dashboard = () => {
 
       if (aValue === bValue) return 0;
 
-      if (key === 'created_at') {
+      if (key === 'created_at' || key === 'published_at') {
         const aDate = new Date(String(aValue)).getTime();
         const bDate = new Date(String(bValue)).getTime();
         return (aDate - bDate) * direction;
@@ -345,6 +384,7 @@ export const Dashboard = () => {
   );
   const sortedServices = useMemo(() => getSortedData(filteredServices, 'services'), [filteredServices, sortBy, sortDirection]);
   const sortedCases = useMemo(() => getSortedData(filteredCases, 'cases'), [filteredCases, sortBy, sortDirection]);
+  const sortedPosts = useMemo(() => getSortedData(filteredPosts, 'posts'), [filteredPosts, sortBy, sortDirection]);
 
   const activeItemsCount = filteredCount[activeTab];
   const totalPages = Math.max(1, Math.ceil(activeItemsCount / pageSize));
@@ -370,6 +410,7 @@ export const Dashboard = () => {
   const pagedTestimonials = paginateData(sortedTestimonials);
   const pagedServices = paginateData(sortedServices);
   const pagedCases = paginateData(sortedCases);
+  const pagedPosts = paginateData(sortedPosts);
 
   const renderActiveList = () => {
     if (activeTab === 'whatsapp' || activeTab === 'contact') {
@@ -379,8 +420,12 @@ export const Dashboard = () => {
     if (activeTab === 'sectors') return <SectorList sectors={pagedSectors} />;
     if (activeTab === 'companies') return <CompanyList companies={pagedCompanies} />;
     if (activeTab === 'team') return <TeamList team={pagedTeam} />;
-    if (activeTab === 'services') return <ServiceList services={pagedServices} />;
-    if (activeTab === 'cases') return <CaseList cases={pagedCases} />;
+    if (activeTab === 'services')
+      return <ServiceList services={pagedServices} onEdit={(item) => setEditing({ endpoint: '/services/', item })} />;
+    if (activeTab === 'cases')
+      return <CaseList cases={pagedCases} onEdit={(item) => setEditing({ endpoint: '/cases/', item })} />;
+    if (activeTab === 'posts')
+      return <PostList posts={pagedPosts} onEdit={(item) => setEditing({ endpoint: '/posts/', item })} />;
     return <TestimonialList testimonials={pagedTestimonials} />;
   };
 
@@ -674,6 +719,15 @@ export const Dashboard = () => {
         </div>
       </div>
 
+      {editing && (
+        <ContentEditorDialog
+          key={`${editing.endpoint}${editing.item.id}`}
+          endpoint={editing.endpoint}
+          item={editing.item}
+          onClose={() => setEditing(null)}
+          onSaved={handleContentSaved}
+        />
+      )}
     </div>
   );
 };

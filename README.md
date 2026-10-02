@@ -96,7 +96,7 @@ npm start                                    # http://localhost:8080, a partir d
 |---|---|
 | `http://localhost:8080/` | site |
 | `http://localhost:8080/admin/` | admin do Django (edição de todo o conteúdo) |
-| `http://localhost:8080/dashboard` | dashboard (só leitura; exige usuário **staff**) |
+| `http://localhost:8080/dashboard` | dashboard (visualização e edição do conteúdo de serviços, cases e posts, com colar formatado e envio de imagens; exige usuário **staff**) |
 | `http://localhost:8080/api/` | API (DRF) |
 
 ## Conteúdo

@@ -1,13 +1,16 @@
 import { Service } from '@/lib/api-types';
 import { getServiceIcon } from '@/lib/service-icons';
+import { Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ItemBadges } from '@/components/dashboard/ItemBadges';
 
 interface ServiceListProps {
   services: Service[];
+  onEdit: (service: Service) => void;
 }
 
-export const ServiceList = ({ services }: ServiceListProps) => {
+export const ServiceList = ({ services, onEdit }: ServiceListProps) => {
   if (services.length === 0) {
     return (
       <Card className="p-8 text-center">
@@ -40,6 +43,10 @@ export const ServiceList = ({ services }: ServiceListProps) => {
                 </div>
                 <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{service.excerpt}</p>
               </div>
+            <Button type="button" variant="outline" size="sm" className="flex-shrink-0 gap-2" onClick={() => onEdit(service)}>
+              <Pencil className="h-4 w-4" />
+              Editar conteúdo
+            </Button>
             </div>
           </Card>
         );

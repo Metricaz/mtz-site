@@ -34,16 +34,22 @@ const buildUrl = (path: string, query?: Query) => {
   return `${apiOrigin}/api${path}${search ? `?${search}` : ''}`;
 };
 
-const request = async <T>(method: 'GET' | 'POST', path: string, options: { query?: Query; body?: unknown } = {}) => {
+const request = async <T>(
+  method: 'GET' | 'POST' | 'PATCH',
+  path: string,
+  options: { query?: Query; body?: unknown } = {},
+) => {
   const headers: Record<string, string> = { Accept: 'application/json' };
-  if (options.body !== undefined) headers['Content-Type'] = 'application/json';
+  // FormData (file uploads) sets its own multipart Content-Type with the boundary.
+  const isForm = options.body instanceof FormData;
+  if (options.body !== undefined && !isForm) headers['Content-Type'] = 'application/json';
   if (method !== 'GET') headers['X-CSRFToken'] = getCookie('csrftoken');
 
   const response = await fetch(buildUrl(path, options.query), {
     method,
     headers,
     credentials: 'same-origin',
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    body: options.body === undefined ? undefined : isForm ? (options.body as FormData) : JSON.stringify(options.body),
   });
 
   const text = await response.text();
@@ -57,4 +63,5 @@ const request = async <T>(method: 'GET' | 'POST', path: string, options: { query
 export const api = {
   get: <T>(path: string, query?: Query) => request<T>('GET', path, { query }),
   post: <T>(path: string, body: unknown) => request<T>('POST', path, { body }),
+  patch: <T>(path: string, body: unknown) => request<T>('PATCH', path, { body }),
 };

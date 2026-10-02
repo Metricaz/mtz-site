@@ -5,7 +5,8 @@
  *   npm run dev    development, with Vite (hot reload)
  *   npm start      production, from the build (npm run build)
  *
- * Environment: PORT (default 8080), HOST (default: all interfaces), DJANGO_URL (default http://127.0.0.1:8000).
+ * Environment: PORT (default 8080), HOST (default: all interfaces), DJANGO_URL (default http://127.0.0.1:8000),
+ * DEV_ALLOWED_HOSTS (development only: extra host names Vite accepts besides localhost, comma-separated).
  */
 import fs from "node:fs/promises";
 import http from "node:http";
@@ -93,7 +94,8 @@ if (isProduction) {
   productionRender = (await import("./dist/server/entry-server.js")).render;
 } else {
   const { createServer } = await import("vite");
-  vite = await createServer({ server: { middlewareMode: true }, appType: "custom" });
+  const allowedHosts = (process.env.DEV_ALLOWED_HOSTS || "").split(",").map((name) => name.trim()).filter(Boolean);
+  vite = await createServer({ server: { middlewareMode: true, allowedHosts }, appType: "custom" });
   app.use(vite.middlewares);
 }
 
