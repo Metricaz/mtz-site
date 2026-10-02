@@ -224,4 +224,6 @@ O `install.sh` copia os serviços systemd, o site do nginx (com o link em `sites
 sudo /local/dev/mtz-site/deploy-assets/deploy.sh
 ```
 
+Ele mostra a branch e o commit em uso. Se o pull não trouxer nada novo, avisa e lista as branches do remoto com commits que não estão na branch do servidor: o caso clássico é a mudança estar numa branch que ainda não teve merge (o servidor usa a `master`).
+
 Logs: `journalctl -u mtz-site-django -f` e `journalctl -u mtz-site-web -f`.
