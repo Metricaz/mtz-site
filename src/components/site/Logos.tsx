@@ -13,6 +13,8 @@ export const Logos = () => {
   }
 
   const brandsCount = options['marcasatendidas'];
+  // "logos" shows each company's logo (name when it has none); anything else shows the names
+  const showLogos = options['logos.display']?.trim().toLowerCase() === 'logos';
 
   // Duplicar items para efeito de loop infinito
   const items = [...companies, ...companies];
@@ -42,6 +44,23 @@ export const Logos = () => {
       >
         <div className="flex gap-20 ticker whitespace-nowrap" style={{ animationPlayState: isPaused ? 'paused' : 'running' }}>
           {items.map((company, i) => {
+            const content = showLogos && company.logo ? (
+              <img
+                src={company.logo}
+                alt={company.logo_alt || company.name}
+                width={500}
+                height={500}
+                loading="lazy"
+                decoding="async"
+                className="h-24 md:h-32 w-auto opacity-70 hover:opacity-100 transition-opacity"
+              />
+            ) : (
+              company.name
+            );
+            const className = showLogos && company.logo
+              ? 'shrink-0'
+              : 'editorial text-4xl md:text-6xl text-muted-foreground/50 hover:text-primary transition-colors';
+
             if (company.website_url) {
               return (
                 <a
@@ -49,20 +68,17 @@ export const Logos = () => {
                   href={company.website_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="editorial text-4xl md:text-6xl text-muted-foreground/50 hover:text-primary transition-colors"
+                  className={className}
                   aria-label={`Abrir site de ${company.name}`}
                 >
-                  {company.name}
+                  {content}
                 </a>
               );
             }
 
             return (
-              <span
-                key={i}
-                className="editorial text-4xl md:text-6xl text-muted-foreground/50 hover:text-primary transition-colors"
-              >
-                {company.name}
+              <span key={i} className={className}>
+                {content}
               </span>
             );
           })}

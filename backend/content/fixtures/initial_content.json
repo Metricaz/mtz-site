@@ -126,11 +126,11 @@
       "order_position": 0,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Whirlpool",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "A2FBR",
+      "logo": "companies/a2fbr.webp",
+      "logo_alt": "Logo A2FBR",
       "website_url": ""
     }
   },
@@ -141,11 +141,11 @@
       "order_position": 1,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Claro",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Agência Bori",
+      "logo": "companies/agencia-bori.webp",
+      "logo_alt": "Logo Agência Bori",
       "website_url": ""
     }
   },
@@ -156,11 +156,11 @@
       "order_position": 2,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Veloe",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Alpargatas",
+      "logo": "companies/alpargatas.webp",
+      "logo_alt": "Logo Alpargatas",
       "website_url": ""
     }
   },
@@ -171,11 +171,11 @@
       "order_position": 3,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Lavazza",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Anhanguera",
+      "logo": "companies/anhanguera.webp",
+      "logo_alt": "Logo Anhanguera",
       "website_url": ""
     }
   },
@@ -186,11 +186,11 @@
       "order_position": 4,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Ambev",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Betbra",
+      "logo": "companies/betbra.webp",
+      "logo_alt": "Logo Betbra",
       "website_url": ""
     }
   },
@@ -201,11 +201,11 @@
       "order_position": 5,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Bradesco",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "BetEspecial",
+      "logo": "companies/betespecial.webp",
+      "logo_alt": "Logo BetEspecial",
       "website_url": ""
     }
   },
@@ -216,11 +216,11 @@
       "order_position": 6,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Natura",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Bolsa de Aposta",
+      "logo": "companies/bolsa-de-aposta.webp",
+      "logo_alt": "Logo Bolsa de Aposta",
       "website_url": ""
     }
   },
@@ -231,11 +231,731 @@
       "order_position": 7,
       "is_active": true,
       "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z",
-      "name": "Itaú",
-      "logo": "",
-      "logo_alt": "",
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Bom Pra Crédito",
+      "logo": "companies/bom-pra-credito.webp",
+      "logo_alt": "Logo Bom Pra Crédito",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 9,
+    "fields": {
+      "order_position": 8,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Braveo",
+      "logo": "companies/braveo.webp",
+      "logo_alt": "Logo Braveo",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 10,
+    "fields": {
+      "order_position": 9,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Brivia",
+      "logo": "companies/brivia.webp",
+      "logo_alt": "Logo Brivia",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 11,
+    "fields": {
+      "order_position": 10,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Burger King",
+      "logo": "companies/burger-king.webp",
+      "logo_alt": "Logo Burger King",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 12,
+    "fields": {
+      "order_position": 11,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "CBRdoc",
+      "logo": "companies/cbrdoc.webp",
+      "logo_alt": "Logo CBRdoc",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 13,
+    "fields": {
+      "order_position": 12,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "CICV (Cruz Vermelha)",
+      "logo": "companies/icrc-cruz-vermelha.webp",
+      "logo_alt": "Logo CICV (Cruz Vermelha)",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 14,
+    "fields": {
+      "order_position": 13,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Cielo",
+      "logo": "companies/cielo.webp",
+      "logo_alt": "Logo Cielo",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 15,
+    "fields": {
+      "order_position": 14,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Claro",
+      "logo": "companies/claro.webp",
+      "logo_alt": "Logo Claro",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 16,
+    "fields": {
+      "order_position": 15,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Cogna (Kroton)",
+      "logo": "companies/cogna-kroton.webp",
+      "logo_alt": "Logo Cogna (Kroton)",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 17,
+    "fields": {
+      "order_position": 16,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Compartilha",
+      "logo": "companies/compartilha.webp",
+      "logo_alt": "Logo Compartilha",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 18,
+    "fields": {
+      "order_position": 17,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Corpay",
+      "logo": "companies/corpay.webp",
+      "logo_alt": "Logo Corpay",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 19,
+    "fields": {
+      "order_position": 18,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Época Cosméticos",
+      "logo": "companies/epoca-cosmeticos.webp",
+      "logo_alt": "Logo Época Cosméticos",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 20,
+    "fields": {
+      "order_position": 19,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Equifax",
+      "logo": "companies/equifax.webp",
+      "logo_alt": "Logo Equifax",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 21,
+    "fields": {
+      "order_position": 20,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "FAPESP",
+      "logo": "companies/fapesp.webp",
+      "logo_alt": "Logo FAPESP",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 22,
+    "fields": {
+      "order_position": 21,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Ford",
+      "logo": "companies/ford.webp",
+      "logo_alt": "Logo Ford",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 23,
+    "fields": {
+      "order_position": 22,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "FTD",
+      "logo": "companies/ftd.webp",
+      "logo_alt": "Logo FTD",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 24,
+    "fields": {
+      "order_position": 23,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "FulltBet",
+      "logo": "companies/fulltbet.webp",
+      "logo_alt": "Logo FulltBet",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 25,
+    "fields": {
+      "order_position": 24,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Google",
+      "logo": "companies/google.webp",
+      "logo_alt": "Logo Google",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 26,
+    "fields": {
+      "order_position": 25,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Grupo Elopar",
+      "logo": "companies/grupo-elopar.webp",
+      "logo_alt": "Logo Grupo Elopar",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 27,
+    "fields": {
+      "order_position": 26,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Grupo OCQ",
+      "logo": "companies/grupo-ocq.webp",
+      "logo_alt": "Logo Grupo OCQ",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 28,
+    "fields": {
+      "order_position": 27,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Grupo SBF",
+      "logo": "companies/grupo-sbf.webp",
+      "logo_alt": "Logo Grupo SBF",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 29,
+    "fields": {
+      "order_position": 28,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Hapvida",
+      "logo": "companies/hapvida.webp",
+      "logo_alt": "Logo Hapvida",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 30,
+    "fields": {
+      "order_position": 29,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Havaianas",
+      "logo": "companies/havaianas.webp",
+      "logo_alt": "Logo Havaianas",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 31,
+    "fields": {
+      "order_position": 30,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Helloo",
+      "logo": "companies/helloo.webp",
+      "logo_alt": "Logo Helloo",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 32,
+    "fields": {
+      "order_position": 31,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Husky by Nomad",
+      "logo": "companies/husky-by-nomad.webp",
+      "logo_alt": "Logo Husky by Nomad",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 33,
+    "fields": {
+      "order_position": 32,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Livelo",
+      "logo": "companies/livelo.webp",
+      "logo_alt": "Logo Livelo",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 34,
+    "fields": {
+      "order_position": 33,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Loja Integrada",
+      "logo": "companies/loja-integrada.webp",
+      "logo_alt": "Logo Loja Integrada",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 35,
+    "fields": {
+      "order_position": 34,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Matchbook",
+      "logo": "companies/matchbook.webp",
+      "logo_alt": "Logo Matchbook",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 36,
+    "fields": {
+      "order_position": 35,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Mileto",
+      "logo": "companies/mileto.webp",
+      "logo_alt": "Logo Mileto",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 37,
+    "fields": {
+      "order_position": 36,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Moderna",
+      "logo": "companies/moderna.webp",
+      "logo_alt": "Logo Moderna",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 38,
+    "fields": {
+      "order_position": 37,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "MongoDB",
+      "logo": "companies/mongodb.webp",
+      "logo_alt": "Logo MongoDB",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 39,
+    "fields": {
+      "order_position": 38,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Neooh",
+      "logo": "companies/neooh.webp",
+      "logo_alt": "Logo Neooh",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 40,
+    "fields": {
+      "order_position": 39,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Netshoes",
+      "logo": "companies/netshoes.webp",
+      "logo_alt": "Logo Netshoes",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 41,
+    "fields": {
+      "order_position": 40,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "PDV Legal",
+      "logo": "companies/pdv-legal.webp",
+      "logo_alt": "Logo PDV Legal",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 42,
+    "fields": {
+      "order_position": 41,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "PGN",
+      "logo": "companies/pgn.webp",
+      "logo_alt": "Logo PGN",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 43,
+    "fields": {
+      "order_position": 42,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Pinnacle",
+      "logo": "companies/pinnacle.webp",
+      "logo_alt": "Logo Pinnacle",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 44,
+    "fields": {
+      "order_position": 43,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Qista",
+      "logo": "companies/qista.webp",
+      "logo_alt": "Logo Qista",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 45,
+    "fields": {
+      "order_position": 44,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Qualicorp",
+      "logo": "companies/qualicorp.webp",
+      "logo_alt": "Logo Qualicorp",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 46,
+    "fields": {
+      "order_position": 45,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Santillana",
+      "logo": "companies/santillana.webp",
+      "logo_alt": "Logo Santillana",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 47,
+    "fields": {
+      "order_position": 46,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Sem Parar",
+      "logo": "companies/sem-parar.webp",
+      "logo_alt": "Logo Sem Parar",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 48,
+    "fields": {
+      "order_position": 47,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "TIM Play",
+      "logo": "companies/tim-play.webp",
+      "logo_alt": "Logo TIM Play",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 49,
+    "fields": {
+      "order_position": 48,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "UniFECAF",
+      "logo": "companies/unifecaf.webp",
+      "logo_alt": "Logo UniFECAF",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 50,
+    "fields": {
+      "order_position": 49,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Unime",
+      "logo": "companies/unime.webp",
+      "logo_alt": "Logo Unime",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 51,
+    "fields": {
+      "order_position": 50,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "UniPDS",
+      "logo": "companies/unipds.webp",
+      "logo_alt": "Logo UniPDS",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 52,
+    "fields": {
+      "order_position": 51,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Unipega Shop",
+      "logo": "companies/unipega-shop.webp",
+      "logo_alt": "Logo Unipega Shop",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 53,
+    "fields": {
+      "order_position": 52,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Unopar",
+      "logo": "companies/unopar.webp",
+      "logo_alt": "Logo Unopar",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 54,
+    "fields": {
+      "order_position": 53,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Veloe",
+      "logo": "companies/veloe.webp",
+      "logo_alt": "Logo Veloe",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 55,
+    "fields": {
+      "order_position": 54,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "Vivara",
+      "logo": "companies/vivara.webp",
+      "logo_alt": "Logo Vivara",
+      "website_url": ""
+    }
+  },
+  {
+    "model": "content.company",
+    "pk": 56,
+    "fields": {
+      "order_position": 55,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-10-22T00:00:00Z",
+      "updated_at": "2026-10-22T00:00:00Z",
+      "name": "VWO",
+      "logo": "companies/vwo.webp",
+      "logo_alt": "Logo VWO",
       "website_url": ""
     }
   },
@@ -839,6 +1559,17 @@
       "value": "Marcas que decidem com *dado, não com achismo.*",
       "description": "Home · Quem confia · título.",
       "updated_at": "2026-09-24T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 74,
+    "fields": {
+      "key": "logos.display",
+      "label": "",
+      "value": "nomes",
+      "description": "Home · Quem confia · exibição: \"logos\" mostra os logos; \"nomes\" (ou vazio) mostra os nomes.",
+      "updated_at": "2026-10-22T00:00:00Z"
     }
   },
   {

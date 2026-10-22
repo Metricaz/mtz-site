@@ -46,7 +46,7 @@ class InitialContentFixtureTests(TestCase):
 
     def test_counts(self):
         self.assertEqual(Sector.objects.count(), 10)
-        self.assertEqual(Company.objects.count(), 8)
+        self.assertEqual(Company.objects.count(), 56)
         self.assertEqual(TeamMember.objects.count(), 8)
         self.assertEqual(Testimonial.objects.count(), 3)
         self.assertEqual(Service.objects.count(), 4)
@@ -67,7 +67,7 @@ class InitialContentFixtureTests(TestCase):
 
     def test_fixture_images_exist(self):
         media = Path(__file__).parent / "fixtures" / "media"
-        paths = [p.image.name for p in AboutPillar.objects.all()] + [
+        paths = [p.image.name for p in AboutPillar.objects.all()] + [c.logo.name for c in Company.objects.all()] + [
             SiteImage.objects.get().image.name,
             Post.objects.get().featured_image.name,
             Case.objects.get().featured_image.name,
