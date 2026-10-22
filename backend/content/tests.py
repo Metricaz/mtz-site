@@ -628,3 +628,49 @@ class ContactDigestTests(TestCase):
         self.assertEqual(ContactSubmission.objects.get().status, "queued")
         self.assertIsNone(Lead.objects.get().notified_at)
         self.assertIsNone(NewsletterSubscriber.objects.get().notified_at)
+
+
+class LoadPartnerCompaniesTests(TestCase):
+    def setUp(self):
+        media = tempfile.TemporaryDirectory()
+        self.addCleanup(media.cleanup)
+        self.media = Path(media.name)
+        self.enterContext(override_settings(MEDIA_ROOT=self.media))
+
+    def run_load(self, *args):
+        out = io.StringIO()
+        call_command("load_partner_companies", *args, stdout=out)
+        return out.getvalue()
+
+    def test_loads_companies_and_logos_without_touching_other_content(self):
+        Company.objects.create(name="Ambev")
+        Company.objects.create(name="Claro", website_url="https://www.claro.com.br")
+        SiteOption.objects.create(key="logos.title", value="Título editado no admin")
+
+        self.run_load()
+
+        active = Company.objects.filter(is_active=True)
+        self.assertEqual(active.count(), 56)
+        self.assertFalse(Company.objects.get(name="Ambev").is_active)
+        self.assertEqual(Company.objects.filter(name="Claro").count(), 1)
+        self.assertEqual(Company.objects.get(name="Claro").website_url, "https://www.claro.com.br")
+        for company in active:
+            self.assertTrue((self.media / company.logo.name).is_file(), company.logo.name)
+        self.assertEqual(SiteOption.objects.get(key="logos.title").value, "Título editado no admin")
+        self.assertEqual(SiteOption.objects.get(key="logos.display").value, "nomes")
+
+    def test_running_again_keeps_the_chosen_display_and_does_not_duplicate(self):
+        self.run_load()
+        SiteOption.objects.filter(key="logos.display").update(value="logos")
+        self.run_load()
+
+        self.assertEqual(Company.objects.count(), 56)
+        self.assertEqual(SiteOption.objects.get(key="logos.display").value, "logos")
+        self.assertEqual(len(list((self.media / "companies").iterdir())), 56)
+
+    def test_dry_run_changes_nothing(self):
+        Company.objects.create(name="Ambev")
+        self.assertIn("[dry-run]", self.run_load("--dry-run"))
+        self.assertEqual(Company.objects.count(), 1)
+        self.assertFalse(SiteOption.objects.filter(key="logos.display").exists())
+        self.assertFalse((self.media / "companies").exists())
