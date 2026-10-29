@@ -25,18 +25,21 @@ export const CaseGrid = ({ cases, headingLevel: Heading = "h3" }: CaseGridProps)
       <Link
         key={c.id}
         to={`/cases/${c.slug}`}
-        className={`group relative rounded-3xl overflow-hidden border border-border bg-card block ${spans[i % spans.length]}`}
+        className={`group relative flex flex-col self-stretch rounded-3xl border border-border bg-card ${spans[i % spans.length]}`}
       >
-        <img
-          src={c.featured_image}
-          alt={c.featured_image_alt || c.title}
-          width={1024}
-          height={768}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/55 to-ink-deep/5" />
-        <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
+        {/* The aspect ratio is a minimum: a long title or summary makes the card taller instead of being cut off. */}
+        <div className="absolute inset-0 overflow-hidden rounded-3xl">
+          <img
+            src={c.featured_image}
+            alt={c.featured_image_alt || c.title}
+            width={1024}
+            height={768}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/55 to-ink-deep/5" />
+        </div>
+        <div className="relative flex flex-1 flex-col justify-between gap-8 p-6 md:p-8">
           <div className="flex items-start justify-between gap-4">
             <span className="mono-tag px-3 py-1.5 rounded-full bg-primary text-primary-foreground">
               {c.tag}
@@ -47,7 +50,7 @@ export const CaseGrid = ({ cases, headingLevel: Heading = "h3" }: CaseGridProps)
             </div>
           </div>
           <div className="max-w-xl">
-            <Heading className="editorial text-3xl md:text-5xl text-foreground">{c.title}</Heading>
+            <Heading className="editorial text-3xl md:text-4xl xl:text-5xl text-foreground">{c.title}</Heading>
             <p className="text-foreground/80 mt-2 text-sm md:text-base max-w-md">{c.excerpt}</p>
             <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
               Ver case
