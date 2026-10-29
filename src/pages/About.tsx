@@ -10,7 +10,7 @@ import { useApiList } from "@/hooks/useApiList";
 import { useSiteImage } from "@/hooks/useSiteImage";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { AboutHighlight, AboutPillar } from "@/lib/api-types";
-import { buildStats } from "@/lib/stats";
+import { buildStats, SHOW_COMPANY_NUMBERS } from "@/lib/stats";
 
 // Numbers grid: numbers from "Opções do site" (value = number, text = its label).
 const ABOUT_STATS = [
@@ -29,7 +29,7 @@ const About = () => {
   const highlights = useApiList<AboutHighlight>("/about-highlights/");
   const whyImage = useSiteImage("about.why_image");
   const { options, labels } = useSiteOptions();
-  const stats = buildStats(ABOUT_STATS, options, labels);
+  const stats = SHOW_COMPANY_NUMBERS ? buildStats(ABOUT_STATS, options, labels) : [];
 
   return (
     <main className="min-h-screen bg-background text-foreground">
