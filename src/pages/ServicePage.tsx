@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useServices } from '@/hooks/useServices';
 import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
+import { PageHead } from '@/components/PageHead';
 import { Footer } from '@/components/site/Footer';
 import { getServiceIcon } from '@/lib/service-icons';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
@@ -36,6 +37,11 @@ const ServicePage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <PageHead
+        title={service.seo_title}
+        name={service.title}
+        description={service.seo_description || service.excerpt}
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">

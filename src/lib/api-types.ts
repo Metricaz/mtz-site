@@ -47,6 +47,8 @@ export type Service = Ordered & {
   icon_name: string;
   excerpt: string;
   content_html: string;
+  seo_title: string;
+  seo_description: string;
 };
 
 export type Case = Ordered & {
@@ -61,6 +63,8 @@ export type Case = Ordered & {
   featured_image: string;
   featured_image_alt: string;
   content_html: string;
+  seo_title: string;
+  seo_description: string;
 };
 
 export type CompanyAddress = Ordered & {
@@ -192,6 +196,8 @@ export type Post = {
   content_html: string;
   published_at: string;
   is_active: boolean;
+  seo_title: string;
+  seo_description: string;
   created_at: string;
   updated_at: string;
 };

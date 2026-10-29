@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, UserRound } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
+import { PageHead } from '@/components/PageHead';
 import { Footer } from '@/components/site/Footer';
 import { usePosts } from '@/hooks/usePosts';
 import { formatShortDate } from '@/lib/dates';
@@ -33,6 +34,13 @@ const BlogPostPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <PageHead
+        title={post.seo_title}
+        name={post.title}
+        description={post.seo_description || post.subtitle}
+        image={post.featured_image}
+        type="article"
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">

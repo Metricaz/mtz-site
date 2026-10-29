@@ -161,12 +161,34 @@ class RichTextModel(SanitizedContentMixin, OrderedModel):
         abstract = True
 
 
+# Optional overrides of what search engines and link previews show (title tag and meta description).
+# Empty = the page's own title and summary.
+def seo_title_field():
+    return models.CharField(
+        "título para o Google",
+        max_length=70,
+        blank=True,
+        help_text="Opcional, até ~60 caracteres. Vazio = título da página seguido do nome do site.",
+    )
+
+
+def seo_description_field():
+    return models.CharField(
+        "descrição para o Google",
+        max_length=200,
+        blank=True,
+        help_text="Opcional, até ~155 caracteres. Vazio = resumo da página.",
+    )
+
+
 class Service(RichTextModel):
     title = models.CharField("título", max_length=255)
     slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /servicos/<slug>")
     icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
     excerpt = models.TextField("resumo")
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
+    seo_title = seo_title_field()
+    seo_description = seo_description_field()
 
     class Meta(RichTextModel.Meta):
         verbose_name = "serviço"
@@ -188,6 +210,8 @@ class Case(RichTextModel):
     featured_image = models.ImageField("imagem de destaque", upload_to="cases/")
     featured_image_alt = models.CharField("texto alternativo da imagem", max_length=255, blank=True)
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
+    seo_title = seo_title_field()
+    seo_description = seo_description_field()
 
     class Meta(RichTextModel.Meta):
         verbose_name = "case"
@@ -316,6 +340,8 @@ class Post(SanitizedContentMixin, models.Model):
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
     published_at = models.DateField("data de publicação")
     is_active = models.BooleanField("publicado", default=True, help_text="Desmarcado = não aparece no site.")
+    seo_title = seo_title_field()
+    seo_description = seo_description_field()
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="criado por",

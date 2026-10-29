@@ -110,7 +110,7 @@ npm start                                    # http://localhost:8080, a partir d
 - **Imagens do site** (admin → *Imagens do site*): imagens avulsas por chave (ex.: `about.why_image`).
 - **Conteúdo rico** (serviços, cases, posts): HTML. Imagens do conteúdo são enviadas em *Imagens de conteúdo* e referenciadas por `<img data-image-id="ID">`; scripts, estilos e atributos fora da lista permitida são removidos ao salvar.
 - **Posição e ativo**: a maioria dos itens tem *posição* (menor aparece primeiro) e *ativo* (desmarcado = não aparece no site).
-- A fixture `initial_content` traz o conteúdo atual do site, um case de exemplo e um post de exemplo (com autor e tag).
+- A fixture `initial_content` traz o conteúdo atual do site e as tags do blog. Cases, posts e autores são conteúdo real, cadastrado no admin (não há mais case nem post de exemplo).
 
 ## E-mail: resumo de contatos
 

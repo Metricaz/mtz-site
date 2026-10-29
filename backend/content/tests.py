@@ -1,3 +1,4 @@
+import importlib
 import io
 import tempfile
 from unittest import mock
@@ -58,19 +59,15 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(SocialLink.objects.count(), 3)
         self.assertEqual(SiteImage.objects.get().key, "about.why_image")
         self.assertEqual(Tag.objects.count(), 5)
-        self.assertEqual(Case.objects.get().slug, "case-de-exemplo")
 
-    def test_example_post_is_complete(self):
-        post = Post.objects.get()
-        self.assertEqual((post.author.name, post.tag.name), ("Nome Sobrenome", "Privacidade"))
-        self.assertTrue(post.subtitle and post.featured_image and post.content_html)
+    def test_no_example_content(self):
+        # Cases, posts and authors are real content, entered in the admin (SEO and GEO audit, 28/10/2026).
+        self.assertFalse(Case.objects.exists() or Post.objects.exists() or Author.objects.exists())
 
     def test_fixture_images_exist(self):
         media = Path(__file__).parent / "fixtures" / "media"
         paths = [p.image.name for p in AboutPillar.objects.all()] + [c.logo.name for c in Company.objects.all()] + [
             SiteImage.objects.get().image.name,
-            Post.objects.get().featured_image.name,
-            Case.objects.get().featured_image.name,
         ]
         for name in paths:
             self.assertTrue((media / name).is_file(), name)
@@ -166,6 +163,7 @@ class PublicContentApiTests(ApiTestCase):
         self.assertEqual([a["label"] for a in self.client.get("/api/addresses/?limit=1").json()], ["São Paulo"])
 
     def test_options_skip_empty_for_public(self):
+        SiteOption.objects.all().delete()  # the seo.* options created by migration 0009
         SiteOption.objects.create(key="contact.email", value="comercial@metricaz.com")
         SiteOption.objects.create(key="logos.brands_count", value="")
         data = self.client.get("/api/options/").json()
@@ -529,9 +527,17 @@ class SiteContentApiTests(ApiTestCase):
 class BlogApiTests(ApiTestCase):
     fixtures = ["initial_content"]
 
+    def setUp(self):
+        super().setUp()
+        self.author = Author.objects.create(name="Ana Lima", mini_bio="Analista de dados.")
+        Post.objects.create(
+            title="Consent Mode", slug="consent-mode", author=self.author, tag=Tag.objects.get(slug="privacidade"),
+            featured_image="blog/x.png", content_html="<p>x</p>", published_at="2026-05-12",
+        )
+
     def test_post_comes_with_author_and_tag(self):
-        post = self.client.get("/api/posts/?slug=google-consent-mode-v2").json()[0]
-        self.assertEqual(post["author"]["name"], "Nome Sobrenome")
+        post = self.client.get("/api/posts/?slug=consent-mode").json()[0]
+        self.assertEqual(post["author"]["name"], "Ana Lima")
         self.assertIn("mini_bio", post["author"])
         self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade"})
         self.assertNotIn("author_id", post)
@@ -541,7 +547,7 @@ class BlogApiTests(ApiTestCase):
             title="Mais novo", slug="mais-novo", tag=Tag.objects.get(slug="seo"), featured_image="blog/x.png",
             content_html="<p>x</p>", published_at="2026-09-01",
         )
-        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/").json()], ["mais-novo", "google-consent-mode-v2"])
+        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/").json()], ["mais-novo", "consent-mode"])
         self.assertEqual([p["slug"] for p in self.client.get("/api/posts/?tag=seo").json()], ["mais-novo"])
         self.assertEqual(len(self.client.get("/api/posts/?limit=1").json()), 1)
 
@@ -554,7 +560,7 @@ class BlogApiTests(ApiTestCase):
         response = self.client.post(
             "/api/posts/",
             {
-                "title": "Novo", "slug": "novo", "author_id": 1, "tag_id": 2, "featured_image": png(),
+                "title": "Novo", "slug": "novo", "author_id": self.author.id, "tag_id": 2, "featured_image": png(),
                 "content_html": "<p>ok</p><script>x()</script>", "published_at": "2026-09-24",
             },
             format="multipart",
@@ -562,12 +568,14 @@ class BlogApiTests(ApiTestCase):
         )
         self.assertEqual(response.status_code, 201, response.content)
         data = response.json()
-        self.assertEqual((data["author"]["id"], data["tag"]["slug"], data["content_html"]), (1, "tag-manager", "<p>ok</p>"))
+        self.assertEqual(
+            (data["author"]["id"], data["tag"]["slug"], data["content_html"]), (self.author.id, "tag-manager", "<p>ok</p>")
+        )
         self.assertEqual(Post.objects.get(slug="novo").created_by, self.staff)
 
     def test_authors_and_tags_are_public(self):
         self.assertEqual(len(self.client.get("/api/tags/").json()), 5)
-        self.assertEqual(self.client.get("/api/authors/").json()[0]["name"], "Nome Sobrenome")
+        self.assertEqual(self.client.get("/api/authors/").json()[0]["name"], "Ana Lima")
 
 
 @override_settings(DEFAULT_FROM_EMAIL="Metricaz <contato@metricaz.com>", CONTACT_DIGEST_TO="comercial@metricaz.com")
@@ -674,3 +682,39 @@ class LoadPartnerCompaniesTests(TestCase):
         self.assertEqual(Company.objects.count(), 1)
         self.assertFalse(SiteOption.objects.filter(key="logos.display").exists())
         self.assertFalse((self.media / "companies").exists())
+
+
+class CaseDataFixMigrationTests(TestCase):
+    """0011_fix_case_data: fixes the wrong values found on the test site, leaves edited ones alone."""
+
+    def run_fix(self):
+        importlib.import_module("content.migrations.0011_fix_case_data").forwards(apps, None)
+
+    def make_case(self, **fields):
+        return Case.objects.create(
+            tag="t", excerpt="e", kpi_value="1", kpi_label="l", featured_image="cases/x.png", content_html="<p>x</p>",
+            **fields,
+        )
+
+    def test_fixes_wrong_values(self):
+        livelo = self.make_case(
+            title="Livelo + GA4", slug="livelo-ga4", client_name="Livelo",
+            service_stack="Na Metricaz, acreditamos que dados bem utilizados...",
+        )
+        Case.objects.filter(pk=livelo.pk).update(kpi_value="+30%", kpi_label="Conversão")
+        bk = self.make_case(title="IoT Analytics", slug="iot-analytics", client_name="Burguer King")
+        Case.objects.filter(pk=bk.pk).update(tag="Burger King, Tagueamento,")
+        self.run_fix()
+        livelo.refresh_from_db()
+        bk.refresh_from_db()
+        self.assertEqual((livelo.kpi_value, livelo.kpi_label), ("+71%", "vendas do Clube"))
+        self.assertEqual(livelo.service_stack, "GA4, Google Ads, Firebase, AppsFlyer, biblioteca de tagueamento")
+        self.assertEqual((bk.client_name, bk.tag), ("Burger King", "Burger King, Tagueamento"))
+        self.assertEqual(bk.service_stack, "GA4, Firebase, Looker Studio, User ID")
+
+    def test_keeps_values_edited_in_the_admin(self):
+        livelo = self.make_case(title="Livelo", slug="livelo-ga4", service_stack="GA4 e Google Ads")
+        Case.objects.filter(pk=livelo.pk).update(kpi_value="+50%", kpi_label="Conversão")
+        self.run_fix()
+        livelo.refresh_from_db()
+        self.assertEqual((livelo.kpi_value, livelo.service_stack), ("+50%", "GA4 e Google Ads"))
