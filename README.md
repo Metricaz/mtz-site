@@ -146,7 +146,9 @@ Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
 
 | Arquivo | Vai para | O que é |
 |---|---|---|
-| `sites-available/mtz-site.conf` | `/etc/nginx/sites-available/` | nginx: `/api`, `/admin` e login/logout → Django; `/static`, `/media`, `/assets` → disco; o resto → Node |
+| `sites-available/mtz-site.conf` | `/etc/nginx/sites-available/` | nginx do UAT (`mtz-site.dev.i.metricaz.com`, fora dos buscadores) |
+| `sites-available/mtz-site-prd.conf` | `/etc/nginx/sites-available/` | nginx da produção (`metricaz.com`; http e www redirecionam para ele) |
+| `nginx/mtz-site-common.conf` | `/etc/nginx/snippets/` | o que os dois têm em comum: `/api`, `/admin` e login/logout → Django; `/static`, `/media`, `/assets` → disco; o resto → Node |
 | `nginx/redirects-site-antigo.map` | (lido do repositório pelo nginx) | 301 dos endereços do site antigo (WordPress) para as páginas novas; lista congelada, mexer só se aparecer endereço antigo esquecido |
 | `systemd/mtz-site-django.service` | `/etc/systemd/system/` | Django (gunicorn) em `127.0.0.1:8101` |
 | `systemd/mtz-site-web.service` | `/etc/systemd/system/` | páginas (Node, SSR) em `127.0.0.1:8100` |
@@ -154,7 +156,7 @@ Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
 | `install.sh` | — | copia os arquivos acima para o sistema e reinicia/recarrega |
 | `deploy.sh` | — | atualização (pull, dependências, migrate, collectstatic, build, `install.sh`) |
 
-O projeto fica em `/local/dev/mtz-site`, e tudo roda com o usuário `www-data`. UAT: `https://mtz-site.dev.i.metricaz.com`, com SQLite. O mesmo roteiro vale para produção; muda o `.env` (e o `server_name`/certificado do nginx).
+O projeto fica em `/local/dev/mtz-site` no UAT e em `/local/mtz-site` na produção (os comandos abaixo usam o do UAT; na produção, tire o `dev/`), e tudo roda com o usuário `www-data`. Os arquivos de `deploy-assets/` citam `/local/dev/mtz-site`; o `install.sh` troca pela pasta onde ele está ao copiar. UAT: `https://mtz-site.dev.i.metricaz.com`; produção: `https://metricaz.com`; os dois com SQLite. O mesmo roteiro vale para os dois; muda o `.env`: `DEPLOY_ENV=prd` faz o `install.sh` instalar o `mtz-site-prd.conf` (vazio ou `uat` = `mtz-site.conf`).
 
 ### Primeira instalação (como root)
 
@@ -166,16 +168,12 @@ apt install -y python3 python3-venv git
 
 Node: ≥ 20 (`node -v`).
 
-**2. Código.** O repositório é privado: se o `www-data` ainda não tem chave, gere uma e cadastre a pública em GitHub → repositório → Settings → Deploy keys (só leitura). O home do `www-data` é `/var/www`; ele também guarda os caches do pip e do npm.
+**2. Código.** O servidor lê o repositório (privado) pelo GitHub App **metricaz-deploy**, só leitura, sem deploy key: se o servidor ainda não tem o App, rode uma vez o `install.sh` do repositório `github-app-git`. O home do `www-data` é `/var/www`; ele também guarda os caches do pip e do npm.
 
 ```bash
-install -d -o www-data -g www-data -m 700 /var/www/.ssh
 install -d -o www-data -g www-data /var/www/.cache /var/www/.npm
-sudo -u www-data -H ssh-keygen -t ed25519 -N "" -f /var/www/.ssh/id_ed25519
-cat /var/www/.ssh/id_ed25519.pub              # → Deploy key no GitHub
-
 mkdir -p /local/dev/mtz-site && chown www-data: /local/dev/mtz-site
-sudo -u www-data -H git clone -b django-backend git@github.com:Metricaz/mtz-site.git /local/dev/mtz-site
+sudo -u www-data -H git clone https://github.com/Metricaz/mtz-site.git /local/dev/mtz-site
 ```
 
 **3. Backend.**
@@ -211,7 +209,15 @@ sudo -u www-data -H npm ci
 sudo -u www-data -H npm run build
 ```
 
-**5. Serviços, nginx e cron.** Confira antes o caminho do certificado `*.dev.i.metricaz.com` no `mtz-site.conf` (`grep -h ssl_certificate /etc/nginx/sites-enabled/*`).
+**5. Certificado (só produção).** O `mtz-site-prd.conf` precisa do certificado de `metricaz.com` para passar no `nginx -t`, e o desafio http do Let's Encrypt só funciona com o DNS já apontando para o servidor. Na troca: aponte o DNS de `metricaz.com` para o servidor novo e, com o site padrão do nginx ainda respondendo na porta 80, tire o certificado (a renovação automática usa a mesma pasta, que o `mtz-site-prd.conf` também serve):
+
+```bash
+certbot certonly --webroot -w /var/www/html -d metricaz.com -d www.metricaz.com --cert-name metricaz.com
+```
+
+Até o passo 6 rodar, o https de `metricaz.com` fica fora do ar (só alguns minutos).
+
+**6. Serviços, nginx e cron.** No UAT, confira antes o caminho do certificado `*.dev.i.metricaz.com` no `mtz-site.conf` (`grep -h ssl_certificate /etc/nginx/sites-enabled/*`).
 
 ```bash
 /local/dev/mtz-site/deploy-assets/install.sh
