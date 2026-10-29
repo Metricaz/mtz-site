@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { useCompanyAddress } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { OptionText } from "@/components/site/OptionText";
+import { PrivacyNotice } from "@/components/site/PrivacyNotice";
 
 export const Contact = () => {
   const [loading, setLoading] = useState(false);
@@ -106,6 +107,7 @@ export const Contact = () => {
               {loading ? "Enviando..." : "Enviar mensagem"}
               <span>→</span>
             </button>
+            <PrivacyNotice />
           </form>
         </div>
       </div>

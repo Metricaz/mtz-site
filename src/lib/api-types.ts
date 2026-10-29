@@ -67,6 +67,15 @@ export type Case = Ordered & {
   seo_description: string;
 };
 
+/** Institutional page (Política de Privacidade, Termos de Uso…), served at /<slug>. */
+export type Page = Ordered & {
+  title: string;
+  slug: string;
+  content_html: string;
+  seo_title: string;
+  seo_description: string;
+};
+
 export type CompanyAddress = Ordered & {
   label: string;
   street: string;

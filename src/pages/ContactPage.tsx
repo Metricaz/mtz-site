@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, MapPin, Mail, PhoneCall } from "lucide-react";
+import { ArrowDown, MapPin, Mail, PhoneCall } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { OptionPageHead } from "@/components/PageHead";
 import { Footer } from "@/components/site/Footer";
@@ -39,13 +38,14 @@ const ContactPage = () => {
             <OptionText k="contactpage.description" as="p" className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg" />
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/#contato"
+              {/* The form (<Contact />, id="contato") is further down this same page. */}
+              <a
+                href="#contato"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card/55 px-5 py-3 text-sm font-medium transition-colors hover:border-primary/40 hover:bg-card"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowDown className="h-4 w-4" />
                 Ir para o formulário
-              </Link>
+              </a>
               <WhatsAppButton
                 number={settings?.number}
                 enabled={settings?.enabled}

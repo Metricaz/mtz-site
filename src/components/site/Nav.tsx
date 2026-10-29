@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import logoMetricaz from "../../assets/logo-metricaz.webp";
+import { siteLinks } from "@/lib/site-links";
 
-const links = [
-  { href: "/quem-somos", label: "Quem Somos", isPage: true },
-  { href: "#servicos", label: "Serviços" },
-  { href: "#metodo", label: "Método" },
-  { href: "#cases", label: "Cases" },
-  { href: "#conteudo", label: "Conteúdo" },
-  { href: "#contato", label: "Contato" },
-];
+const links = siteLinks;
 
 interface NavProps {
   useHomeSectionLinks?: boolean;

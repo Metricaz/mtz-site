@@ -14,6 +14,7 @@ import { WhatsAppFloatingButton } from "@/components/site/WhatsAppFloatingButton
 // don't ship in the public site's initial bundle.
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));
+const CasesPage = lazy(() => import("./pages/Cases"));
 const CasePage = lazy(() => import("./pages/CasePage"));
 const About = lazy(() => import("./pages/About"));
 const ServicesPage = lazy(() => import("./pages/Services"));
@@ -21,6 +22,7 @@ const ServicePage = lazy(() => import("./pages/ServicePage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const BlogPage = lazy(() => import("./pages/Blog"));
 const BlogPostPage = lazy(() => import("./pages/BlogPost"));
+const InstitutionalPage = lazy(() => import("./pages/InstitutionalPage"));
 
 const MetricazPrefixRedirect = () => {
   const location = useLocation();
@@ -88,6 +90,7 @@ const App = ({ queryClient, router }: AppProps) => (
                 <Route path="/servicos" element={<ServicesPage />} />
                 <Route path="/servicos/:slug" element={<ServicePage />} />
                 <Route path="/contato" element={<ContactPage />} />
+                <Route path="/cases" element={<CasesPage />} />
                 <Route path="/cases/:slug" element={<CasePage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/blog/:slug" element={<BlogPostPage />} />
@@ -100,6 +103,8 @@ const App = ({ queryClient, router }: AppProps) => (
                     </ProtectedRoute>
                   }
                 />
+                {/* Institutional pages from the admin (/politica-de-privacidade…); fixed routes above win. */}
+                <Route path="/:slug" element={<InstitutionalPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

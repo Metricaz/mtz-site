@@ -28,6 +28,7 @@ from .models import (
     Lead,
     MethodStep,
     NewsletterSubscriber,
+    Page,
     Post,
     Sector,
     Service,
@@ -56,7 +57,7 @@ class InitialContentFixtureTests(TestCase):
         self.assertEqual(EngagementModel.objects.count(), 3)
         self.assertEqual(AboutPillar.objects.count(), 3)
         self.assertEqual(AboutHighlight.objects.count(), 4)
-        self.assertEqual(SocialLink.objects.count(), 3)
+        self.assertEqual(SocialLink.objects.count(), 4)
         self.assertEqual(SiteImage.objects.get().key, "about.why_image")
         self.assertEqual(Tag.objects.count(), 5)
 
@@ -718,3 +719,41 @@ class CaseDataFixMigrationTests(TestCase):
         self.run_fix()
         livelo.refresh_from_db()
         self.assertEqual((livelo.kpi_value, livelo.service_stack), ("+50%", "GA4 e Google Ads"))
+
+
+class RelativeContactLinksMigrationTests(TestCase):
+    def test_old_site_contact_link_points_to_this_site(self):
+        case = Case.objects.create(
+            title="Livelo", slug="livelo-ga4", tag="t", excerpt="e", kpi_value="1", kpi_label="l",
+            featured_image="cases/x.png",
+            content_html='<p><a href="https://metricaz.com/contato/">Fale conosco</a> <a href="https://metricaz.com/blog/">blog</a></p>',
+        )
+        importlib.import_module("content.migrations.0013_relative_contact_links").forwards(apps, None)
+        case.refresh_from_db()
+        self.assertIn('<a href="/contato" rel="noopener noreferrer">Fale conosco</a>', case.content_html)
+        self.assertIn('href="https://metricaz.com/blog/"', case.content_html)  # only the contact link changes
+
+
+class InstitutionalPagesTests(ApiTestCase):
+    def test_privacy_and_terms_come_from_the_migration(self):
+        privacy = self.client.get("/api/pages/?slug=politica-de-privacidade").json()[0]
+        self.assertEqual(privacy["title"], "Política de Privacidade")
+        self.assertIn("Integração com o WhatsApp Business", privacy["content_html"])
+        self.assertNotIn("betano", privacy["content_html"].lower())
+        self.assertEqual(self.client.get("/api/pages/?slug=termos-de-uso").json()[0]["title"], "Termos de Uso")
+        self.assertEqual(
+            list(SocialLink.objects.filter(url__in=["/politica-de-privacidade", "/termos-de-uso"]).values_list("url", flat=True)),
+            ["/termos-de-uso"],  # "Privacidade" only exists after the fixture; the migration only fixes it
+        )
+
+    def test_inactive_page_is_hidden_and_only_staff_writes(self):
+        Page.objects.filter(slug="termos-de-uso").update(is_active=False)
+        self.assertEqual(self.client.get("/api/pages/?slug=termos-de-uso").json(), [])
+        response = self.client.post("/api/pages/", {"title": "x", "slug": "x", "content_html": "<p>x</p>"})
+        self.assertEqual(response.status_code, 403)
+
+    def test_content_is_sanitized(self):
+        self.login()
+        page = Page.objects.get(slug="termos-de-uso")
+        self.client.patch(f"/api/pages/{page.pk}/", {"content_html": "<p>ok</p><script>x()</script>"}, format="json", **self.csrf)
+        self.assertEqual(Page.objects.get(pk=page.pk).content_html, "<p>ok</p>")

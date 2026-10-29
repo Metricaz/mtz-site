@@ -17,9 +17,9 @@ const CasePage = () => {
         <NotFoundStatus />
         <Nav useHomeSectionLinks />
         <div className="container-x py-20">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
+          <Link to="/cases" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
             <ArrowLeft className="h-4 w-4" />
-            Voltar para home
+            Voltar para os cases
           </Link>
           <h1 className="mt-10 editorial text-5xl">Case não encontrado</h1>
           <p className="mt-4 max-w-lg text-muted-foreground">

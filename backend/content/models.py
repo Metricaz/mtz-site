@@ -221,6 +221,25 @@ class Case(RichTextModel):
         return self.title
 
 
+class Page(RichTextModel):
+    """Página institucional (Política de Privacidade, Termos de Uso…), servida em /<slug>."""
+
+    title = models.CharField("título", max_length=255)
+    slug = models.SlugField(
+        "slug", max_length=255, unique=True, help_text="Endereço: /<slug> (ex.: politica-de-privacidade)"
+    )
+    content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
+    seo_title = seo_title_field()
+    seo_description = seo_description_field()
+
+    class Meta(RichTextModel.Meta):
+        verbose_name = "página institucional"
+        verbose_name_plural = "páginas institucionais"
+
+    def __str__(self):
+        return self.title
+
+
 class MethodStep(OrderedModel):
     """Seção Método da home. O número exibido (01, 02…) é a ordem por posição."""
 

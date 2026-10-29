@@ -77,7 +77,7 @@ const ServicePage = () => {
                 />
               </div>
               <Link
-                to="/#contato"
+                to="/contato"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-glow"
               >
                 Falar com a gente

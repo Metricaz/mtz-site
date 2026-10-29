@@ -22,6 +22,7 @@ from .models import (
     Lead,
     MethodStep,
     NewsletterSubscriber,
+    Page,
     Post,
     Sector,
     Service,
@@ -48,6 +49,7 @@ from .serializers import (
     LeadSerializer,
     MethodStepSerializer,
     NewsletterSubscriberSerializer,
+    PageSerializer,
     PostSerializer,
     SectorSerializer,
     ServiceSerializer,
@@ -90,7 +92,7 @@ class OrderedViewSet(viewsets.ModelViewSet):
 
     Query params:
       ?placement=<name>  items flagged for that place (see `placements`)
-      ?slug=<slug>       services / cases by URL slug
+      ?slug=<slug>       services / cases / pages by URL slug
       ?limit=<n>         first n items
     """
 
@@ -152,6 +154,11 @@ class ServiceViewSet(OrderedViewSet):
 
 class CaseViewSet(OrderedViewSet):
     serializer_class = CaseSerializer
+    slug_filter = True
+
+
+class PageViewSet(OrderedViewSet):
+    serializer_class = PageSerializer
     slug_filter = True
 
 
