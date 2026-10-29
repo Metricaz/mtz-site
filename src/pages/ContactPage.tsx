@@ -123,7 +123,9 @@ const ContactPage = () => {
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
                   <Mail className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
-                    <p className="text-sm font-medium">{email}</p>
+                    <a href={`mailto:${email}`} className="text-sm font-medium underline-offset-4 hover:text-primary hover:underline">
+                      {email}
+                    </a>
                     <OptionText k="contactpage.email_note" as="p" className="text-sm text-muted-foreground" />
                   </div>
                 </div>
@@ -132,7 +134,14 @@ const ContactPage = () => {
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
                   <PhoneCall className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
-                    {address.phone && <p className="text-sm font-medium">{address.phone}</p>}
+                    {address.phone && (
+                      <a
+                        href={`tel:${address.phone.replace(/[^\d+]/g, "")}`}
+                        className="block text-sm font-medium underline-offset-4 hover:text-primary hover:underline"
+                      >
+                        {address.phone}
+                      </a>
+                    )}
                     {address.hours && <p className="text-sm text-muted-foreground">{address.hours}</p>}
                   </div>
                 </div>
