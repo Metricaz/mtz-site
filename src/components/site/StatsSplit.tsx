@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { OptionText } from "@/components/site/OptionText";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
-import { buildStats } from "@/lib/stats";
+import { buildStats, SHOW_HOME_NUMBERS } from "@/lib/stats";
 
 const AUTOPLAY_MS = 10000;
 // "Em números" panel: numbers from "Opções do site" (value = number, text = its label).
@@ -41,7 +41,7 @@ export const StatsSplit = () => {
       .toUpperCase(),
   }));
 
-  const stats = buildStats(SPLIT_STATS, options, labels);
+  const stats = SHOW_HOME_NUMBERS ? buildStats(SPLIT_STATS, options, labels) : [];
 
   const [i, setI] = useState(0);
   const go = (dir: number) =>
