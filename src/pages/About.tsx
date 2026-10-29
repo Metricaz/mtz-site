@@ -33,7 +33,7 @@ const About = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="about" />
+      <OptionPageHead page="about" crumb="Quem Somos" />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-ink-deep pb-16 pt-28 md:pb-20 md:pt-36">

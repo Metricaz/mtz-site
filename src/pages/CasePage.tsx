@@ -3,6 +3,7 @@ import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-
 import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
+import { articleSchema } from '@/lib/structured-data';
 import { Footer } from '@/components/site/Footer';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
 
@@ -39,6 +40,15 @@ const CasePage = () => {
         description={caseItem.seo_description || caseItem.excerpt}
         image={caseItem.featured_image}
         type="article"
+        breadcrumb={[{ label: 'Cases', href: '/cases' }]}
+        schema={(context) =>
+          articleSchema(context, {
+            type: 'Article',
+            headline: caseItem.title,
+            description: caseItem.seo_description || caseItem.excerpt,
+            image: caseItem.featured_image,
+          })
+        }
       />
       <Nav useHomeSectionLinks />
 

@@ -781,3 +781,14 @@ class SearchEngineFilesTests(TestCase):
         self.assertEqual(response["Content-Type"], "text/plain")
         self.assertIn("Sitemap: http://localhost/sitemap.xml", response.content.decode())
         self.assertIn("Disallow: /admin/", response.content.decode())
+
+
+class FoundingYearMigrationTests(ApiTestCase):
+    def test_founding_year_is_public(self):
+        options = {o["key"]: o["value"] for o in self.client.get("/api/options/").json()}
+        self.assertEqual(options["company.founding_year"], "2014")
+
+    def test_edited_value_is_kept(self):
+        SiteOption.objects.filter(key="company.founding_year").update(value="2015")
+        importlib.import_module("content.migrations.0016_founding_year").forwards(apps, None)
+        self.assertEqual(SiteOption.objects.get(key="company.founding_year").value, "2015")

@@ -9,6 +9,7 @@ import { useCompanyAddresses } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
 import { OptionText } from "@/components/site/OptionText";
+import { contactSchema } from "@/lib/structured-data";
 
 const ContactPage = () => {
   const { settings } = useWhatsAppSettings();
@@ -22,7 +23,13 @@ const ContactPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="contact" />
+      <OptionPageHead
+        page="contact"
+        crumb="Contato"
+        schema={(context) =>
+          contactSchema(context, { name: options["seo.site_name"] ?? "", email: email ?? "", addresses })
+        }
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">

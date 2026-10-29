@@ -12,7 +12,7 @@ const BlogPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="blog" />
+      <OptionPageHead page="blog" crumb="Blog" />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Conteúdo" section (keys content.eyebrow / content.title). */}
