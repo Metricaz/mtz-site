@@ -757,3 +757,27 @@ class InstitutionalPagesTests(ApiTestCase):
         page = Page.objects.get(slug="termos-de-uso")
         self.client.patch(f"/api/pages/{page.pk}/", {"content_html": "<p>ok</p><script>x()</script>"}, format="json", **self.csrf)
         self.assertEqual(Page.objects.get(pk=page.pk).content_html, "<p>ok</p>")
+
+
+class SearchEngineFilesTests(TestCase):
+    fixtures = ["initial_content"]
+
+    def test_sitemap_lists_active_public_pages(self):
+        Case.objects.create(
+            title="Livelo", slug="livelo-ga4", tag="t", excerpt="e", kpi_value="1", kpi_label="l",
+            featured_image="cases/x.png", content_html="<p>x</p>",
+        )
+        Case.objects.create(
+            title="Off", slug="desativado", tag="t", excerpt="e", kpi_value="1", kpi_label="l",
+            featured_image="cases/x.png", content_html="<p>x</p>", is_active=False,
+        )
+        xml = self.client.get("/sitemap.xml", HTTP_HOST="localhost").content.decode()
+        for path in ["/", "/quem-somos", "/cases", "/contato", "/servicos/seo", "/cases/livelo-ga4", "/politica-de-privacidade"]:
+            self.assertIn(f"<loc>http://localhost{path}</loc>", xml)
+        self.assertNotIn("desativado", xml)
+
+    def test_robots_points_to_this_environment_sitemap(self):
+        response = self.client.get("/robots.txt", HTTP_HOST="localhost")
+        self.assertEqual(response["Content-Type"], "text/plain")
+        self.assertIn("Sitemap: http://localhost/sitemap.xml", response.content.decode())
+        self.assertIn("Disallow: /admin/", response.content.decode())

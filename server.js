@@ -25,7 +25,7 @@ const djangoUrl = process.env.DJANGO_URL || "http://127.0.0.1:8000";
 
 // Paths answered by Django. In production nginx sends them straight to gunicorn; the proxy below
 // is for running everything from one address locally (the Django session cookie needs it).
-const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout"];
+const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout", "/sitemap.xml", "/robots.txt"];
 
 const proxyToDjango = (req, res) => {
   const upstream = http.request(
