@@ -57,7 +57,7 @@ const ServicePage = () => {
               <Icon className="h-8 w-8" />
             </div>
             <div className="min-w-0">
-              <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">{service.title}</h1>
+              <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">{service.headline || service.title}</h1>
               <p className="mt-5 max-w-3xl text-base text-foreground/85 md:text-lg">{service.excerpt}</p>
             </div>
           </div>

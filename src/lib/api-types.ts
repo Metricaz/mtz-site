@@ -45,6 +45,8 @@ export type Service = Ordered & {
   title: string;
   slug: string;
   icon_name: string;
+  /** Page H1; empty = title. */
+  headline: string;
   excerpt: string;
   content_html: string;
   seo_title: string;

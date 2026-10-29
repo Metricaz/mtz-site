@@ -22,7 +22,7 @@ const BlogPage = () => {
             <OptionText k="content.eyebrow" className="mono-tag rounded-full bg-primary/15 px-3 py-1.5 text-primary" />
           </div>
           <OptionText
-            k="content.title"
+            k="blogpage.title"
             as="h1"
             className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]"
             accentClassName="editorial-italic text-primary"

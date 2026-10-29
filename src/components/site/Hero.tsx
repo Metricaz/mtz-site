@@ -24,13 +24,18 @@ export const Hero = () => {
           <OptionText k="hero.location" className="mono-tag text-muted-foreground hidden md:block" />
         </div>
 
-        {/* headline */}
-        <OptionText
-          k="hero.title"
-          as="h1"
-          className="editorial text-foreground text-[clamp(2.75rem,10vw,9rem)]"
-          accentClassName="editorial-italic"
-        />
+        {/* headline: the eyebrow is part of the H1, so the heading says what Metricaz does (SEO audit, S6) */}
+        <h1>
+          <OptionText
+            k="hero.eyebrow"
+            className="mono-tag mb-6 inline-block rounded-full bg-primary/15 px-3 py-1.5 text-primary md:mb-8"
+          />
+          <OptionText
+            k="hero.title"
+            className="editorial block text-foreground text-[clamp(2.75rem,10vw,9rem)]"
+            accentClassName="editorial-italic"
+          />
+        </h1>
 
         {/* sub row */}
         <div className="mt-12 md:mt-16 grid md:grid-cols-12 gap-10 items-end">

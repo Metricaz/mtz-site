@@ -185,6 +185,12 @@ class Service(RichTextModel):
     title = models.CharField("título", max_length=255)
     slug = models.SlugField("slug", max_length=255, unique=True, help_text="Endereço: /servicos/<slug>")
     icon_name = models.CharField("ícone", max_length=40, choices=ICONS)
+    headline = models.CharField(
+        "título da página",
+        max_length=255,
+        blank=True,
+        help_text="Título principal (H1) da página do serviço, descritivo. Vazio = o título acima, que fica no menu e nos cartões.",
+    )
     excerpt = models.TextField("resumo")
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
     seo_title = seo_title_field()
