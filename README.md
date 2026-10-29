@@ -147,7 +147,7 @@ Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
 | Arquivo | Vai para | O que é |
 |---|---|---|
 | `sites-available/mtz-site.conf` | `/etc/nginx/sites-available/` | nginx do UAT (`mtz-site.dev.i.metricaz.com`, fora dos buscadores) |
-| `sites-available/mtz-site-prd.conf` | `/etc/nginx/sites-available/` | nginx da produção (`metricaz.com`; http e www redirecionam para ele) |
+| `sites-available/mtz-site-prd.conf` | `/etc/nginx/sites-available/` | nginx da produção (`metricaz.com`; http e www redirecionam para ele); `/admin` e `/dashboard` só dos IPs do `geo $mtz_admin_fechado` (os outros recebem 403) |
 | `nginx/mtz-site-common.conf` | `/etc/nginx/snippets/` | o que os dois têm em comum: `/api`, `/admin` e login/logout → Django; `/static`, `/media`, `/assets` → disco; o resto → Node |
 | `nginx/redirects-site-antigo.map` | (lido do repositório pelo nginx) | 301 dos endereços do site antigo (WordPress) para as páginas novas; lista congelada, mexer só se aparecer endereço antigo esquecido |
 | `systemd/mtz-site-django.service` | `/etc/systemd/system/` | Django (gunicorn) em `127.0.0.1:8101` |
