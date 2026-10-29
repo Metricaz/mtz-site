@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Case } from "@/lib/api-types";
 import { useCases } from "@/hooks/useCases";
 import { OptionText } from "@/components/site/OptionText";
+import { SHOW_CASE_NUMBERS } from "@/lib/stats";
 
 const spans = [
   "md:col-span-8 aspect-[16/10]",
@@ -44,10 +45,12 @@ export const CaseGrid = ({ cases, headingLevel: Heading = "h3" }: CaseGridProps)
             <span className="mono-tag px-3 py-1.5 rounded-full bg-primary text-primary-foreground">
               {c.tag}
             </span>
-            <div className="text-right">
-              <div className="editorial text-3xl md:text-5xl text-primary leading-none">{c.kpi_value}</div>
-              <div className="mono-tag text-foreground/70 mt-2">{c.kpi_label}</div>
-            </div>
+            {SHOW_CASE_NUMBERS && (
+              <div className="text-right">
+                <div className="editorial text-3xl md:text-5xl text-primary leading-none">{c.kpi_value}</div>
+                <div className="mono-tag text-foreground/70 mt-2">{c.kpi_label}</div>
+              </div>
+            )}
           </div>
           <div className="max-w-xl">
             <Heading className="editorial text-3xl md:text-4xl xl:text-5xl text-foreground">{c.title}</Heading>

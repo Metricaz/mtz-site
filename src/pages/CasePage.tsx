@@ -4,6 +4,7 @@ import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
 import { articleSchema } from '@/lib/structured-data';
+import { SHOW_CASE_NUMBERS } from '@/lib/stats';
 import { Footer } from '@/components/site/Footer';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
 
@@ -61,14 +62,16 @@ const CasePage = () => {
           <p className="mt-6 max-w-3xl text-base text-foreground/85 md:text-lg">{caseItem.excerpt}</p>
 
           <div className="mt-8 grid gap-3 text-sm text-foreground/80 md:grid-cols-4">
-            <div className="rounded-xl border border-border bg-card/55 p-4">
-              <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                <Gauge className="h-3.5 w-3.5" />
-                Resultado destaque
+            {SHOW_CASE_NUMBERS && (
+              <div className="rounded-xl border border-border bg-card/55 p-4">
+                <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <Gauge className="h-3.5 w-3.5" />
+                  Resultado destaque
+                </div>
+                <p className="editorial text-3xl text-primary">{caseItem.kpi_value}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{caseItem.kpi_label}</p>
               </div>
-              <p className="editorial text-3xl text-primary">{caseItem.kpi_value}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{caseItem.kpi_label}</p>
-            </div>
+            )}
             {/* Empty in the admin = the box is left out (never a "não informado" placeholder). */}
             {caseItem.client_name && (
               <div className="rounded-xl border border-border bg-card/55 p-4">

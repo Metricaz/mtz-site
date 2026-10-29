@@ -1,6 +1,6 @@
 import { OptionText } from "@/components/site/OptionText";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
-import { buildStats } from "@/lib/stats";
+import { buildStats, SHOW_COMPANY_NUMBERS } from "@/lib/stats";
 
 // KPI band: numbers from "Opções do site" (value = number, text = its label).
 const HERO_STATS = [
@@ -12,7 +12,7 @@ const HERO_STATS = [
 
 export const Hero = () => {
   const { options, labels } = useSiteOptions();
-  const stats = buildStats(HERO_STATS, options, labels);
+  const stats = SHOW_COMPANY_NUMBERS ? buildStats(HERO_STATS, options, labels) : [];
 
   return (
     <section id="top" className="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden noise">
