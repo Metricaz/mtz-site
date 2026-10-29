@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, UserRound } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
+import { articleSchema } from '@/lib/structured-data';
 import { Footer } from '@/components/site/Footer';
 import { usePosts } from '@/hooks/usePosts';
 import { formatShortDate } from '@/lib/dates';
@@ -40,6 +41,18 @@ const BlogPostPage = () => {
         description={post.seo_description || post.subtitle}
         image={post.featured_image}
         type="article"
+        breadcrumb={[{ label: 'Blog', href: '/blog' }]}
+        schema={(context) =>
+          articleSchema(context, {
+            type: 'BlogPosting',
+            headline: post.title,
+            description: post.seo_description || post.subtitle,
+            image: post.featured_image,
+            datePublished: post.published_at,
+            dateModified: post.updated_at.slice(0, 10),
+            author: post.author,
+          })
+        }
       />
       <Nav useHomeSectionLinks />
 
@@ -78,6 +91,10 @@ const BlogPostPage = () => {
             <img
               src={post.featured_image}
               alt={post.featured_image_alt || post.title}
+              width={1536}
+              height={1152}
+              // React 18 only passes the lowercase HTML attribute through to the <img>.
+              {...{ fetchpriority: "high" }}
               className="h-[260px] w-full object-cover md:h-[500px]"
             />
           </figure>

@@ -1168,6 +1168,7 @@
       "updated_at": "2026-09-24T00:00:00Z",
       "title": "SEO",
       "slug": "seo",
+      "headline": "Consultoria de SEO para crescimento orgânico previsível",
       "icon_name": "seo",
       "excerpt": "Auditoria técnica, estratégia de conteúdo e link building com foco em crescimento orgânico previsível.",
       "content_html": "<h2>SEO orientado a negócio</h2>\n<p>Estruturamos a presença orgânica para gerar demanda qualificada, apoiar a jornada de compra e ampliar previsibilidade de receita.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria técnica e correção de gargalos</li>\n  <li>Arquitetura de conteúdo e clusters temáticos</li>\n  <li>Estratégia de autoridade e desempenho orgânico</li>\n</ul>",
@@ -1186,6 +1187,7 @@
       "updated_at": "2026-09-24T00:00:00Z",
       "title": "CRO & Testes A/B",
       "slug": "cro",
+      "headline": "CRO e testes A/B para converter mais com o mesmo tráfego",
       "icon_name": "cro",
       "excerpt": "Hipóteses baseadas em dados, experimentação contínua e otimização da jornada de conversão.",
       "content_html": "<h2>Conversão com método</h2>\n<p>Testamos, priorizamos e ajustamos a experiência para transformar mais tráfego em resultado real.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria de UX e comportamento</li>\n  <li>Hipóteses ICE e roadmap de testes</li>\n  <li>Experimentação e leitura estatística</li>\n</ul>",
@@ -1204,6 +1206,7 @@
       "updated_at": "2026-09-24T00:00:00Z",
       "title": "Digital Analytics",
       "slug": "analytics",
+      "headline": "Digital Analytics: mensuração confiável com GA4, GTM e server-side",
       "icon_name": "analytics",
       "excerpt": "Mensuração ponta a ponta com GA4, GTM, server-side tracking e dashboards acionáveis.",
       "content_html": "<h2>Mensuração confiável</h2>\n<p>Construímos uma base de dados clara para que marketing, produto e liderança tomem decisão com segurança.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Setup e migração para GA4</li>\n  <li>Tagueamento e governança</li>\n  <li>Integração com mídia e BI</li>\n</ul>",
@@ -1222,6 +1225,7 @@
       "updated_at": "2026-09-24T00:00:00Z",
       "title": "Desenvolvimento",
       "slug": "desenvolvimento",
+      "headline": "Desenvolvimento de software, integrações e automações para operações data-driven",
       "icon_name": "development",
       "excerpt": "Software sob medida, integrações e automações que sustentam a operação data-driven.",
       "content_html": "<h2>Produto e automação</h2>\n<p>Desenvolvemos camadas técnicas que conectam sistemas, simplificam fluxos e sustentam operações mais inteligentes.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Integrações com APIs e dados</li>\n  <li>Web apps e ferramentas internas</li>\n  <li>Automação de processos e relatórios</li>\n</ul>",
@@ -2477,8 +2481,8 @@
     "pk": 1,
     "fields": {
       "key": "about.why_image",
-      "image": "site/por-que-escolher.webp",
-      "alt": "Metricaz",
+      "image": "site/metricaz-corporate.webp",
+      "alt": "Recepção do escritório da Metricaz, com o logo na parede de madeira e o M iluminado ao fundo",
       "description": "Quem Somos · imagem de \"Por que escolher a Metricaz\".",
       "updated_at": "2026-09-24T00:00:00Z"
     }

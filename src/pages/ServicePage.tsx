@@ -4,6 +4,7 @@ import { useServices } from '@/hooks/useServices';
 import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
+import { serviceSchema } from '@/lib/structured-data';
 import { Footer } from '@/components/site/Footer';
 import { getServiceIcon } from '@/lib/service-icons';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
@@ -41,6 +42,8 @@ const ServicePage = () => {
         title={service.seo_title}
         name={service.title}
         description={service.seo_description || service.excerpt}
+        breadcrumb={[{ label: 'Serviços', href: '/servicos' }]}
+        schema={(context) => serviceSchema(context, service.title, service.excerpt)}
       />
       <Nav useHomeSectionLinks />
 
@@ -54,7 +57,7 @@ const ServicePage = () => {
               <Icon className="h-8 w-8" />
             </div>
             <div className="min-w-0">
-              <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">{service.title}</h1>
+              <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">{service.headline || service.title}</h1>
               <p className="mt-5 max-w-3xl text-base text-foreground/85 md:text-lg">{service.excerpt}</p>
             </div>
           </div>

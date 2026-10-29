@@ -9,6 +9,7 @@ import { useCompanyAddresses } from "@/hooks/useCompanyAddress";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
 import { OptionText } from "@/components/site/OptionText";
+import { contactSchema } from "@/lib/structured-data";
 
 const ContactPage = () => {
   const { settings } = useWhatsAppSettings();
@@ -22,7 +23,13 @@ const ContactPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="contact" />
+      <OptionPageHead
+        page="contact"
+        crumb="Contato"
+        schema={(context) =>
+          contactSchema(context, { name: options["seo.site_name"] ?? "", email: email ?? "", addresses })
+        }
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
@@ -116,7 +123,9 @@ const ContactPage = () => {
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
                   <Mail className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
-                    <p className="text-sm font-medium">{email}</p>
+                    <a href={`mailto:${email}`} className="text-sm font-medium underline-offset-4 hover:text-primary hover:underline">
+                      {email}
+                    </a>
                     <OptionText k="contactpage.email_note" as="p" className="text-sm text-muted-foreground" />
                   </div>
                 </div>
@@ -125,7 +134,14 @@ const ContactPage = () => {
                 <div className="flex items-start gap-3 rounded-2xl border border-border bg-ink-deep/40 p-4">
                   <PhoneCall className="mt-0.5 h-5 w-5 text-primary" />
                   <div>
-                    {address.phone && <p className="text-sm font-medium">{address.phone}</p>}
+                    {address.phone && (
+                      <a
+                        href={`tel:${address.phone.replace(/[^\d+]/g, "")}`}
+                        className="block text-sm font-medium underline-offset-4 hover:text-primary hover:underline"
+                      >
+                        {address.phone}
+                      </a>
+                    )}
                     {address.hours && <p className="text-sm text-muted-foreground">{address.hours}</p>}
                   </div>
                 </div>

@@ -12,7 +12,7 @@ const BlogPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="blog" />
+      <OptionPageHead page="blog" crumb="Blog" />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Conteúdo" section (keys content.eyebrow / content.title). */}
@@ -22,7 +22,7 @@ const BlogPage = () => {
             <OptionText k="content.eyebrow" className="mono-tag rounded-full bg-primary/15 px-3 py-1.5 text-primary" />
           </div>
           <OptionText
-            k="content.title"
+            k="blogpage.title"
             as="h1"
             className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]"
             accentClassName="editorial-italic text-primary"
@@ -44,7 +44,10 @@ const BlogPage = () => {
                     <img
                       src={post.featured_image}
                       alt={post.featured_image_alt || post.title}
+                      width={1024}
+                      height={768}
                       loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>

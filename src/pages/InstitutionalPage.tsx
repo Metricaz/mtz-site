@@ -16,7 +16,7 @@ const InstitutionalPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <PageHead title={page.seo_title} name={page.title} description={page.seo_description} />
+      <PageHead title={page.seo_title} name={page.title} description={page.seo_description} breadcrumb={[]} />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">

@@ -195,6 +195,10 @@ export const Team = () => {
                       <img
                         src={person.photo}
                         alt={person.photo_alt || person.name}
+                        width={600}
+                        height={800}
+                        loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{
                           filter: 'grayscale(100%) hue-rotate(200deg) saturate(0.6) brightness(1.1) contrast(1.1)'

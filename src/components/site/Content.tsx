@@ -42,7 +42,10 @@ export const Content = () => {
                 <img
                   src={posts[0].featured_image}
                   alt={posts[0].featured_image_alt || posts[0].title}
+                  width={1024}
+                  height={768}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 {posts[0].tag && (
@@ -87,7 +90,10 @@ export const Content = () => {
                   <img
                     src={p.featured_image}
                     alt={p.featured_image_alt || p.title}
+                    width={1024}
+                    height={768}
                     loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>

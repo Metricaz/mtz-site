@@ -10,7 +10,7 @@ const CasesPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="cases" />
+      <OptionPageHead page="cases" crumb="Cases" />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Cases" section (keys cases.eyebrow / cases.title). */}

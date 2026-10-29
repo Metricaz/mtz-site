@@ -130,7 +130,7 @@ export const StatsSplit = () => {
           <OptionText k="statssplit.numbers_eyebrow" as="div" className="mono-tag text-muted-foreground mb-6" />
           <OptionText
             k="statssplit.numbers_title"
-            as="h3"
+            as="h2"
             className="editorial text-3xl md:text-5xl max-w-lg leading-tight"
             accentClassName="editorial-italic text-primary"
           />

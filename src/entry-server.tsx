@@ -26,7 +26,7 @@ const escapeHtml = (value: string) =>
 
 /**
  * <head> tags of the page, from its <PageHead> (falls back to the site name from "Opções do site").
- * Canonical and og:url point to the page itself at `siteUrl`; "not found" pages get neither.
+ * Canonical and og:url point to the page itself at `siteUrl`; "not found" pages get neither, nor structured data.
  */
 const renderHead = (meta: PageMeta, options: SiteOption[], siteUrl: string, url: string, status: number) => {
   const option = (key: string) => options.find((o) => o.key === key)?.value ?? "";
@@ -48,10 +48,15 @@ const renderHead = (meta: PageMeta, options: SiteOption[], siteUrl: string, url:
     siteName && `<meta property="og:site_name" content="${siteName}" />`,
     image && `<meta property="og:image" content="${image}" />`,
     image && `<meta name="twitter:image" content="${image}" />`,
+    pageUrl && meta.jsonLd?.length && `<script type="application/ld+json">${jsonLd(meta.jsonLd)}</script>`,
   ]
     .filter(Boolean)
     .join("\n    ");
 };
+
+// JSON inside <script>: "<" escaped so content can never close the tag.
+const jsonLd = (nodes: unknown[]) =>
+  JSON.stringify({ "@context": "https://schema.org", "@graph": nodes }).replace(/</g, "\\u003c");
 
 const RENDER_TIMEOUT_MS = 10_000;
 
@@ -61,7 +66,7 @@ export const render = (url: string, apiOrigin: string, siteUrl: string) =>
     setApiOrigin(apiOrigin);
     const queryClient = createQueryClient();
     const status: HttpStatus = { code: 200 };
-    const meta: PageMeta = {};
+    const meta: PageMeta = { siteUrl };
     const app = (
       <HttpStatusContext.Provider value={status}>
         <PageMetaContext.Provider value={meta}>

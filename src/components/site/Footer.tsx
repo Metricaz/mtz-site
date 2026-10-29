@@ -49,7 +49,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
         <div className="grid md:grid-cols-12 gap-12 pb-16 border-b border-border">
           <div className="md:col-span-4">
             <a href={resolveHref("#top")} className="flex items-center gap-2.5">
-              <img src={logoMetricaz} alt="Metricaz" width={394} height={103} className="h-8 w-auto" />
+              <img src={logoMetricaz} alt="Metricaz" width={394} height={103} loading="lazy" decoding="async" className="h-8 w-auto" />
             </a>
             <OptionText
               k="footer.tagline"

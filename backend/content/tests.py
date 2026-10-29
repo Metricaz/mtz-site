@@ -520,8 +520,8 @@ class SiteContentApiTests(ApiTestCase):
 
     def test_site_image_by_key(self):
         image = self.client.get("/api/site-images/about.why_image/").json()
-        self.assertEqual(image["image"], "/media/site/por-que-escolher.webp")
-        self.assertEqual(image["alt"], "Metricaz")
+        self.assertEqual(image["image"], "/media/site/metricaz-corporate.webp")
+        self.assertTrue(image["alt"].startswith("Recepção do escritório da Metricaz"))
 
 
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
@@ -781,3 +781,34 @@ class SearchEngineFilesTests(TestCase):
         self.assertEqual(response["Content-Type"], "text/plain")
         self.assertIn("Sitemap: http://localhost/sitemap.xml", response.content.decode())
         self.assertIn("Disallow: /admin/", response.content.decode())
+
+
+class FoundingYearMigrationTests(ApiTestCase):
+    def test_founding_year_is_public(self):
+        options = {o["key"]: o["value"] for o in self.client.get("/api/options/").json()}
+        self.assertEqual(options["company.founding_year"], "2014")
+
+    def test_edited_value_is_kept(self):
+        SiteOption.objects.filter(key="company.founding_year").update(value="2015")
+        importlib.import_module("content.migrations.0016_founding_year").forwards(apps, None)
+        self.assertEqual(SiteOption.objects.get(key="company.founding_year").value, "2015")
+
+
+class PageHeadingsMigrationTests(ApiTestCase):
+    def test_service_headline_is_public_and_kept_when_edited(self):
+        service = Service.objects.create(title="SEO", slug="seo", icon_name="seo", excerpt="e", content_html="<p>x</p>")
+        importlib.import_module("content.migrations.0017_page_headings").forwards(apps, None)
+        response = self.client.get("/api/services/?slug=seo").json()[0]
+        self.assertEqual(response["headline"], "Consultoria de SEO para crescimento orgânico previsível")
+        Service.objects.filter(pk=service.pk).update(headline="Outro título")
+        importlib.import_module("content.migrations.0017_page_headings").forwards(apps, None)
+        self.assertEqual(Service.objects.get(pk=service.pk).headline, "Outro título")
+
+    def test_only_original_option_text_is_replaced(self):
+        SiteOption.objects.update_or_create(key="servicespage.title", defaults={"value": "O que fazemos"})
+        SiteOption.objects.update_or_create(key="about.title", defaults={"value": "Texto editado"})
+        importlib.import_module("content.migrations.0017_page_headings").forwards(apps, None)
+        options = dict(SiteOption.objects.values_list("key", "value"))
+        self.assertEqual(options["servicespage.title"], "Serviços de SEO, CRO, Digital Analytics e Desenvolvimento")
+        self.assertEqual(options["about.title"], "Texto editado")
+        self.assertEqual(options["hero.eyebrow"], "Consultoria de SEO, CRO e Digital Analytics")
