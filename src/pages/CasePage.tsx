@@ -105,6 +105,10 @@ const CasePage = () => {
             <img
               src={caseItem.featured_image}
               alt={caseItem.featured_image_alt || caseItem.title}
+              width={1536}
+              height={1152}
+              // React 18 only passes the lowercase HTML attribute through to the <img>.
+              {...{ fetchpriority: "high" }}
               className="h-[260px] w-full object-cover md:h-[500px]"
             />
           </figure>

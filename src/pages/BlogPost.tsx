@@ -91,6 +91,10 @@ const BlogPostPage = () => {
             <img
               src={post.featured_image}
               alt={post.featured_image_alt || post.title}
+              width={1536}
+              height={1152}
+              // React 18 only passes the lowercase HTML attribute through to the <img>.
+              {...{ fetchpriority: "high" }}
               className="h-[260px] w-full object-cover md:h-[500px]"
             />
           </figure>

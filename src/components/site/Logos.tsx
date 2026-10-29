@@ -51,10 +51,12 @@ export const Logos = () => {
           style={{ animationDuration: duration, animationPlayState: isPaused ? 'paused' : 'running' }}
         >
           {items.map((company, i) => {
+            // Second copy: only there for the loop, hidden from screen readers and skipped by the keyboard.
+            const isCopy = i >= companies.length;
             const content = showLogos && company.logo ? (
               <img
                 src={company.logo}
-                alt={company.logo_alt || company.name}
+                alt={isCopy ? '' : company.logo_alt || company.name}
                 width={500}
                 height={500}
                 loading="lazy"
@@ -76,7 +78,9 @@ export const Logos = () => {
                   target="_blank"
                   rel="noreferrer"
                   className={className}
-                  aria-label={`Abrir site de ${company.name}`}
+                  aria-label={isCopy ? undefined : `Abrir site de ${company.name}`}
+                  aria-hidden={isCopy || undefined}
+                  tabIndex={isCopy ? -1 : undefined}
                 >
                   {content}
                 </a>
@@ -84,7 +88,7 @@ export const Logos = () => {
             }
 
             return (
-              <span key={i} className={className}>
+              <span key={i} className={className} aria-hidden={isCopy || undefined}>
                 {content}
               </span>
             );

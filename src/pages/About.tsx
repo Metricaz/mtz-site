@@ -71,7 +71,7 @@ const About = () => {
                 key={item.id}
                 className="group relative min-h-[320px] overflow-hidden rounded-3xl border border-border bg-card md:flex-1 md:transition-all md:duration-500 md:ease-out md:hover:flex-[1.45]"
               >
-                <img src={item.image} alt={item.image_alt || item.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={item.image} alt={item.image_alt || item.title} width={1024} height={768} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/35 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   <p className="mono-tag text-primary">{item.tag}</p>
@@ -100,7 +100,7 @@ const About = () => {
         <div className={`container-x grid gap-8 lg:items-center ${whyImage ? "lg:grid-cols-[1.1fr_1fr]" : ""}`}>
           {whyImage && (
             <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-cream">
-              <img src={whyImage.image} alt={whyImage.alt} className="h-full min-h-[320px] w-full object-cover" />
+              <img src={whyImage.image} alt={whyImage.alt} width={853} height={716} loading="lazy" decoding="async" className="h-full min-h-[320px] w-full object-cover" />
             </div>
           )}
 
@@ -158,6 +158,10 @@ const About = () => {
                     <img
                       src={member.photo}
                       alt={member.photo_alt || member.name}
+                      width={600}
+                      height={800}
+                      loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       style={{
                         filter: "grayscale(100%) hue-rotate(200deg) saturate(0.6) brightness(1.1) contrast(1.1)",

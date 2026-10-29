@@ -2481,8 +2481,8 @@
     "pk": 1,
     "fields": {
       "key": "about.why_image",
-      "image": "site/por-que-escolher.webp",
-      "alt": "Metricaz",
+      "image": "site/metricaz-corporate.webp",
+      "alt": "Recepção do escritório da Metricaz, com o logo na parede de madeira e o M iluminado ao fundo",
       "description": "Quem Somos · imagem de \"Por que escolher a Metricaz\".",
       "updated_at": "2026-09-24T00:00:00Z"
     }

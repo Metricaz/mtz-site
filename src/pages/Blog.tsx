@@ -44,7 +44,10 @@ const BlogPage = () => {
                     <img
                       src={post.featured_image}
                       alt={post.featured_image_alt || post.title}
+                      width={1024}
+                      height={768}
                       loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>

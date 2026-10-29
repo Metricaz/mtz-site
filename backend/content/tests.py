@@ -520,8 +520,8 @@ class SiteContentApiTests(ApiTestCase):
 
     def test_site_image_by_key(self):
         image = self.client.get("/api/site-images/about.why_image/").json()
-        self.assertEqual(image["image"], "/media/site/por-que-escolher.webp")
-        self.assertEqual(image["alt"], "Metricaz")
+        self.assertEqual(image["image"], "/media/site/metricaz-corporate.webp")
+        self.assertTrue(image["alt"].startswith("Recepção do escritório da Metricaz"))
 
 
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
