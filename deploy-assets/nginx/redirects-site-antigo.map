@@ -1,0 +1,45 @@
+# Addresses of the old WordPress site (metricaz.com until 10/2026), frozen as found in its
+# sitemap_index.xml on 29/10/2026, each sent with a 301 to the closest page of this site.
+# Included in a `map $uri` block by sites-available/mtz-site.conf; the trailing slash is optional.
+
+# Pages that exist here without the trailing slash
+~^/servicos/$                       /servicos;
+~^/cases/$                          /cases;
+~^/contato/$                        /contato;
+~^/termos-de-uso/$                  /termos-de-uso;
+~^/politica-de-privacidade/$        /politica-de-privacidade;
+~^/sobre/?$                         /quem-somos;
+
+# Blog posts
+~^/news/?$                                          /blog;
+~^/dimensoes-personalizadas-google-analytics/?$     /blog/dimensoes-personalizadas-no-google-analytics;
+~^/por-que-voce-precisa-do-google-tag-manager/?$    /blog/por-que-voce-precisa-do-google-tag-manager;
+~^/como-configurar-instalar-ga4-com-gtm/?$          /blog/como-configurar-instalar-ga4-com-gtm;
+~^/google-consent-mode-como-funciona-e-vantagens/?$ /blog/google-consent-mode-o-que-e-como-funciona-e-por-que-sua-empresa-precisa-disso-agora;
+~^/(category|tag)/[^/]+/?$                          /blog;
+~^/author/[^/]+/?$                                  /blog;
+
+# Cases
+~^/portfolio/livelo-case-sucesso-ga4/?$     /cases/livelo-ga4;
+~^/portfolio/iot-analytics/?$               /cases/iot-analytics;
+~^/portfolio_cat/[^/]+/?$                   /cases;
+
+# Services: Mensuração and Análise → Analytics, Otimização (SEO consulting and audit) → SEO, Integração → Desenvolvimento
+~^/service(_cat)?/mensuracao(/.*)?$         /servicos/analytics;
+~^/service/analise/?$                       /servicos/analytics;
+~^/service(_cat)?/otimizacao(/.*)?$         /servicos/seo;
+~^/service/integracao/?$                    /servicos/desenvolvimento;
+~^/service_cat/[^/]+/?$                     /servicos;
+
+# Team
+~^/team(/[^/]+)?/?$                         /quem-somos;
+~^/team-two/?$                              /quem-somos;
+
+# Theme demo pages that were published by accident
+~^/(home-one|home-two|one-page-home-[123]|sample-page|sample-embedded-lookerstudio-dashboard|testimonials|faq)/?$  /;
+~^/(services-two|services-three|service-four)/?$    /servicos;
+~^/cases-two/?$                                     /cases;
+~^/(news-old|blog-carousel)/?$                      /blog;
+
+# Yoast sitemaps (Search Console may still have the old index registered)
+~^/(sitemap_index|[a-z_]+-sitemap)\.xml$    /sitemap.xml;

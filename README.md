@@ -147,6 +147,7 @@ Servidor próprio, sem Docker. Os arquivos ficam em `deploy-assets/`:
 | Arquivo | Vai para | O que é |
 |---|---|---|
 | `sites-available/mtz-site.conf` | `/etc/nginx/sites-available/` | nginx: `/api`, `/admin` e login/logout → Django; `/static`, `/media`, `/assets` → disco; o resto → Node |
+| `nginx/redirects-site-antigo.map` | (lido do repositório pelo nginx) | 301 dos endereços do site antigo (WordPress) para as páginas novas; lista congelada, mexer só se aparecer endereço antigo esquecido |
 | `systemd/mtz-site-django.service` | `/etc/systemd/system/` | Django (gunicorn) em `127.0.0.1:8101` |
 | `systemd/mtz-site-web.service` | `/etc/systemd/system/` | páginas (Node, SSR) em `127.0.0.1:8100` |
 | `cron.d/mtz-site` | `/etc/cron.d/` | resumo de e-mail de hora em hora |
