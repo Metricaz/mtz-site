@@ -5,12 +5,12 @@ import { OptionText } from "@/components/site/OptionText";
 import { SHOW_CASE_NUMBERS } from "@/lib/stats";
 
 const spans = [
-  "md:col-span-8 aspect-[16/10]",
-  "md:col-span-4 aspect-[4/5]",
-  "md:col-span-5 aspect-[5/4]",
-  "md:col-span-7 aspect-[16/9]",
-  "md:col-span-6 aspect-[5/4]",
-  "md:col-span-6 aspect-[5/4]",
+  "lg:col-span-8 aspect-[16/10]",
+  "lg:col-span-4 aspect-[4/5]",
+  "lg:col-span-5 aspect-[5/4]",
+  "lg:col-span-7 aspect-[16/9]",
+  "lg:col-span-6 aspect-[5/4]",
+  "lg:col-span-6 aspect-[5/4]",
 ];
 
 type CaseGridProps = {
@@ -21,12 +21,12 @@ type CaseGridProps = {
 
 /** Case cards in the mosaic layout: home "Cases" section and the /cases page. */
 export const CaseGrid = ({ cases, headingLevel: Heading = "h3" }: CaseGridProps) => (
-  <div className="grid md:grid-cols-12 gap-4 md:gap-6">
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
     {cases.map((c, i) => (
       <Link
         key={c.id}
         to={`/cases/${c.slug}`}
-        className={`group relative flex flex-col self-stretch rounded-3xl border border-border bg-card ${spans[i % spans.length]}`}
+        className={`group relative flex w-full flex-col self-stretch rounded-3xl border border-border bg-card ${spans[i % spans.length]}`}
       >
         {/* The aspect ratio is a minimum: a long title or summary makes the card taller instead of being cut off. */}
         <div className="absolute inset-0 overflow-hidden rounded-3xl">
