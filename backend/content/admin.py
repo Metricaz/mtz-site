@@ -13,6 +13,7 @@ from .models import (
     Lead,
     MethodStep,
     NewsletterSubscriber,
+    Page,
     Post,
     Sector,
     Service,
@@ -87,6 +88,13 @@ class ServiceAdmin(OrderedAdmin):
 class CaseAdmin(OrderedAdmin):
     list_display = ("title", "slug", "tag", "order_position", "is_active")
     search_fields = ("title", "slug", "client_name")
+    prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(Page)
+class PageAdmin(OrderedAdmin):
+    list_display = ("title", "slug", "order_position", "is_active")
+    search_fields = ("title", "slug")
     prepopulated_fields = {"slug": ("title",)}
 
 

@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import mSymbol from "@/assets/m-metricaz.webp";
 import { api } from "@/lib/api";
 import { OptionText } from "@/components/site/OptionText";
+import { PrivacyNotice } from "@/components/site/PrivacyNotice";
 
 export const FooterCTA = () => {
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,7 @@ export const FooterCTA = () => {
                 Começar →
               </button>
             </form>
+            <PrivacyNotice className="mt-3" />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Case } from "@/lib/api-types";
 import { useCases } from "@/hooks/useCases";
 import { OptionText } from "@/components/site/OptionText";
 
@@ -10,6 +11,54 @@ const spans = [
   "md:col-span-6 aspect-[5/4]",
   "md:col-span-6 aspect-[5/4]",
 ];
+
+type CaseGridProps = {
+  cases: Case[];
+  /** Card title level: h3 under the home section's h2, h2 right under the /cases page h1. */
+  headingLevel?: "h2" | "h3";
+};
+
+/** Case cards in the mosaic layout: home "Cases" section and the /cases page. */
+export const CaseGrid = ({ cases, headingLevel: Heading = "h3" }: CaseGridProps) => (
+  <div className="grid md:grid-cols-12 gap-4 md:gap-6">
+    {cases.map((c, i) => (
+      <Link
+        key={c.id}
+        to={`/cases/${c.slug}`}
+        className={`group relative rounded-3xl overflow-hidden border border-border bg-card block ${spans[i % spans.length]}`}
+      >
+        <img
+          src={c.featured_image}
+          alt={c.featured_image_alt || c.title}
+          width={1024}
+          height={768}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/55 to-ink-deep/5" />
+        <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
+          <div className="flex items-start justify-between gap-4">
+            <span className="mono-tag px-3 py-1.5 rounded-full bg-primary text-primary-foreground">
+              {c.tag}
+            </span>
+            <div className="text-right">
+              <div className="editorial text-3xl md:text-5xl text-primary leading-none">{c.kpi_value}</div>
+              <div className="mono-tag text-foreground/70 mt-2">{c.kpi_label}</div>
+            </div>
+          </div>
+          <div className="max-w-xl">
+            <Heading className="editorial text-3xl md:text-5xl text-foreground">{c.title}</Heading>
+            <p className="text-foreground/80 mt-2 text-sm md:text-base max-w-md">{c.excerpt}</p>
+            <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
+              Ver case
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </div>
+        </div>
+      </Link>
+    ))}
+  </div>
+);
 
 export const Cases = () => {
   const { cases } = useCases({ limit: 6 });
@@ -31,51 +80,12 @@ export const Cases = () => {
               accentClassName="editorial-italic text-primary"
             />
           </div>
-          <a href="#contato" className="mono-tag text-muted-foreground hover:text-primary inline-flex items-center gap-2 self-start md:self-end">
+          <Link to="/cases" className="mono-tag text-muted-foreground hover:text-primary inline-flex items-center gap-2 self-start md:self-end">
             Todos os cases <span>→</span>
-          </a>
+          </Link>
         </div>
 
-        <div className="grid md:grid-cols-12 gap-4 md:gap-6">
-          {cases.map((c, i) => {
-            return (
-            <Link
-              key={c.id}
-              to={`/cases/${c.slug}`}
-              className={`group relative rounded-3xl overflow-hidden border border-border bg-card block ${spans[i % spans.length]}`}
-            >
-              <img
-                src={c.featured_image}
-                alt={c.featured_image_alt || c.title}
-                width={1024}
-                height={768}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink-deep via-ink-deep/55 to-ink-deep/5" />
-              <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="mono-tag px-3 py-1.5 rounded-full bg-primary text-primary-foreground">
-                    {c.tag}
-                  </span>
-                  <div className="text-right">
-                    <div className="editorial text-3xl md:text-5xl text-primary leading-none">{c.kpi_value}</div>
-                    <div className="mono-tag text-foreground/70 mt-2">{c.kpi_label}</div>
-                  </div>
-                </div>
-                <div className="max-w-xl">
-                  <h3 className="editorial text-3xl md:text-5xl text-foreground">{c.title}</h3>
-                  <p className="text-foreground/80 mt-2 text-sm md:text-base max-w-md">{c.excerpt}</p>
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                    Ver case
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </span>
-                </div>
-              </div>
-            </Link>
-            );
-          })}
-        </div>
+        <CaseGrid cases={cases} />
       </div>
     </section>
   );

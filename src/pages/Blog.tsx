@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
+import { OptionPageHead } from '@/components/PageHead';
 import { Footer } from '@/components/site/Footer';
 import { OptionText } from '@/components/site/OptionText';
 import { usePosts } from '@/hooks/usePosts';
@@ -11,6 +12,7 @@ const BlogPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <OptionPageHead page="blog" />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Conteúdo" section (keys content.eyebrow / content.title). */}

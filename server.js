@@ -25,7 +25,7 @@ const djangoUrl = process.env.DJANGO_URL || "http://127.0.0.1:8000";
 
 // Paths answered by Django. In production nginx sends them straight to gunicorn; the proxy below
 // is for running everything from one address locally (the Django session cookie needs it).
-const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout"];
+const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout", "/sitemap.xml", "/robots.txt"];
 
 const proxyToDjango = (req, res) => {
   const upstream = http.request(
@@ -66,6 +66,8 @@ const serializeState = (state) => JSON.stringify(state).replace(/</g, "\\u003c")
 
 const app = express();
 app.disable("x-powered-by");
+// Behind nginx: req.protocol comes from its X-Forwarded-Proto (https), not from the local http hop.
+app.set("trust proxy", "loopback");
 
 app.use((req, res, next) => {
   if (DJANGO_PATHS.some((prefix) => req.path.startsWith(prefix))) return proxyToDjango(req, res);
@@ -115,7 +117,10 @@ app.use(async (req, res) => {
       render = (await vite.ssrLoadModule("/src/entry-server.tsx")).render;
     }
 
-    const { pipe, head, state, status } = await render(url, djangoUrl);
+    // Public address the page was requested at (nginx passes Host and X-Forwarded-Proto): canonical
+    // and link preview tags point there, so each environment links to itself.
+    const siteUrl = `${req.protocol}://${req.get("host")}`;
+    const { pipe, head, state, status } = await render(url, djangoUrl, siteUrl);
     const html = await collect(pipe);
     const page = template
       .replace("<!--app-head-->", () => head)

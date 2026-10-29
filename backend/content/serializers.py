@@ -15,6 +15,7 @@ from .models import (
     Lead,
     MethodStep,
     NewsletterSubscriber,
+    Page,
     Post,
     Sector,
     Service,
@@ -102,6 +103,13 @@ class ServiceSerializer(RichTextMixin, OrderedSerializer):
 class CaseSerializer(RichTextMixin, OrderedSerializer):
     class Meta:
         model = Case
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+
+class PageSerializer(RichTextMixin, OrderedSerializer):
+    class Meta:
+        model = Page
         fields = "__all__"
         read_only_fields = ORDERED_READ_ONLY
 

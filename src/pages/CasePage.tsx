@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FolderKanban, Gauge, UserRound } from 'lucide-react';
 import { useCases } from '@/hooks/useCases';
 import { Nav } from '@/components/site/Nav';
+import { PageHead } from '@/components/PageHead';
 import { Footer } from '@/components/site/Footer';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
 
@@ -16,9 +17,9 @@ const CasePage = () => {
         <NotFoundStatus />
         <Nav useHomeSectionLinks />
         <div className="container-x py-20">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
+          <Link to="/cases" className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-glow">
             <ArrowLeft className="h-4 w-4" />
-            Voltar para home
+            Voltar para os cases
           </Link>
           <h1 className="mt-10 editorial text-5xl">Case não encontrado</h1>
           <p className="mt-4 max-w-lg text-muted-foreground">
@@ -32,6 +33,13 @@ const CasePage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <PageHead
+        title={caseItem.seo_title}
+        name={caseItem.title}
+        description={caseItem.seo_description || caseItem.excerpt}
+        image={caseItem.featured_image}
+        type="article"
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">
@@ -51,20 +59,25 @@ const CasePage = () => {
               <p className="editorial text-3xl text-primary">{caseItem.kpi_value}</p>
               <p className="mt-1 text-xs text-muted-foreground">{caseItem.kpi_label}</p>
             </div>
-            <div className="rounded-xl border border-border bg-card/55 p-4">
-              <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                <UserRound className="h-3.5 w-3.5" />
-                Cliente
+            {/* Empty in the admin = the box is left out (never a "não informado" placeholder). */}
+            {caseItem.client_name && (
+              <div className="rounded-xl border border-border bg-card/55 p-4">
+                <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <UserRound className="h-3.5 w-3.5" />
+                  Cliente
+                </div>
+                <p>{caseItem.client_name}</p>
               </div>
-              <p>{caseItem.client_name || 'Não informado'}</p>
-            </div>
-            <div className="rounded-xl border border-border bg-card/55 p-4">
-              <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                <FolderKanban className="h-3.5 w-3.5" />
-                Escopo
+            )}
+            {caseItem.service_stack && (
+              <div className="rounded-xl border border-border bg-card/55 p-4">
+                <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <FolderKanban className="h-3.5 w-3.5" />
+                  Escopo
+                </div>
+                <p>{caseItem.service_stack}</p>
               </div>
-              <p>{caseItem.service_stack || 'Não informado'}</p>
-            </div>
+            )}
             <div className="rounded-xl border border-border bg-card/55 p-4">
               <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
                 <CalendarDays className="h-3.5 w-3.5" />

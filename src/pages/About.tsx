@@ -1,4 +1,5 @@
 import { Nav } from "@/components/site/Nav";
+import { OptionPageHead } from "@/components/PageHead";
 import { FooterCTA } from "@/components/site/FooterCTA";
 import { Contact } from "@/components/site/Contact";
 import { Footer } from "@/components/site/Footer";
@@ -32,6 +33,7 @@ const About = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <OptionPageHead page="about" />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-ink-deep pb-16 pt-28 md:pb-20 md:pt-36">

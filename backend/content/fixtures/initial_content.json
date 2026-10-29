@@ -1170,7 +1170,9 @@
       "slug": "seo",
       "icon_name": "seo",
       "excerpt": "Auditoria técnica, estratégia de conteúdo e link building com foco em crescimento orgânico previsível.",
-      "content_html": "<h2>SEO orientado a negócio</h2>\n<p>Estruturamos a presença orgânica para gerar demanda qualificada, apoiar a jornada de compra e ampliar previsibilidade de receita.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria técnica e correção de gargalos</li>\n  <li>Arquitetura de conteúdo e clusters temáticos</li>\n  <li>Estratégia de autoridade e desempenho orgânico</li>\n</ul>"
+      "content_html": "<h2>SEO orientado a negócio</h2>\n<p>Estruturamos a presença orgânica para gerar demanda qualificada, apoiar a jornada de compra e ampliar previsibilidade de receita.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria técnica e correção de gargalos</li>\n  <li>Arquitetura de conteúdo e clusters temáticos</li>\n  <li>Estratégia de autoridade e desempenho orgânico</li>\n</ul>",
+      "seo_title": "Consultoria de SEO Técnico e Estratégico | Metricaz",
+      "seo_description": "Auditoria técnica de SEO, arquitetura de conteúdo e estratégia de autoridade para crescer em tráfego orgânico com previsibilidade. Fale com a Metricaz."
     }
   },
   {
@@ -1186,7 +1188,9 @@
       "slug": "cro",
       "icon_name": "cro",
       "excerpt": "Hipóteses baseadas em dados, experimentação contínua e otimização da jornada de conversão.",
-      "content_html": "<h2>Conversão com método</h2>\n<p>Testamos, priorizamos e ajustamos a experiência para transformar mais tráfego em resultado real.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria de UX e comportamento</li>\n  <li>Hipóteses ICE e roadmap de testes</li>\n  <li>Experimentação e leitura estatística</li>\n</ul>"
+      "content_html": "<h2>Conversão com método</h2>\n<p>Testamos, priorizamos e ajustamos a experiência para transformar mais tráfego em resultado real.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Auditoria de UX e comportamento</li>\n  <li>Hipóteses ICE e roadmap de testes</li>\n  <li>Experimentação e leitura estatística</li>\n</ul>",
+      "seo_title": "Consultoria de CRO e Testes A/B | Metricaz",
+      "seo_description": "Auditoria de UX, hipóteses priorizadas por ICE e testes A/B com leitura estatística para aumentar a conversão do seu site ou e-commerce."
     }
   },
   {
@@ -1202,7 +1206,9 @@
       "slug": "analytics",
       "icon_name": "analytics",
       "excerpt": "Mensuração ponta a ponta com GA4, GTM, server-side tracking e dashboards acionáveis.",
-      "content_html": "<h2>Mensuração confiável</h2>\n<p>Construímos uma base de dados clara para que marketing, produto e liderança tomem decisão com segurança.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Setup e migração para GA4</li>\n  <li>Tagueamento e governança</li>\n  <li>Integração com mídia e BI</li>\n</ul>"
+      "content_html": "<h2>Mensuração confiável</h2>\n<p>Construímos uma base de dados clara para que marketing, produto e liderança tomem decisão com segurança.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Setup e migração para GA4</li>\n  <li>Tagueamento e governança</li>\n  <li>Integração com mídia e BI</li>\n</ul>",
+      "seo_title": "Digital Analytics: GA4, GTM e Server-Side | Metricaz",
+      "seo_description": "Implementação e migração de GA4, GTM, server-side tracking e dashboards em Looker Studio e BigQuery, com governança e conformidade LGPD."
     }
   },
   {
@@ -1218,7 +1224,9 @@
       "slug": "desenvolvimento",
       "icon_name": "development",
       "excerpt": "Software sob medida, integrações e automações que sustentam a operação data-driven.",
-      "content_html": "<h2>Produto e automação</h2>\n<p>Desenvolvemos camadas técnicas que conectam sistemas, simplificam fluxos e sustentam operações mais inteligentes.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Integrações com APIs e dados</li>\n  <li>Web apps e ferramentas internas</li>\n  <li>Automação de processos e relatórios</li>\n</ul>"
+      "content_html": "<h2>Produto e automação</h2>\n<p>Desenvolvemos camadas técnicas que conectam sistemas, simplificam fluxos e sustentam operações mais inteligentes.</p>\n<h3>Frentes de atuação</h3>\n<ul>\n  <li>Integrações com APIs e dados</li>\n  <li>Web apps e ferramentas internas</li>\n  <li>Automação de processos e relatórios</li>\n</ul>",
+      "seo_title": "Desenvolvimento de Software e Integrações | Metricaz",
+      "seo_description": "Integrações com APIs, web apps, ferramentas internas e automação de relatórios para sustentar operações data-driven. Fale com a Metricaz."
     }
   },
   {
@@ -1356,10 +1364,10 @@
     "model": "content.siteoption",
     "pk": 8,
     "fields": {
-      "key": "seo.title",
+      "key": "seo.home.title",
       "label": "",
-      "value": "Metricaz · Consultoria de SEO, CRO e Digital Analytics",
-      "description": "Título da aba e dos resultados de busca.",
+      "value": "Consultoria de SEO, CRO e Analytics em São Paulo | Metricaz",
+      "description": "Título da página inicial na aba e nos resultados de busca.",
       "updated_at": "2026-09-24T00:00:00Z"
     }
   },
@@ -1367,10 +1375,10 @@
     "model": "content.siteoption",
     "pk": 9,
     "fields": {
-      "key": "seo.description",
+      "key": "seo.home.description",
       "label": "",
-      "value": "Transformamos dados em vantagem competitiva. Consultoria de SEO, CRO, Digital Analytics e desenvolvimento de software com método e rigor analítico.",
-      "description": "Descrição para buscadores e compartilhamento.",
+      "value": "Consultoria de SEO, CRO, Digital Analytics e desenvolvimento. Mais de 80 marcas atendidas em 12 anos. Peça um diagnóstico e transforme dados em receita.",
+      "description": "Descrição da página inicial para buscadores e compartilhamento.",
       "updated_at": "2026-09-24T00:00:00Z"
     }
   },
@@ -2090,6 +2098,127 @@
     }
   },
   {
+    "model": "content.siteoption",
+    "pk": 75,
+    "fields": {
+      "key": "seo.site_name",
+      "label": "",
+      "value": "Metricaz",
+      "description": "Nome do site: vai depois do título das páginas e na prévia de links compartilhados.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 76,
+    "fields": {
+      "key": "seo.about.title",
+      "label": "",
+      "value": "Quem somos: time sênior de SEO, CRO e Analytics | Metricaz",
+      "description": "Título do Quem Somos na aba e nos resultados de busca.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 77,
+    "fields": {
+      "key": "seo.about.description",
+      "label": "",
+      "value": "Conheça a Metricaz: consultoria de performance com time sênior em SEO, CRO, Digital Analytics e desenvolvimento. +80 marcas atendidas.",
+      "description": "Descrição do Quem Somos para buscadores e compartilhamento.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 78,
+    "fields": {
+      "key": "seo.services.title",
+      "label": "",
+      "value": "Serviços de SEO, CRO, Analytics e Desenvolvimento | Metricaz",
+      "description": "Título da página Serviços na aba e nos resultados de busca.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 79,
+    "fields": {
+      "key": "seo.services.description",
+      "label": "",
+      "value": "Conheça os serviços da Metricaz: SEO, CRO e testes A/B, Digital Analytics (GA4, GTM, server-side) e desenvolvimento sob medida.",
+      "description": "Descrição da página Serviços para buscadores e compartilhamento.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 80,
+    "fields": {
+      "key": "seo.blog.title",
+      "label": "",
+      "value": "Blog Metricaz: SEO, CRO e Digital Analytics na prática",
+      "description": "Título do Blog na aba e nos resultados de busca.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 81,
+    "fields": {
+      "key": "seo.blog.description",
+      "label": "",
+      "value": "Artigos práticos sobre SEO, GEO, CRO, GA4, GTM e Consent Mode escritos pelo time da Metricaz. Estratégia com dados, sem achismo.",
+      "description": "Descrição do Blog para buscadores e compartilhamento.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 82,
+    "fields": {
+      "key": "seo.contact.title",
+      "label": "",
+      "value": "Fale com a Metricaz | Diagnóstico de SEO, CRO e Analytics",
+      "description": "Título da página Contato na aba e nos resultados de busca.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 83,
+    "fields": {
+      "key": "seo.contact.description",
+      "label": "",
+      "value": "Fale com a Metricaz e conte seu desafio em SEO, CRO ou Analytics. Retorno em até 1 dia útil. Escritório em Pinheiros, São Paulo.",
+      "description": "Descrição da página Contato para buscadores e compartilhamento.",
+      "updated_at": "2026-10-28T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 84,
+    "fields": {
+      "key": "seo.cases.title",
+      "label": "",
+      "value": "Cases de SEO, CRO e Analytics | Metricaz",
+      "description": "Título da página Cases na aba e nos resultados de busca.",
+      "updated_at": "2026-10-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.siteoption",
+    "pk": 85,
+    "fields": {
+      "key": "seo.cases.description",
+      "label": "",
+      "value": "Cases da Metricaz em SEO, CRO e Digital Analytics: desafios, soluções e resultados de marcas como Livelo e Burger King.",
+      "description": "Descrição da página Cases para buscadores e compartilhamento.",
+      "updated_at": "2026-10-29T00:00:00Z"
+    }
+  },
+  {
     "model": "content.methodstep",
     "pk": 1,
     "fields": {
@@ -2327,7 +2456,20 @@
       "created_at": "2026-09-24T00:00:00Z",
       "updated_at": "2026-09-24T00:00:00Z",
       "label": "Privacidade",
-      "url": "#"
+      "url": "/politica-de-privacidade"
+    }
+  },
+  {
+    "model": "content.sociallink",
+    "pk": 4,
+    "fields": {
+      "order_position": 3,
+      "is_active": true,
+      "created_by": null,
+      "created_at": "2026-09-24T00:00:00Z",
+      "updated_at": "2026-09-24T00:00:00Z",
+      "label": "Termos de uso",
+      "url": "/termos-de-uso"
     }
   },
   {
@@ -2379,57 +2521,6 @@
     "fields": {
       "name": "CRO",
       "slug": "cro"
-    }
-  },
-  {
-    "model": "content.author",
-    "pk": 1,
-    "fields": {
-      "name": "Nome Sobrenome",
-      "mini_bio": "Especialista em Digital Analytics e privacidade de dados na Metricaz. (Autor de exemplo.)",
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z"
-    }
-  },
-  {
-    "model": "content.post",
-    "pk": 1,
-    "fields": {
-      "title": "Google Consent Mode v2: o que muda e por que sua empresa precisa disso agora",
-      "slug": "google-consent-mode-v2",
-      "subtitle": "Post de exemplo: um guia rápido sobre consentimento, mensuração e o que ajustar no seu setup.",
-      "author": 1,
-      "tag": 1,
-      "featured_image": "blog/consent-mode-v2.jpg",
-      "featured_image_alt": "Painel de dados de analytics",
-      "content_html": "<p>Este é um post de exemplo, criado para mostrar o layout completo do blog.</p><h2>O que é o Consent Mode v2</h2><p>É o mecanismo do Google que ajusta a coleta de dados de acordo com o consentimento do visitante, mantendo a mensuração possível mesmo quando o usuário recusa cookies.</p><h2>O que muda na prática</h2><ul><li>Novos sinais de consentimento para anúncios e personalização</li><li>Modelagem de conversões quando não há consentimento</li><li>Exigência para quem anuncia no Espaço Econômico Europeu</li></ul><h3>Checklist rápido</h3><ol><li>Revise a plataforma de gestão de consentimento (CMP)</li><li>Atualize as tags no Google Tag Manager</li><li>Valide os sinais no modo de visualização</li></ol><blockquote><p>Mensuração sem consentimento bem configurado é dado que você não pode usar.</p></blockquote><p>Quer revisar o seu setup? <a href=\"/contato\" rel=\"noopener noreferrer\">Fale com a gente</a>.</p>",
-      "published_at": "2026-05-12",
-      "is_active": true,
-      "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z"
-    }
-  },
-  {
-    "model": "content.case",
-    "pk": 1,
-    "fields": {
-      "title": "Case de exemplo: mensuração de ponta a ponta para e-commerce",
-      "slug": "case-de-exemplo",
-      "tag": "Digital Analytics",
-      "excerpt": "Case de exemplo: como uma base de dados confiável mudou as decisões de mídia e conversão.",
-      "kpi_value": "+40%",
-      "kpi_label": "conversão (exemplo)",
-      "client_name": "Cliente Exemplo",
-      "service_stack": "GA4, GTM Server-Side, Looker Studio",
-      "featured_image": "cases/case-exemplo.jpg",
-      "featured_image_alt": "Dashboard de analytics",
-      "content_html": "<p>Este é um case de exemplo, criado para mostrar o layout completo da página de case.</p><h2>Contexto</h2><p>Uma operação de e-commerce com dados de mídia, analytics e CRM desconectados, sem uma leitura única do funil.</p><h2>O que fizemos</h2><ul><li>Diagnóstico do tagueamento e da qualidade dos dados</li><li>Migração para GA4 com server-side tracking</li><li>Dashboards de funil para marketing e liderança</li></ul><h2>Resultado</h2><p>Decisões de mídia passaram a ser tomadas com base em dados confiáveis, com ganho de conversão no período.</p><blockquote><p>Números de exemplo: substitua por um case real no admin.</p></blockquote>",
-      "order_position": 0,
-      "is_active": true,
-      "created_by": null,
-      "created_at": "2026-09-24T00:00:00Z",
-      "updated_at": "2026-09-24T00:00:00Z"
     }
   }
 ]
