@@ -24,6 +24,7 @@ O que é só código vai sendo feito no projeto (área `seo-urgente`).
 ## Informações a levantar
 
 - [ ] **Case Burger King:** resultado real para o card (hoje "20% Tagueamento", que não é uma métrica clara). Ex.: aumento de conversão no totem, redução do tempo de pedido.
+- [ ] **Case Consent Mode:** o card mostra "0 GTM" como resultado (não é uma métrica) e a etiqueta "gtm, consent mode, lgpd, configurar" parece lista de palavras-chave. Definir um resultado real e uma etiqueta curta (ex.: "Consent Mode, GTM").
 - [ ] **Case Burger King:** imagens ou capturas de dashboard (com permissão do cliente).
 - [ ] **Case Livelo:** texto alternativo da imagem de capa (descrever o que a imagem mostra). Aprovar o título sugerido: "Livelo + GA4: como unificamos a mensuração do maior programa de recompensas do Brasil".
 - [ ] **Números do site que não batem:** "+312% receita orgânica média" (home) x "+300% média de ganho" (Quem Somos); "99.8% de confiabilidade de coleta" sem explicação. Definir o número certo e de onde ele vem (período, metodologia).
