@@ -6,7 +6,7 @@ import { OptionText } from "@/components/site/OptionText";
 import { PrivacyNotice } from "@/components/site/PrivacyNotice";
 import { useApiList } from "@/hooks/useApiList";
 import { SocialLink } from "@/lib/api-types";
-import { siteLinks } from "@/lib/site-links";
+import { footerLinks } from "@/lib/site-links";
 import { useServices } from "@/hooks/useServices";
 
 interface FooterProps {
@@ -17,6 +17,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
   const homeBase = import.meta.env.BASE_URL;
   // Pages get the base path; home sections (#id) too when the footer is not on the home page.
   const resolveHref = (href: string, isPage?: boolean) => {
+    if (href.startsWith("https://")) return href;  // another Metricaz site
     if (isPage) return `${homeBase}${href.replace(/^\//, "")}`;
     return useHomeSectionLinks ? `${homeBase}${href}` : href;
   };
@@ -62,7 +63,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
           <div className="md:col-span-2">
             <div className="eyebrow mb-6">{"// Navegação"}</div>
             <ul className="space-y-3.5 text-muted-foreground">
-              {siteLinks.map((link) => (
+              {footerLinks.map((link) => (
                 <li key={link.href}><a href={resolveHref(link.href, link.isPage)} className="hover:text-primary transition-colors">{link.label}</a></li>
               ))}
             </ul>

@@ -10,3 +10,9 @@ export const siteLinks: SiteLink[] = [
   { href: "/blog", label: "Blog", isPage: true },
   { href: "/contato", label: "Contato", isPage: true },
 ];
+
+// Footer only: applying to work here is mostly by an invite from HR; this is the way in for the curious.
+export const footerLinks: SiteLink[] = [
+  ...siteLinks,
+  { href: "https://candidatos.metricaz.com", label: "Trabalhe conosco" },
+];
