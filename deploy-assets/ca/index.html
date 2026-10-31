@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Certificados Metricaz</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f6f6f4; --fg: #1d1d1b; --muted: #8a8a85; --line: #e2e2de; --link: #1d1d1b; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #141413; --fg: #ececea; --muted: #7d7d78; --line: #2a2a28; --link: #ececea; } }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
+  h1 { margin: 0 0 24px; font-size: 1.375rem; font-weight: 600; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 14px 0; border-top: 1px solid var(--line); }
+  li:last-child { border-bottom: 1px solid var(--line); }
+  a { color: var(--link); font-weight: 600; }
+  .meta { color: var(--muted); font-size: .8125rem; }
+  code { font: .75rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Certificados Metricaz</h1>
+  <ul>
+    <li>
+      <a href="mtz-root-ca.crt" download>mtz-root-ca.crt</a>
+      <div class="meta">MTZ Root CA · válido até 11/08/2044</div>
+      <code>SHA-256 4F:E7:97:0B:BA:21:7F:57:59:D0:87:AB:DE:01:62:F0:56:84:E2:E8:17:9F:08:CC:FC:5E:24:D5:9A:F8:D8:C9</code>
+    </li>
+    <li>
+      <a href="mtz-intermediate-ca.crt" download>mtz-intermediate-ca.crt</a>
+      <div class="meta">MTZ Intermediate CA · válido até 14/08/2034</div>
+      <code>SHA-256 20:96:6A:3E:94:49:94:47:A3:FB:79:00:98:E9:0D:7E:8A:5B:87:BE:8E:55:DB:04:0B:9D:69:73:43:55:AF:D3</code>
+    </li>
+    <li>
+      <a href="mtz-chain.pem" download>mtz-chain.pem</a>
+      <div class="meta">Cadeia: intermediária + raiz</div>
+    </li>
+  </ul>
+</main>
+</body>
+</html>
