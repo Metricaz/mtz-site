@@ -51,6 +51,18 @@ export type Service = Ordered & {
   content_html: string;
   seo_title: string;
   seo_description: string;
+  /** Cases and posts picked in the admin, active ones only (internal links at the end of the page). */
+  related_links: {
+    cases: { title: string; slug: string; excerpt: string; client_name: string }[];
+    posts: { title: string; slug: string; excerpt: string }[];
+  };
+};
+
+/** Pergunta frequente (Django admin → Perguntas frequentes): home or one service. */
+export type FaqItem = Ordered & {
+  question: string;
+  answer: string;
+  service: number | null;
 };
 
 export type Case = Ordered & {
@@ -206,6 +218,8 @@ export type Post = {
   featured_image_alt: string;
   content_html: string;
   published_at: string;
+  /** Set in the admin when the text is really revised ("Atualizado em"); null = never. */
+  reviewed_at: string | null;
   is_active: boolean;
   seo_title: string;
   seo_description: string;

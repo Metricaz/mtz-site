@@ -136,3 +136,18 @@ export const articleSchema = ({ siteUrl, pageUrl, absolute }: SchemaContext, art
       : { "@id": organizationId(siteUrl) },
     publisher: { "@id": organizationId(siteUrl) },
   });
+
+/** FAQ shown on the page (FAQPage only describes questions that are visible there). */
+export const faqSchema = (items: { question: string; answer: string }[]): SchemaNode[] =>
+  items.length
+    ? [
+        {
+          "@type": "FAQPage",
+          mainEntity: items.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
+          })),
+        },
+      ]
+    : [];

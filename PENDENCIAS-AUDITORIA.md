@@ -1,20 +1,28 @@
 # Pendências da auditoria de SEO e GEO (documento do Uanderson)
 
 Lista do que precisa de **informação, texto ou decisão da equipe** para fechar os itens da auditoria.
-O que é só código vai sendo feito no projeto (área `seo-urgente`).
+O que é só código vai sendo feito no projeto (áreas `seo-urgente`, já no ar, e `auditoria-seo-2`).
 
-Última atualização: 29/10/2026
+Última atualização: 03/11/2026
 
-## Antes de ir ao ar (30/10/2026)
+## Ida ao ar (30/10/2026)
 
-- [ ] **Bloqueio do Google só no site de teste.** A linha `add_header X-Robots-Tag "noindex, nofollow"` em `deploy-assets/sites-available/mtz-site.conf` **não pode** ir para a configuração do metricaz.com, senão o site oficial some do Google. (Ciro)
-- [ ] **Redirecionamentos 301** do site atual para o novo: o site atual tem a lista de páginas em https://metricaz.com/sitemap_index.xml. Privacidade e Termos de Uso já usam os mesmos endereços do site atual. (Ciro)
-- [ ] **`/sitemap.xml` e `/robots.txt` vêm do Django:** a configuração do nginx de produção precisa mandar esses dois endereços para o Django, como já faz a de homologação (`location ~ ^/(api|admin|...|sitemap\.xml|robots\.txt)`). (Ciro)
+- [x] **Bloqueio do Google só no site de teste.** Conferido em 03/11: o metricaz.com não tem o bloqueio. A linha `add_header X-Robots-Tag "noindex, nofollow"` em `deploy-assets/sites-available/mtz-site.conf` **não pode** ir para a configuração do metricaz.com, senão o site oficial some do Google. (Ciro)
+- [ ] **Redirecionamentos 301** do site atual para o novo (conferir no Search Console as páginas antigas com erro 404): o site atual tem a lista de páginas em https://metricaz.com/sitemap_index.xml. Privacidade e Termos de Uso já usam os mesmos endereços do site atual. (Ciro)
+- [x] **`/sitemap.xml` e `/robots.txt` vêm do Django:** conferido em 03/11. a configuração do nginx de produção precisa mandar esses dois endereços para o Django, como já faz a de homologação (`location ~ ^/(api|admin|...|sitemap\.xml|robots\.txt)`). (Ciro)
 - [ ] **Depois da troca:** enviar `https://metricaz.com/sitemap.xml` no Google Search Console.
-- [ ] **Conferir as páginas na tela** (computador e celular) na homologação depois do merge: menu, rodapé, Cases, Privacidade, Termos, formulários. Atenção à **etiqueta nova acima do título da home** e aos **títulos mais longos das páginas de serviço** (quebra de linha no celular).
-- [ ] **Validar os dados estruturados** na homologação: https://search.google.com/test/rich-results (colar o endereço de uma página; testar home, um serviço, um post, um case e Contato).
+- [x] **Conferir as páginas na tela** (computador e celular) na homologação depois do merge: menu, rodapé, Cases, Privacidade, Termos, formulários. Atenção à **etiqueta nova acima do título da home** e aos **títulos mais longos das páginas de serviço** (quebra de linha no celular).
+- [x] **Validar os dados estruturados:** 10 páginas principais do metricaz.com testadas em 03/11 no validador do schema.org (do Google), sem erros nem avisos.
 - [ ] **Revisar a Política de Privacidade e os Termos de Uso** (painel → Páginas). Confirmar e-mail para assuntos de dados (hoje: contato@metricaz.com), endereço e, se quiserem, incluir CNPJ.
 - [ ] **Imagem padrão de compartilhamento** (WhatsApp, LinkedIn): 1200×630, no painel do Django → Imagens do site, chave `seo.og_image`.
+
+## Novidades do painel (área `auditoria-seo-2`, depois de publicada)
+
+- [ ] **Perguntas frequentes** (painel → Perguntas frequentes): 3 a 5 por página, respostas de 40 a 60 palavras. Sem serviço = home; com serviço = página daquele serviço (também dá para editar dentro do cadastro do serviço). O bloco só aparece quando há perguntas.
+- [ ] **Cases e posts relacionados** (painel → Serviços → cada serviço): escolher os cases e posts ligados a ele. Sugestão da auditoria: Analytics com Livelo, Burger King e os posts de GTM, Consent Mode e dimensões personalizadas.
+- [ ] **"Revisado em"** (painel → Posts): preencher quando um post for reescrito de verdade. O post mostra "Atualizado em" e o Google recebe essa data; a data de publicação fica como está.
+- [ ] **Datas de publicação dos posts:** conferir se são as do site antigo. Ex.: o post de GA4 com GTM está com 01/10/2026.
+- [ ] **"Título para o Google" e "descrição para o Google" dos posts** passam a funcionar (antes eram ignorados): dá para aplicar os títulos sugeridos pela auditoria.
 
 ## Google Tag Manager (documento do Gus)
 

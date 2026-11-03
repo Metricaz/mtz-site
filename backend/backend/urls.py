@@ -22,7 +22,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
 from content.sitemaps import SITEMAPS
-from content.views import robots_txt
+from content.views import llms_txt, robots_txt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +33,7 @@ urlpatterns = [
     # For search engines; nginx sends these two addresses here (every other page is the Node server).
     path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots-txt'),
+    path('llms.txt', llms_txt, name='llms-txt'),
 ]
 
 # Uploaded files in development (production serves /media/ from the web server).

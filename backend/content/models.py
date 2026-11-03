@@ -195,6 +195,20 @@ class Service(RichTextModel):
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
     seo_title = seo_title_field()
     seo_description = seo_description_field()
+    related_cases = models.ManyToManyField(
+        "Case",
+        verbose_name="cases relacionados",
+        blank=True,
+        related_name="+",
+        help_text="Aparecem no fim da página do serviço (links internos). Só os ativos são mostrados.",
+    )
+    related_posts = models.ManyToManyField(
+        "Post",
+        verbose_name="posts relacionados",
+        blank=True,
+        related_name="+",
+        help_text="Aparecem no fim da página do serviço (links internos). Só os publicados são mostrados.",
+    )
 
     class Meta(RichTextModel.Meta):
         verbose_name = "serviço"
@@ -364,6 +378,13 @@ class Post(SanitizedContentMixin, models.Model):
     featured_image_alt = models.CharField("texto alternativo da imagem", max_length=255, blank=True)
     content_html = models.TextField("conteúdo", help_text=RICH_TEXT_HELP)
     published_at = models.DateField("data de publicação")
+    reviewed_at = models.DateField(
+        "revisado em",
+        null=True,
+        blank=True,
+        help_text="Preencha quando o texto for revisto de verdade: o post mostra \"Atualizado em\" e o Google recebe essa data. "
+        "Não mude a data de publicação.",
+    )
     is_active = models.BooleanField("publicado", default=True, help_text="Desmarcado = não aparece no site.")
     seo_title = seo_title_field()
     seo_description = seo_description_field()
@@ -386,6 +407,29 @@ class Post(SanitizedContentMixin, models.Model):
 
     def __str__(self):
         return self.title
+
+
+class FAQItem(OrderedModel):
+    """Pergunta frequente: na home (sem serviço) ou na página de um serviço. Sem perguntas, o bloco não aparece."""
+
+    service = models.ForeignKey(
+        Service,
+        verbose_name="serviço",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="faq_items",
+        help_text="Vazio = aparece na home.",
+    )
+    question = models.CharField("pergunta", max_length=255)
+    answer = models.TextField("resposta", help_text="Resposta direta, de 40 a 60 palavras. Texto simples.")
+
+    class Meta(OrderedModel.Meta):
+        verbose_name = "pergunta frequente"
+        verbose_name_plural = "perguntas frequentes"
+
+    def __str__(self):
+        return self.question
 
 
 class ContentImage(models.Model):

@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CalendarDays, UserRound } from 'lucide-react';
+import { ArrowLeft, CalendarDays, RefreshCw, UserRound } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
 import { articleSchema } from '@/lib/structured-data';
@@ -49,7 +49,8 @@ const BlogPostPage = () => {
             description: post.seo_description || post.subtitle,
             image: post.featured_image,
             datePublished: post.published_at,
-            dateModified: post.updated_at.slice(0, 10),
+            // Only a real revision counts as a change (updated_at moves on any save, e.g. the site migration).
+            dateModified: post.reviewed_at || post.published_at,
             author: post.author,
           })
         }
@@ -79,8 +80,14 @@ const BlogPostPage = () => {
             )}
             <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3">
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
-              {formatShortDate(post.published_at)}
+              <time dateTime={post.published_at}>{formatShortDate(post.published_at)}</time>
             </div>
+            {post.reviewed_at && post.reviewed_at > post.published_at && (
+              <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3">
+                <RefreshCw className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                Atualizado em <time dateTime={post.reviewed_at}>{formatShortDate(post.reviewed_at)}</time>
+              </div>
+            )}
           </div>
         </div>
       </section>

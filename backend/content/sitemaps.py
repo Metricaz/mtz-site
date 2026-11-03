@@ -48,6 +48,10 @@ class PostSitemap(ContentSitemap):
     model = Post
     prefix = "/blog/"
 
+    def lastmod(self, item):
+        # Same date the post shows and sends as dateModified, not the last save in the admin.
+        return item.reviewed_at or item.published_at
+
 
 class PageSitemap(ContentSitemap):
     model = Page
