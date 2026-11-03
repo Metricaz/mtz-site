@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CalendarDays, UserRound } from 'lucide-react';
+import { ArrowLeft, CalendarDays, RefreshCw, UserRound } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
 import { articleSchema } from '@/lib/structured-data';
@@ -49,7 +49,8 @@ const BlogPostPage = () => {
             description: post.seo_description || post.subtitle,
             image: post.featured_image,
             datePublished: post.published_at,
-            dateModified: post.updated_at.slice(0, 10),
+            // Only a real revision counts as a change (updated_at moves on any save, e.g. the site migration).
+            dateModified: post.reviewed_at || post.published_at,
             author: post.author,
           })
         }
@@ -64,7 +65,12 @@ const BlogPostPage = () => {
           </Link>
           {post.tag && (
             <div className="mb-6">
-              <span className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground">{post.tag.name}</span>
+              <Link
+                to={`/blog/categoria/${post.tag.slug}`}
+                className="mono-tag rounded-full bg-primary px-3 py-1.5 text-primary-foreground transition-colors hover:bg-primary-glow"
+              >
+                {post.tag.name}
+              </Link>
             </div>
           )}
           <h1 className="editorial text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95]">{post.title}</h1>
@@ -72,15 +78,25 @@ const BlogPostPage = () => {
 
           <div className="mt-8 flex flex-wrap gap-3 text-sm text-foreground/80">
             {post.author && (
-              <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3">
+              <Link
+                to={`/autor/${post.author.slug}`}
+                rel="author"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3 transition-colors hover:border-primary/40 hover:text-foreground"
+              >
                 <UserRound className="h-4 w-4 text-muted-foreground" />
                 {post.author.name}
-              </div>
+              </Link>
             )}
             <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3">
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
-              {formatShortDate(post.published_at)}
+              <time dateTime={post.published_at}>{formatShortDate(post.published_at)}</time>
             </div>
+            {post.reviewed_at && post.reviewed_at > post.published_at && (
+              <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/55 px-4 py-3">
+                <RefreshCw className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                Atualizado em <time dateTime={post.reviewed_at}>{formatShortDate(post.reviewed_at)}</time>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -102,10 +118,31 @@ const BlogPostPage = () => {
           <article className="case-content blog-content mt-12 max-w-4xl" dangerouslySetInnerHTML={{ __html: post.content_html }} />
 
           {post.author && (
-            <aside className="mt-16 max-w-4xl rounded-3xl border border-border bg-card/55 p-6 md:p-8">
-              <p className="eyebrow">Sobre o autor</p>
-              <p className="editorial mt-3 text-2xl md:text-3xl">{post.author.name}</p>
-              {post.author.mini_bio && <p className="mt-3 text-sm leading-7 text-muted-foreground md:text-base">{post.author.mini_bio}</p>}
+            <aside className="mt-16 flex max-w-4xl flex-col gap-6 rounded-3xl border border-border bg-card/55 p-6 sm:flex-row sm:items-start md:p-8">
+              {post.author.photo && (
+                <img
+                  src={post.author.photo}
+                  alt={post.author.name}
+                  width={96}
+                  height={96}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-20 w-20 shrink-0 rounded-full border border-border object-cover md:h-24 md:w-24"
+                />
+              )}
+              <div>
+                <p className="eyebrow">Sobre o autor</p>
+                <p className="editorial mt-3 text-2xl md:text-3xl">{post.author.name}</p>
+                {post.author.role && <p className="mt-1 text-sm text-primary">{post.author.role}</p>}
+                {post.author.mini_bio && <p className="mt-3 text-sm leading-7 text-muted-foreground md:text-base">{post.author.mini_bio}</p>}
+                <Link
+                  to={`/autor/${post.author.slug}`}
+                  rel="author"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  Ver todos os posts de {post.author.name} →
+                </Link>
+              </div>
             </aside>
           )}
         </div>

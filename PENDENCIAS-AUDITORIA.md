@@ -1,22 +1,39 @@
 # Pendências da auditoria de SEO e GEO (documento do Uanderson)
 
 Lista do que precisa de **informação, texto ou decisão da equipe** para fechar os itens da auditoria.
-O que é só código vai sendo feito no projeto (área `seo-urgente`).
+O que é só código vai sendo feito no projeto (áreas `seo-urgente`, já no ar, e `auditoria-seo-2`).
 
-Última atualização: 29/10/2026
+Última atualização: 03/11/2026
 
-## Antes de ir ao ar (30/10/2026)
+## Ida ao ar (30/10/2026)
 
-- [ ] **Bloqueio do Google só no site de teste.** A linha `add_header X-Robots-Tag "noindex, nofollow"` em `deploy-assets/sites-available/mtz-site.conf` **não pode** ir para a configuração do metricaz.com, senão o site oficial some do Google. (Ciro)
-- [ ] **Redirecionamentos 301** do site atual para o novo: o site atual tem a lista de páginas em https://metricaz.com/sitemap_index.xml. Privacidade e Termos de Uso já usam os mesmos endereços do site atual. (Ciro)
-- [ ] **`/sitemap.xml` e `/robots.txt` vêm do Django:** a configuração do nginx de produção precisa mandar esses dois endereços para o Django, como já faz a de homologação (`location ~ ^/(api|admin|...|sitemap\.xml|robots\.txt)`). (Ciro)
+- [x] **Bloqueio do Google só no site de teste.** Conferido em 03/11: o metricaz.com não tem o bloqueio. A linha `add_header X-Robots-Tag "noindex, nofollow"` em `deploy-assets/sites-available/mtz-site.conf` **não pode** ir para a configuração do metricaz.com, senão o site oficial some do Google. (Ciro)
+- [ ] **Redirecionamentos 301** do site atual para o novo (conferir no Search Console as páginas antigas com erro 404): o site atual tem a lista de páginas em https://metricaz.com/sitemap_index.xml. Privacidade e Termos de Uso já usam os mesmos endereços do site atual. (Ciro)
+- [x] **`/sitemap.xml` e `/robots.txt` vêm do Django:** conferido em 03/11. a configuração do nginx de produção precisa mandar esses dois endereços para o Django, como já faz a de homologação (`location ~ ^/(api|admin|...|sitemap\.xml|robots\.txt)`). (Ciro)
 - [ ] **Depois da troca:** enviar `https://metricaz.com/sitemap.xml` no Google Search Console.
-- [ ] **Conferir as páginas na tela** (computador e celular) na homologação depois do merge: menu, rodapé, Cases, Privacidade, Termos, formulários. Atenção à **etiqueta nova acima do título da home** e aos **títulos mais longos das páginas de serviço** (quebra de linha no celular).
-- [ ] **Validar os dados estruturados** na homologação: https://search.google.com/test/rich-results (colar o endereço de uma página; testar home, um serviço, um post, um case e Contato).
+- [x] **Conferir as páginas na tela** (computador e celular) na homologação depois do merge: menu, rodapé, Cases, Privacidade, Termos, formulários. Atenção à **etiqueta nova acima do título da home** e aos **títulos mais longos das páginas de serviço** (quebra de linha no celular).
+- [x] **Validar os dados estruturados:** 10 páginas principais do metricaz.com testadas em 03/11 no validador do schema.org (do Google), sem erros nem avisos.
 - [ ] **Revisar a Política de Privacidade e os Termos de Uso** (painel → Páginas). Confirmar e-mail para assuntos de dados (hoje: contato@metricaz.com), endereço e, se quiserem, incluir CNPJ.
 - [ ] **Imagem padrão de compartilhamento** (WhatsApp, LinkedIn): 1200×630, no painel do Django → Imagens do site, chave `seo.og_image`.
 
+## Novidades do painel (área `auditoria-seo-2`, depois de publicada)
+
+- [ ] **Perguntas frequentes** (painel → Perguntas frequentes): 3 a 5 por página, respostas de 40 a 60 palavras. Sem serviço = home; com serviço = página daquele serviço (também dá para editar dentro do cadastro do serviço). O bloco só aparece quando há perguntas.
+- [ ] **Cases e posts relacionados** (painel → Serviços → cada serviço): escolher os cases e posts ligados a ele. Sugestão da auditoria: Analytics com Livelo, Burger King e os posts de GTM, Consent Mode e dimensões personalizadas.
+- [ ] **"Revisado em"** (painel → Posts): preencher quando um post for reescrito de verdade. O post mostra "Atualizado em" e o Google recebe essa data; a data de publicação fica como está.
+- [ ] **Datas de publicação dos posts:** conferir se são as do site antigo. Ex.: o post de GA4 com GTM está com 01/10/2026.
+- [ ] **"Título para o Google" e "descrição para o Google" dos posts** passam a funcionar (antes eram ignorados): dá para aplicar os títulos sugeridos pela auditoria.
+- [ ] **Página de cada autor** (`/autor/<nome>`, painel → Autores): preencher **foto** (quadrada), **cargo** (ex.: "Head de SEO na Metricaz"), **LinkedIn** e **minibio**. O post passa a linkar para a página do autor, e o Google e as IAs recebem o perfil do LinkedIn. O endereço é criado sozinho a partir do nome.
+- [ ] **Página de cada categoria do blog** (`/blog/categoria/<slug>`, painel → Tags): escrever a **descrição** (2 a 3 linhas de abertura). Só aparecem categorias que têm posts publicados. Revisar as categorias dos posts (a auditoria aponta o post de Consent Mode em "SEO"; o certo seria Analytics/Privacidade).
+- [ ] **Mapa do Contato:** endereço novo ganha mapa sozinho, montado a partir do endereço. O campo "mapa (URL de incorporação)" só é preciso para escolher um mapa diferente.
+
 ## Google Tag Manager (documento do Gus)
+
+- [ ] **Velocidade no celular: o que vem pelo GTM pesa mais que o site.** Medição de 03/11 (Lighthouse, celular): sem o GTM o site tira **96 a 98**; com o sGTM e o banner de cookies da **GoAdopt** cai para **77 a 83** (o padrão da Metricaz pede 90). Os dois somam mais de 1 segundo de processamento no celular, e o banner da GoAdopt também faz a página "pular" quando aparece. A decidir com o Gus:
+  - carregar o GTM um pouco depois da página abrir (ganho grande; pode perder visitas de quem sai em menos de 1 a 2 segundos);
+  - revisar as tags do contêiner (há código que não é usado na página);
+  - ver com a GoAdopt se o banner pode ocupar o lugar sem empurrar a página (ou usar outra ferramenta de consentimento).
+- [ ] **Mapa do Contato antes do consentimento:** o mapa do Google agora só carrega quando a pessoa rola até ele, mas ainda carrega sem o aceite de cookies. Decidir se ele deve esperar o consentimento.
 
 - [ ] **Confirmar com o Gus o ID no código do `<head>`:** o último valor de `})(window,document,'script','dataLayer','');` está vazio no documento (o `noscript` usa `GTM-PMMZBGH`). Foi implementado exatamente como está no documento.
 - [ ] **Atualizar a Política de Privacidade** (seção "Cookies"): hoje ela diz que o site usa apenas cookies essenciais. Com o GTM/Google Analytics isso muda; o texto e o consentimento (Consent Mode) ficam a definir com o Gus.
@@ -34,9 +51,9 @@ O que é só código vai sendo feito no projeto (área `seo-urgente`).
 - [ ] **Time (Quem Somos):** bio de 2 a 3 linhas, certificações e LinkedIn de cada head.
 - [ ] **Fotos do time:** todas no mesmo formato, em pé (3:4, ex.: 600×800), em WebP. No site atual há fotos em tamanhos e proporções diferentes, em JPEG.
 - [ ] **Imagens do blog e dos cases:** de preferência em WebP, em formato 4:3 (ex.: 1536×1152), com texto alternativo descrevendo a imagem (não repetir o título).
-- [ ] **Contato:** telefone e WhatsApp oficiais; endereços de Orlando e Cafelândia (completar ou remover as abas).
+- [ ] **Contato:** telefone e WhatsApp oficiais de São Paulo e Orlando.
 - [ ] **Perfis externos da marca** para os dados estruturados: Google Business Profile, Clutch, Google Partners etc. (se existirem). Hoje vão LinkedIn e Instagram, tirados dos Links do rodapé.
-- [ ] **Autores do blog:** os posts informam ao Google o nome e a minibio do autor (painel → Autores). Preencher nome real e minibio de cada autor.
+- [ ] **Autores do blog:** nome real, foto, cargo, LinkedIn e minibio de cada autor (ver "Página de cada autor" acima).
 
 - [ ] **Endereços (painel → Endereços):** o país de São Paulo está como "Brasil" e o de Orlando como "US". Para o Google, o ideal é o código de duas letras (BR, US) nos dois.
 

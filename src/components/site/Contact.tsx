@@ -44,16 +44,18 @@ export const Contact = () => {
 
   return (
     <section id="contato" className="relative overflow-hidden">
-      <div className="grid md:grid-cols-12 min-h-[80vh]">
+      {/* Side by side from lg; stacked below (a tablet is too narrow for the big title next to the form). */}
+      <div className="grid lg:grid-cols-12 min-h-[80vh]">
         {/* left: orange editorial panel */}
-        <div className="md:col-span-5 surface-orange relative p-10 md:p-16 flex flex-col justify-between">
+        <div className="lg:col-span-5 surface-orange relative p-10 md:p-16 lg:p-12 xl:p-16 flex flex-col justify-between">
           <div>
             <OptionText k="contact.eyebrow" as="div" className="mono-tag text-primary-foreground/80" />
+            {/* The accent keeps the panel's text colour: the default orange accent would vanish on orange. */}
             <OptionText
               k="contact.title"
               as="h2"
-              className="editorial mt-6 text-5xl md:text-7xl text-primary-foreground"
-              accentClassName="editorial-italic"
+              className="editorial mt-6 text-5xl md:text-6xl xl:text-7xl text-primary-foreground"
+              accentClassName="editorial-italic text-primary-foreground"
             />
             <OptionText
               k="contact.description"
@@ -66,7 +68,7 @@ export const Contact = () => {
             {email && (
               <div>
                 <div className="mono-tag text-primary-foreground/70 mb-2">E-mail</div>
-                <a href={`mailto:${email}`} className="editorial text-2xl md:text-3xl underline-offset-4 hover:underline">
+                <a href={`mailto:${email}`} className="editorial text-2xl md:text-3xl lg:text-2xl xl:text-3xl underline-offset-4 hover:underline">
                   {email}
                 </a>
               </div>
@@ -90,7 +92,7 @@ export const Contact = () => {
         </div>
 
         {/* right: form on ink */}
-        <div className="md:col-span-7 bg-ink-deep p-10 md:p-16 flex items-center">
+        <div className="lg:col-span-7 bg-ink-deep p-10 md:p-16 lg:p-12 xl:p-16 flex items-center">
           <form onSubmit={onSubmit} className="w-full max-w-xl mx-auto space-y-7">
             <div className="grid md:grid-cols-2 gap-7">
               <Field label="Nome" name="name" />

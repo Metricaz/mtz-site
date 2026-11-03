@@ -4,15 +4,61 @@ import { useServices } from '@/hooks/useServices';
 import { OptionText } from '@/components/site/OptionText';
 import { Nav } from '@/components/site/Nav';
 import { PageHead } from '@/components/PageHead';
-import { serviceSchema } from '@/lib/structured-data';
+import { faqSchema, serviceSchema } from '@/lib/structured-data';
+import { useFaq } from '@/hooks/useFaq';
+import { FaqSection } from '@/components/site/FaqSection';
 import { Footer } from '@/components/site/Footer';
 import { getServiceIcon } from '@/lib/service-icons';
 import { NotFoundStatus } from '@/components/NotFoundStatus';
+import { Service } from '@/lib/api-types';
+
+type RelatedLinksProps = { links: Service['related_links'] | undefined };
+
+/** Cases and posts picked in the service's admin page: internal links with the destination's own title. */
+const RelatedLinks = ({ links }: RelatedLinksProps) => {
+  const items = [
+    ...(links?.cases ?? []).map((item) => ({ ...item, kind: 'Case', href: `/cases/${item.slug}` })),
+    ...(links?.posts ?? []).map((item) => ({ ...item, kind: 'Blog', href: `/blog/${item.slug}` })),
+  ];
+  if (items.length === 0) return null;
+
+  return (
+    <section className="pb-12 md:pb-16">
+      <div className="container-x">
+        <OptionText
+          k="servicepage.related_title"
+          as="h2"
+          className="editorial mb-10 text-4xl leading-tight md:text-5xl"
+          accentClassName="editorial-italic text-primary"
+        />
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <li key={item.href}>
+              <Link
+                to={item.href}
+                className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+              >
+                <span className="mono-tag text-primary">{item.kind}</span>
+                <h3 className="mt-3 text-xl font-medium leading-snug group-hover:text-primary">{item.title}</h3>
+                {item.excerpt && <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">{item.excerpt}</p>}
+                <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm text-primary">
+                  {item.kind === 'Case' ? 'Ver o case' : 'Ler o post'}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+};
 
 const ServicePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { services } = useServices({ slug, enabled: Boolean(slug) });
   const service = services[0] ?? null;
+  const { items: faq } = useFaq(slug ?? '');
 
   if (!service) {
     return (
@@ -43,7 +89,7 @@ const ServicePage = () => {
         name={service.title}
         description={service.seo_description || service.excerpt}
         breadcrumb={[{ label: 'Serviços', href: '/servicos' }]}
-        schema={(context) => serviceSchema(context, service.title, service.excerpt)}
+        schema={(context) => [serviceSchema(context, service.title, service.excerpt), ...faqSchema(faq)]}
       />
       <Nav useHomeSectionLinks />
 
@@ -67,8 +113,16 @@ const ServicePage = () => {
       <section className="py-12 md:py-16">
         <div className="container-x">
           <article className="case-content max-w-4xl" dangerouslySetInnerHTML={{ __html: service.content_html }} />
+        </div>
+      </section>
 
-          <div className="mt-14 rounded-3xl border border-border bg-card/55 p-6 md:p-8">
+      <FaqSection items={faq} className="pb-12 md:pb-16" />
+      <RelatedLinks links={service.related_links} />
+
+      <section className="pb-12 md:pb-16">
+        <div className="container-x">
+
+          <div className="rounded-3xl border border-border bg-card/55 p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <OptionText k="servicepage.cta_eyebrow" as="p" className="eyebrow" />

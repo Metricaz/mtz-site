@@ -12,6 +12,7 @@ from .models import (
     ContactSubmission,
     ContentImage,
     EngagementModel,
+    FAQItem,
     Lead,
     MethodStep,
     NewsletterSubscriber,
@@ -94,8 +95,34 @@ class TestimonialSerializer(OrderedSerializer):
 
 
 class ServiceSerializer(RichTextMixin, OrderedSerializer):
+    """related_cases / related_posts are written as ids; related_links is what the site shows (active items only)."""
+
+    related_links = serializers.SerializerMethodField()
+
     class Meta:
         model = Service
+        fields = "__all__"
+        read_only_fields = ORDERED_READ_ONLY
+
+    def get_related_links(self, service):
+        # .all() so the viewset's prefetch is used; filtering in Python keeps it to one query each.
+        cases = [case for case in service.related_cases.all() if case.is_active]
+        posts = [post for post in service.related_posts.all() if post.is_active]
+        return {
+            "cases": [
+                {"title": case.title, "slug": case.slug, "excerpt": case.excerpt, "client_name": case.client_name}
+                for case in sorted(cases, key=lambda case: (case.order_position, case.created_at))
+            ],
+            "posts": [
+                {"title": post.title, "slug": post.slug, "excerpt": post.subtitle}
+                for post in sorted(posts, key=lambda post: post.published_at, reverse=True)
+            ],
+        }
+
+
+class FAQItemSerializer(OrderedSerializer):
+    class Meta:
+        model = FAQItem
         fields = "__all__"
         read_only_fields = ORDERED_READ_ONLY
 
@@ -184,13 +211,14 @@ class SocialLinkSerializer(OrderedSerializer):
 class AuthorSerializer(ModelSerializer):
     class Meta:
         model = Author
-        fields = ["id", "name", "mini_bio"]
+        fields = ["id", "name", "slug", "role", "photo", "linkedin_url", "mini_bio"]
+        extra_kwargs = {"slug": {"required": False}}
 
 
 class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
-        fields = ["id", "name", "slug"]
+        fields = ["id", "name", "slug", "description"]
 
 
 class PostSerializer(RichTextMixin, ModelSerializer):
@@ -210,8 +238,8 @@ class PostSerializer(RichTextMixin, ModelSerializer):
         model = Post
         fields = [
             "id", "title", "slug", "subtitle", "author", "author_id", "tag", "tag_id",
-            "featured_image", "featured_image_alt", "content_html", "published_at",
-            "is_active", "created_by", "created_at", "updated_at",
+            "featured_image", "featured_image_alt", "content_html", "published_at", "reviewed_at",
+            "seo_title", "seo_description", "is_active", "created_by", "created_at", "updated_at",
         ]
         read_only_fields = ["id", "created_by", "created_at", "updated_at"]
 

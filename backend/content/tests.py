@@ -25,6 +25,7 @@ from .models import (
     ContactSubmission,
     ContentImage,
     EngagementModel,
+    FAQItem,
     Lead,
     MethodStep,
     NewsletterSubscriber,
@@ -544,7 +545,7 @@ class BlogApiTests(ApiTestCase):
         post = self.client.get("/api/posts/?slug=consent-mode").json()[0]
         self.assertEqual(post["author"]["name"], "Ana Lima")
         self.assertIn("mini_bio", post["author"])
-        self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade"})
+        self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade", "description": ""})
         self.assertNotIn("author_id", post)
 
     def test_filters_and_order(self):
@@ -831,3 +832,94 @@ class PageHeadingsMigrationTests(ApiTestCase):
         self.assertEqual(options["servicespage.title"], "Serviços de SEO, CRO, Digital Analytics e Desenvolvimento")
         self.assertEqual(options["about.title"], "Texto editado")
         self.assertEqual(options["hero.eyebrow"], "Consultoria de SEO, CRO e Digital Analytics")
+
+
+class AuditFollowUpTests(ApiTestCase):
+    """SEO and GEO audit, 03/11/2026: FAQ, related links, post review date and SEO fields, AI crawlers."""
+
+    def setUp(self):
+        super().setUp()
+        self.service = Service.objects.create(title="SEO", slug="seo", icon_name="seo", excerpt="e", content_html="<p>x</p>")
+        image = {"featured_image": "cases/x.png", "content_html": "<p>x</p>"}
+        self.case = Case.objects.create(title="Livelo", slug="livelo", tag="t", excerpt="e", kpi_value="1", kpi_label="l", **image)
+        self.hidden_case = Case.objects.create(
+            title="Off", slug="off", tag="t", excerpt="e", kpi_value="1", kpi_label="l", is_active=False, **image
+        )
+        self.post = Post.objects.create(
+            title="GTM", slug="gtm", subtitle="Sub", published_at="2026-05-12", seo_title="GTM: 7 motivos",
+            seo_description="Desc", **image,
+        )
+
+    def test_faq_split_between_home_and_service(self):
+        FAQItem.objects.create(question="Home?", answer="Sim.")
+        FAQItem.objects.create(question="SEO?", answer="Sim.", service=self.service)
+        FAQItem.objects.create(question="Oculta?", answer="Não.", is_active=False)
+        self.assertEqual([f["question"] for f in self.client.get("/api/faq/?service=home").json()], ["Home?"])
+        self.assertEqual([f["question"] for f in self.client.get("/api/faq/?service=seo").json()], ["SEO?"])
+
+    def test_related_links_show_only_active_items(self):
+        self.service.related_cases.set([self.case, self.hidden_case])
+        self.service.related_posts.set([self.post])
+        links = self.client.get("/api/services/?slug=seo").json()[0]["related_links"]
+        self.assertEqual([c["slug"] for c in links["cases"]], ["livelo"])
+        self.assertEqual(links["posts"], [{"title": "GTM", "slug": "gtm", "excerpt": "Sub"}])
+
+    def test_post_sends_seo_fields_and_review_date(self):
+        Post.objects.filter(pk=self.post.pk).update(reviewed_at="2026-11-03")
+        post = self.client.get("/api/posts/?slug=gtm").json()[0]
+        self.assertEqual((post["seo_title"], post["seo_description"], post["reviewed_at"]), ("GTM: 7 motivos", "Desc", "2026-11-03"))
+        xml = self.client.get("/sitemap.xml", HTTP_HOST="localhost").content.decode()
+        self.assertIn("<loc>http://localhost/blog/gtm</loc><lastmod>2026-11-03</lastmod>", xml)
+
+    def test_robots_names_ai_crawlers_as_allowed(self):
+        body = self.client.get("/robots.txt", HTTP_HOST="localhost").content.decode()
+        self.assertIn("User-agent: GPTBot\n", body)
+        self.assertIn("User-agent: ClaudeBot\n", body)
+        self.assertEqual(body.count("Disallow: /admin/"), 2)  # the AI group keeps the same blocks
+
+    def test_llms_txt_lists_active_content(self):
+        response = self.client.get("/llms.txt", HTTP_HOST="localhost")
+        self.assertEqual(response["Content-Type"], "text/plain; charset=utf-8")
+        body = response.content.decode()
+        self.assertIn("- [SEO](http://localhost/servicos/seo): e", body)
+        self.assertIn("- [Livelo](http://localhost/cases/livelo): e", body)
+        self.assertIn("- [GTM](http://localhost/blog/gtm): Sub", body)
+        self.assertNotIn("/cases/off", body)
+
+    def test_new_section_titles_are_created_once(self):
+        SiteOption.objects.filter(key="faq.title").update(value="Editado")
+        importlib.import_module("content.migrations.0018_faq_related_links_reviewed_at").forwards(apps, None)
+        self.assertEqual(SiteOption.objects.get(key="faq.title").value, "Editado")
+        self.assertTrue(SiteOption.objects.filter(key="servicepage.related_title").exists())
+
+
+class AuthorAndCategoryPagesTests(ApiTestCase):
+    """Audit: author pages (/autor/<slug>) and category pages (/blog/categoria/<slug>)."""
+
+    def setUp(self):
+        super().setUp()
+        self.author = Author.objects.create(name="Ana Souza", role="Head de SEO", linkedin_url="https://www.linkedin.com/in/ana")
+        self.idle_author = Author.objects.create(name="Sem Posts")
+        self.tag = Tag.objects.create(name="SEO", slug="seo", description="Tudo de SEO.")
+        self.empty_tag = Tag.objects.create(name="Vazia", slug="vazia")
+        base = {"featured_image": "blog/x.png", "content_html": "<p>x</p>", "author": self.author, "tag": self.tag}
+        Post.objects.create(title="A", slug="a", published_at="2026-05-12", **base)
+        Post.objects.create(title="Rascunho", slug="r", published_at="2026-06-01", is_active=False, **base)
+
+    def test_author_slug_comes_from_the_name_and_stays_unique(self):
+        self.assertEqual(self.author.slug, "ana-souza")
+        self.assertEqual(Author.objects.create(name="Ana Souza").slug, "ana-souza-2")
+
+    def test_author_and_category_found_by_slug_with_their_posts(self):
+        author = self.client.get("/api/authors/?slug=ana-souza").json()
+        self.assertEqual([(a["name"], a["role"], a["linkedin_url"]) for a in author],
+                         [("Ana Souza", "Head de SEO", "https://www.linkedin.com/in/ana")])
+        self.assertEqual(self.client.get("/api/tags/?slug=seo").json()[0]["description"], "Tudo de SEO.")
+        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/?author=ana-souza").json()], ["a"])
+
+    def test_sitemap_lists_only_authors_and_categories_with_published_posts(self):
+        xml = self.client.get("/sitemap.xml", HTTP_HOST="localhost").content.decode()
+        self.assertIn("<loc>http://localhost/autor/ana-souza</loc><lastmod>2026-05-12</lastmod>", xml)
+        self.assertIn("<loc>http://localhost/blog/categoria/seo</loc><lastmod>2026-05-12</lastmod>", xml)
+        self.assertNotIn("/autor/sem-posts", xml)
+        self.assertNotIn("/blog/categoria/vazia", xml)

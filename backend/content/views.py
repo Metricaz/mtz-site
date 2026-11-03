@@ -47,6 +47,7 @@ from .serializers import (
     ContactSubmissionSerializer,
     ContentImageSerializer,
     EngagementModelSerializer,
+    FAQItemSerializer,
     LeadSerializer,
     MethodStepSerializer,
     NewsletterSubscriberSerializer,
@@ -69,20 +70,53 @@ FILE_PARSERS = [JSONParser, MultiPartParser, FormParser]
 
 # --- Search engines ------------------------------------------------------------------------------
 
-ROBOTS_TXT = """User-agent: *
-Allow: /
+# AI assistants and AI search are welcome (Metricaz sells GEO): named so the choice is explicit, not a default.
+AI_CRAWLERS = [
+    "GPTBot", "OAI-SearchBot", "ChatGPT-User",
+    "ClaudeBot", "Claude-SearchBot", "Claude-User",
+    "PerplexityBot", "Perplexity-User",
+    "Google-Extended", "Applebot-Extended", "CCBot",
+]
+
+ROBOTS_RULES = """Allow: /
 Disallow: /admin/
 Disallow: /dashboard/
-
-Sitemap: {sitemap_url}
 """
 
 
 def robots_txt(request):
     """robots.txt pointing to this environment's sitemap (the test site also sends X-Robots-Tag: noindex)."""
-    return HttpResponse(
-        ROBOTS_TXT.format(sitemap_url=request.build_absolute_uri("/sitemap.xml")), content_type="text/plain"
-    )
+    groups = ["User-agent: *\n" + ROBOTS_RULES]
+    ai_agents = "".join(f"User-agent: {bot}\n" for bot in AI_CRAWLERS)
+    groups.append("# Assistentes e buscas com IA: liberados.\n" + ai_agents + ROBOTS_RULES)
+    body = "\n".join(groups) + f"\nSitemap: {request.build_absolute_uri('/sitemap.xml')}\n"
+    return HttpResponse(body, content_type="text/plain")
+
+
+def llms_txt(request):
+    """
+    /llms.txt: plain-text map of the site for AI assistants (llmstxt.org), built from the same content
+    as the site, so it never goes stale. Only active items.
+    """
+    options = dict(SiteOption.objects.filter(key__in=["seo.site_name", "seo.home.description"]).values_list("key", "value"))
+
+    def line(title, path, summary=""):
+        summary = " ".join(summary.split())  # one line, whatever line breaks the admin text has
+        return f"- [{title}]({request.build_absolute_uri(path)})" + (f": {summary}" if summary else "")
+
+    sections = [
+        ("Serviços", [line(s.title, f"/servicos/{s.slug}", s.excerpt) for s in Service.objects.filter(is_active=True)]),
+        ("Cases", [line(c.title, f"/cases/{c.slug}", c.excerpt) for c in Case.objects.filter(is_active=True)]),
+        ("Blog", [line(p.title, f"/blog/{p.slug}", p.subtitle) for p in Post.objects.filter(is_active=True)]),
+        ("Institucional", [line("Quem somos", "/quem-somos"), line("Contato", "/contato")]),
+    ]
+    text = f"# {options.get('seo.site_name') or 'Metricaz'}\n"
+    if description := options.get("seo.home.description"):
+        text += f"\n> {description}\n"
+    for title, items in sections:
+        if items:
+            text += f"\n## {title}\n\n" + "\n".join(items) + "\n"
+    return HttpResponse(text, content_type="text/plain; charset=utf-8")
 
 
 # --- Session -------------------------------------------------------------------------------------
@@ -170,6 +204,24 @@ class ServiceViewSet(OrderedViewSet):
     serializer_class = ServiceSerializer
     slug_filter = True
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related("related_cases", "related_posts")
+
+
+class FAQItemViewSet(OrderedViewSet):
+    """Perguntas frequentes. ?service=<slug do serviço>, ou ?service=home para as da home (sem serviço)."""
+
+    serializer_class = FAQItemSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        service = self.request.query_params.get("service")
+        if service == "home":
+            queryset = queryset.filter(service__isnull=True)
+        elif service:
+            queryset = queryset.filter(service__slug=service)
+        return queryset
+
 
 class CaseViewSet(OrderedViewSet):
     serializer_class = CaseSerializer
@@ -208,7 +260,7 @@ class SocialLinkViewSet(OrderedViewSet):
 
 
 class PostViewSet(OrderedViewSet):
-    """Blog posts, newest first. Extra filter: ?tag=<tag slug>."""
+    """Blog posts, newest first. Extra filters: ?tag=<tag slug>, ?author=<author slug>."""
 
     serializer_class = PostSerializer
     slug_filter = True
@@ -217,15 +269,28 @@ class PostViewSet(OrderedViewSet):
         queryset = super().get_queryset().select_related("author", "tag")
         if tag := self.request.query_params.get("tag"):
             queryset = queryset.filter(tag__slug=tag)
+        if author := self.request.query_params.get("author"):
+            queryset = queryset.filter(author__slug=author)
         return queryset
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
+class SlugFilterMixin:
+    """?slug=<slug> narrows the list to that item (author and category pages)."""
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if slug := self.request.query_params.get("slug"):
+            queryset = queryset.filter(slug=slug)
+        return queryset
+
+
+class AuthorViewSet(SlugFilterMixin, viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    parser_classes = FILE_PARSERS
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(SlugFilterMixin, viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 

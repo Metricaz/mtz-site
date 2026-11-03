@@ -22,6 +22,8 @@ const ServicePage = lazy(() => import("./pages/ServicePage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const BlogPage = lazy(() => import("./pages/Blog"));
 const BlogPostPage = lazy(() => import("./pages/BlogPost"));
+const BlogCategoryPage = lazy(() => import("./pages/BlogCategory"));
+const AuthorPage = lazy(() => import("./pages/AuthorPage"));
 const InstitutionalPage = lazy(() => import("./pages/InstitutionalPage"));
 
 const MetricazPrefixRedirect = () => {
@@ -93,7 +95,9 @@ const App = ({ queryClient, router }: AppProps) => (
                 <Route path="/cases" element={<CasesPage />} />
                 <Route path="/cases/:slug" element={<CasePage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/categoria/:slug" element={<BlogCategoryPage />} />
                 <Route path="/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/autor/:slug" element={<AuthorPage />} />
                 <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
                 <Route
                   path="/dashboard/:section"

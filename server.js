@@ -25,7 +25,7 @@ const djangoUrl = process.env.DJANGO_URL || "http://127.0.0.1:8000";
 
 // Paths answered by Django. In production nginx sends them straight to gunicorn; the proxy below
 // is for running everything from one address locally (the Django session cookie needs it).
-const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout", "/sitemap.xml", "/robots.txt"];
+const DJANGO_PATHS = ["/api", "/admin", "/static", "/media", "/dashboard/login", "/dashboard/logout", "/sitemap.xml", "/robots.txt", "/llms.txt"];
 
 const proxyToDjango = (req, res) => {
   const upstream = http.request(
@@ -79,6 +79,13 @@ app.use((req, res, next) => {
   if (req.path === "/dashboard" || req.path === "/dashboard/") return res.redirect(302, "/dashboard/sectors");
   const legacy = req.originalUrl.match(/^\/metricaz(\/.*)?$/);
   if (legacy) return res.redirect(301, legacy[1] || "/");
+  // One address per page: "/quem-somos/" goes to "/quem-somos" (the canonical), query string kept.
+  if (req.path.length > 1 && req.path.endsWith("/")) {
+    const query = req.originalUrl.slice(req.path.length);
+    // Leading slashes collapsed too: "//other.site/" must never become a redirect to another site.
+    const clean = req.path.replace(/^\/+/, "/").replace(/\/+$/, "") || "/";
+    return res.redirect(301, clean + query);
+  }
   next();
 });
 
