@@ -25,7 +25,8 @@ export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    // Below lg the top links don't fit next to the logo and the button (tablet): the floating menu is used.
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
     const updateViewport = () => setIsMobile(mediaQuery.matches);
 
     updateViewport();
@@ -47,7 +48,7 @@ export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
   }, []);
 
   const mobileMenu = (
-    <div className="fixed md:hidden bottom-6 right-6 z-40">
+    <div className="fixed lg:hidden bottom-6 right-6 z-40">
       {mobileMenuOpen && (
         <button
           type="button"
@@ -108,7 +109,7 @@ export const Nav = ({ useHomeSectionLinks = false }: NavProps) => {
               className="h-8 w-auto"
             />
           </a>
-          <nav className="hidden md:flex items-center gap-9 text-sm text-muted-foreground">
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9 text-sm text-muted-foreground">
             {links.map((l) => (
               <a key={l.href} href={resolveHref(l.href, l.isPage)} className="hover:text-foreground transition-colors">
                 {l.label}

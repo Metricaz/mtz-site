@@ -48,19 +48,20 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
     <footer className="relative bg-ink-deep border-t border-border pt-20 pb-10">
       <div className="container-x">
         <div className="grid md:grid-cols-12 gap-12 pb-16 border-b border-border">
-          <div className="md:col-span-4">
+          {/* Tablet: the brand line on its own row, the three columns below it; side by side from lg. */}
+          <div className="md:col-span-12 lg:col-span-4">
             <a href={resolveHref("#top")} className="flex items-center gap-2.5">
               <img src={logoMetricaz} alt="Metricaz" width={394} height={103} loading="lazy" decoding="async" className="h-8 w-auto" />
             </a>
             <OptionText
               k="footer.tagline"
               as="p"
-              className="editorial text-3xl md:text-5xl mt-10 max-w-md leading-tight"
+              className="editorial text-3xl md:text-5xl lg:text-4xl xl:text-5xl mt-10 max-w-md leading-tight"
               accentClassName="editorial-italic text-primary"
             />
           </div>
 
-          <div className="md:col-span-2">
+          <div className="md:col-span-3 lg:col-span-2">
             <div className="eyebrow mb-6">{"// Navegação"}</div>
             <ul className="space-y-3.5 text-muted-foreground">
               {footerLinks.map((link) => (
@@ -70,7 +71,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
           </div>
 
           {services.length > 0 && (
-            <div className="md:col-span-2">
+            <div className="md:col-span-3 lg:col-span-2">
               <div className="eyebrow mb-6">{"// Serviços"}</div>
               <ul className="space-y-3.5 text-muted-foreground">
                 {services.map((service) => (
@@ -84,7 +85,7 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
             </div>
           )}
 
-          <div className="md:col-span-4">
+          <div className="md:col-span-6 lg:col-span-4">
             <OptionText k="footer.newsletter_eyebrow" as="div" className="eyebrow mb-6" />
             <OptionText k="footer.newsletter_text" as="p" className="text-muted-foreground mb-5 text-sm leading-relaxed" />
             <form onSubmit={onSubscribe} className="flex border border-border rounded-full overflow-hidden p-1 bg-ink">
@@ -92,7 +93,8 @@ export const Footer = ({ useHomeSectionLinks = false }: FooterProps) => {
                 type="email"
                 name="email"
                 placeholder="seu@email.com"
-                className="flex-1 bg-transparent outline-none px-4 text-sm text-foreground"
+                aria-label="Seu e-mail"
+                className="min-w-0 flex-1 bg-transparent outline-none px-4 text-sm text-foreground"
                 required
               />
               <button
