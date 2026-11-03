@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils.text import slugify
 
 from .sanitize import sanitize_html
 
@@ -339,7 +340,17 @@ class SocialLink(OrderedModel):
 # --- Blog ---------------------------------------------------------------------------------------
 
 class Author(models.Model):
+    """Autor dos posts: página própria em /autor/<slug> (foto, cargo, minibio, LinkedIn e posts)."""
+
     name = models.CharField("nome", max_length=120)
+    slug = models.SlugField(
+        "slug", max_length=140, unique=True, blank=True, help_text="Endereço: /autor/<slug>. Vazio = gerado do nome."
+    )
+    role = models.CharField("cargo", max_length=120, blank=True, help_text="Ex.: Head de SEO na Metricaz.")
+    photo = models.ImageField("foto", upload_to="authors/", blank=True, help_text="Quadrada, de preferência.")
+    linkedin_url = models.URLField(
+        "LinkedIn", blank=True, help_text="Endereço do perfil. Ajuda o Google e as IAs a reconhecer o autor."
+    )
     mini_bio = models.TextField("minibio", blank=True)
     created_at = models.DateTimeField("criado em", auto_now_add=True)
     updated_at = models.DateTimeField("atualizado em", auto_now=True)
@@ -352,10 +363,29 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slug(Author, self.name, self.pk)
+        super().save(*args, **kwargs)
+
+
+def unique_slug(model, text, pk=None):
+    """Slug from `text`, with -2, -3... when another row already uses it."""
+    base = slugify(text)[:130] or "autor"
+    slug, n = base, 2
+    while model.objects.filter(slug=slug).exclude(pk=pk).exists():
+        slug, n = f"{base}-{n}", n + 1
+    return slug
+
 
 class Tag(models.Model):
+    """Categoria do blog: cada uma com página própria em /blog/categoria/<slug>."""
+
     name = models.CharField("nome", max_length=60, unique=True)
-    slug = models.SlugField("slug", max_length=80, unique=True)
+    slug = models.SlugField("slug", max_length=80, unique=True, help_text="Endereço: /blog/categoria/<slug>")
+    description = models.TextField(
+        "descrição", blank=True, help_text="Texto de abertura da página da categoria (2 a 3 linhas)."
+    )
 
     class Meta:
         ordering = ["name"]

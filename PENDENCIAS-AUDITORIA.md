@@ -23,8 +23,17 @@ O que é só código vai sendo feito no projeto (áreas `seo-urgente`, já no ar
 - [ ] **"Revisado em"** (painel → Posts): preencher quando um post for reescrito de verdade. O post mostra "Atualizado em" e o Google recebe essa data; a data de publicação fica como está.
 - [ ] **Datas de publicação dos posts:** conferir se são as do site antigo. Ex.: o post de GA4 com GTM está com 01/10/2026.
 - [ ] **"Título para o Google" e "descrição para o Google" dos posts** passam a funcionar (antes eram ignorados): dá para aplicar os títulos sugeridos pela auditoria.
+- [ ] **Página de cada autor** (`/autor/<nome>`, painel → Autores): preencher **foto** (quadrada), **cargo** (ex.: "Head de SEO na Metricaz"), **LinkedIn** e **minibio**. O post passa a linkar para a página do autor, e o Google e as IAs recebem o perfil do LinkedIn. O endereço é criado sozinho a partir do nome.
+- [ ] **Página de cada categoria do blog** (`/blog/categoria/<slug>`, painel → Tags): escrever a **descrição** (2 a 3 linhas de abertura). Só aparecem categorias que têm posts publicados. Revisar as categorias dos posts (a auditoria aponta o post de Consent Mode em "SEO"; o certo seria Analytics/Privacidade).
+- [ ] **Mapa do Contato:** endereço novo ganha mapa sozinho, montado a partir do endereço. O campo "mapa (URL de incorporação)" só é preciso para escolher um mapa diferente.
 
 ## Google Tag Manager (documento do Gus)
+
+- [ ] **Velocidade no celular: o que vem pelo GTM pesa mais que o site.** Medição de 03/11 (Lighthouse, celular): sem o GTM o site tira **96 a 98**; com o sGTM e o banner de cookies da **GoAdopt** cai para **77 a 83** (o padrão da Metricaz pede 90). Os dois somam mais de 1 segundo de processamento no celular, e o banner da GoAdopt também faz a página "pular" quando aparece. A decidir com o Gus:
+  - carregar o GTM um pouco depois da página abrir (ganho grande; pode perder visitas de quem sai em menos de 1 a 2 segundos);
+  - revisar as tags do contêiner (há código que não é usado na página);
+  - ver com a GoAdopt se o banner pode ocupar o lugar sem empurrar a página (ou usar outra ferramenta de consentimento).
+- [ ] **Mapa do Contato antes do consentimento:** o mapa do Google agora só carrega quando a pessoa rola até ele, mas ainda carrega sem o aceite de cookies. Decidir se ele deve esperar o consentimento.
 
 - [ ] **Confirmar com o Gus o ID no código do `<head>`:** o último valor de `})(window,document,'script','dataLayer','');` está vazio no documento (o `noscript` usa `GTM-PMMZBGH`). Foi implementado exatamente como está no documento.
 - [ ] **Atualizar a Política de Privacidade** (seção "Cookies"): hoje ela diz que o site usa apenas cookies essenciais. Com o GTM/Google Analytics isso muda; o texto e o consentimento (Consent Mode) ficam a definir com o Gus.
@@ -44,7 +53,7 @@ O que é só código vai sendo feito no projeto (áreas `seo-urgente`, já no ar
 - [ ] **Imagens do blog e dos cases:** de preferência em WebP, em formato 4:3 (ex.: 1536×1152), com texto alternativo descrevendo a imagem (não repetir o título).
 - [ ] **Contato:** telefone e WhatsApp oficiais; endereços de Orlando e Cafelândia (completar ou remover as abas).
 - [ ] **Perfis externos da marca** para os dados estruturados: Google Business Profile, Clutch, Google Partners etc. (se existirem). Hoje vão LinkedIn e Instagram, tirados dos Links do rodapé.
-- [ ] **Autores do blog:** os posts informam ao Google o nome e a minibio do autor (painel → Autores). Preencher nome real e minibio de cada autor.
+- [ ] **Autores do blog:** nome real, foto, cargo, LinkedIn e minibio de cada autor (ver "Página de cada autor" acima).
 
 - [ ] **Endereços (painel → Endereços):** o país de São Paulo está como "Brasil" e o de Orlando como "US". Para o Google, o ideal é o código de duas letras (BR, US) nos dois.
 

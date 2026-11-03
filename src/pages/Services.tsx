@@ -6,6 +6,7 @@ import { useServices } from '@/hooks/useServices';
 import { OptionText } from '@/components/site/OptionText';
 import { getServiceIcon } from '@/lib/service-icons';
 import { ArrowRight } from 'lucide-react';
+import { collectionSchema } from '@/lib/structured-data';
 
 const ServicesPage = () => {
   const { services } = useServices();
@@ -13,7 +14,16 @@ const ServicesPage = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="services" crumb="Serviços" />
+      <OptionPageHead
+        page="services"
+        crumb="Serviços"
+        schema={(context) =>
+          collectionSchema(context, {
+            name: "Serviços",
+            items: services.map((s) => ({ name: s.title, path: `/servicos/${s.slug}` })),
+          })
+        }
+      />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-radial pb-14 pt-28 md:pb-20 md:pt-36">

@@ -260,7 +260,7 @@ class SocialLinkViewSet(OrderedViewSet):
 
 
 class PostViewSet(OrderedViewSet):
-    """Blog posts, newest first. Extra filter: ?tag=<tag slug>."""
+    """Blog posts, newest first. Extra filters: ?tag=<tag slug>, ?author=<author slug>."""
 
     serializer_class = PostSerializer
     slug_filter = True
@@ -269,15 +269,28 @@ class PostViewSet(OrderedViewSet):
         queryset = super().get_queryset().select_related("author", "tag")
         if tag := self.request.query_params.get("tag"):
             queryset = queryset.filter(tag__slug=tag)
+        if author := self.request.query_params.get("author"):
+            queryset = queryset.filter(author__slug=author)
         return queryset
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
+class SlugFilterMixin:
+    """?slug=<slug> narrows the list to that item (author and category pages)."""
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if slug := self.request.query_params.get("slug"):
+            queryset = queryset.filter(slug=slug)
+        return queryset
+
+
+class AuthorViewSet(SlugFilterMixin, viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    parser_classes = FILE_PARSERS
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(SlugFilterMixin, viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 

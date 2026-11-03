@@ -181,13 +181,16 @@ class SocialLinkAdmin(OrderedAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at")
-    search_fields = ("name", "mini_bio")
+    list_display = ("name", "role", "slug", "created_at")
+    search_fields = ("name", "role", "mini_bio")
+    prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "role", "photo", "linkedin_url", "mini_bio")
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "slug")
+    fields = ("name", "slug", "description")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
 

@@ -211,13 +211,14 @@ class SocialLinkSerializer(OrderedSerializer):
 class AuthorSerializer(ModelSerializer):
     class Meta:
         model = Author
-        fields = ["id", "name", "mini_bio"]
+        fields = ["id", "name", "slug", "role", "photo", "linkedin_url", "mini_bio"]
+        extra_kwargs = {"slug": {"required": False}}
 
 
 class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
-        fields = ["id", "name", "slug"]
+        fields = ["id", "name", "slug", "description"]
 
 
 class PostSerializer(RichTextMixin, ModelSerializer):

@@ -541,7 +541,7 @@ class BlogApiTests(ApiTestCase):
         post = self.client.get("/api/posts/?slug=consent-mode").json()[0]
         self.assertEqual(post["author"]["name"], "Ana Lima")
         self.assertIn("mini_bio", post["author"])
-        self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade"})
+        self.assertEqual(post["tag"], {"id": 1, "name": "Privacidade", "slug": "privacidade", "description": ""})
         self.assertNotIn("author_id", post)
 
     def test_filters_and_order(self):
@@ -872,3 +872,35 @@ class AuditFollowUpTests(ApiTestCase):
         importlib.import_module("content.migrations.0018_faq_related_links_reviewed_at").forwards(apps, None)
         self.assertEqual(SiteOption.objects.get(key="faq.title").value, "Editado")
         self.assertTrue(SiteOption.objects.filter(key="servicepage.related_title").exists())
+
+
+class AuthorAndCategoryPagesTests(ApiTestCase):
+    """Audit: author pages (/autor/<slug>) and category pages (/blog/categoria/<slug>)."""
+
+    def setUp(self):
+        super().setUp()
+        self.author = Author.objects.create(name="Ana Souza", role="Head de SEO", linkedin_url="https://www.linkedin.com/in/ana")
+        self.idle_author = Author.objects.create(name="Sem Posts")
+        self.tag = Tag.objects.create(name="SEO", slug="seo", description="Tudo de SEO.")
+        self.empty_tag = Tag.objects.create(name="Vazia", slug="vazia")
+        base = {"featured_image": "blog/x.png", "content_html": "<p>x</p>", "author": self.author, "tag": self.tag}
+        Post.objects.create(title="A", slug="a", published_at="2026-05-12", **base)
+        Post.objects.create(title="Rascunho", slug="r", published_at="2026-06-01", is_active=False, **base)
+
+    def test_author_slug_comes_from_the_name_and_stays_unique(self):
+        self.assertEqual(self.author.slug, "ana-souza")
+        self.assertEqual(Author.objects.create(name="Ana Souza").slug, "ana-souza-2")
+
+    def test_author_and_category_found_by_slug_with_their_posts(self):
+        author = self.client.get("/api/authors/?slug=ana-souza").json()
+        self.assertEqual([(a["name"], a["role"], a["linkedin_url"]) for a in author],
+                         [("Ana Souza", "Head de SEO", "https://www.linkedin.com/in/ana")])
+        self.assertEqual(self.client.get("/api/tags/?slug=seo").json()[0]["description"], "Tudo de SEO.")
+        self.assertEqual([p["slug"] for p in self.client.get("/api/posts/?author=ana-souza").json()], ["a"])
+
+    def test_sitemap_lists_only_authors_and_categories_with_published_posts(self):
+        xml = self.client.get("/sitemap.xml", HTTP_HOST="localhost").content.decode()
+        self.assertIn("<loc>http://localhost/autor/ana-souza</loc><lastmod>2026-05-12</lastmod>", xml)
+        self.assertIn("<loc>http://localhost/blog/categoria/seo</loc><lastmod>2026-05-12</lastmod>", xml)
+        self.assertNotIn("/autor/sem-posts", xml)
+        self.assertNotIn("/blog/categoria/vazia", xml)

@@ -4,13 +4,20 @@ import { Footer } from '@/components/site/Footer';
 import { OptionText } from '@/components/site/OptionText';
 import { CaseGrid } from '@/components/site/Cases';
 import { useCases } from '@/hooks/useCases';
+import { collectionSchema } from '@/lib/structured-data';
 
 const CasesPage = () => {
   const { cases } = useCases();
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="cases" crumb="Cases" />
+      <OptionPageHead
+        page="cases"
+        crumb="Cases"
+        schema={(context) =>
+          collectionSchema(context, { name: "Cases", items: cases.map((c) => ({ name: c.title, path: `/cases/${c.slug}` })) })
+        }
+      />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Cases" section (keys cases.eyebrow / cases.title). */}

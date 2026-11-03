@@ -198,13 +198,20 @@ export type SocialLink = Ordered & {
 export type Author = {
   id: number;
   name: string;
+  /** Author page: /autor/<slug>. */
+  slug: string;
+  role: string;
+  photo: string | null;
+  linkedin_url: string;
   mini_bio: string;
 };
 
+/** Blog category: /blog/categoria/<slug>. */
 export type Tag = {
   id: number;
   name: string;
   slug: string;
+  description: string;
 };
 
 export type Post = {
