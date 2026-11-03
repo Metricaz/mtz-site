@@ -51,7 +51,7 @@ O que é só código vai sendo feito no projeto (áreas `seo-urgente`, já no ar
 - [ ] **Time (Quem Somos):** bio de 2 a 3 linhas, certificações e LinkedIn de cada head.
 - [ ] **Fotos do time:** todas no mesmo formato, em pé (3:4, ex.: 600×800), em WebP. No site atual há fotos em tamanhos e proporções diferentes, em JPEG.
 - [ ] **Imagens do blog e dos cases:** de preferência em WebP, em formato 4:3 (ex.: 1536×1152), com texto alternativo descrevendo a imagem (não repetir o título).
-- [ ] **Contato:** telefone e WhatsApp oficiais; endereços de Orlando e Cafelândia (completar ou remover as abas).
+- [ ] **Contato:** telefone e WhatsApp oficiais de São Paulo e Orlando.
 - [ ] **Perfis externos da marca** para os dados estruturados: Google Business Profile, Clutch, Google Partners etc. (se existirem). Hoje vão LinkedIn e Instagram, tirados dos Links do rodapé.
 - [ ] **Autores do blog:** nome real, foto, cargo, LinkedIn e minibio de cada autor (ver "Página de cada autor" acima).
 
