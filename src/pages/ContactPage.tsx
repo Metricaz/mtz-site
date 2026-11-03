@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown, MapPin, Mail, PhoneCall } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { OptionPageHead } from "@/components/PageHead";
@@ -19,6 +19,37 @@ const addressQuery = (a: CompanyAddress) =>
 /** The map pasted in the admin; without one, Google Maps finds the place from the address itself. */
 const mapEmbedUrl = (a: CompanyAddress) =>
   a.map_url || `https://www.google.com/maps?q=${encodeURIComponent(addressQuery(a))}&output=embed`;
+
+/**
+ * Google Maps only loads when the visitor gets near it: it is heavy (about 500 KB of scripts) and sits
+ * at the end of the page. Until then an empty box of the same size holds its place (no layout jump).
+ */
+const MapFrame = ({ title, src, className }: { title: string; src: string; className: string }) => {
+  const box = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const element = box.current;
+    if (!element || !("IntersectionObserver" in window)) return setVisible(true);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <div ref={box} className={className}>
+      {visible && (
+        <iframe title={title} src={src} className="block h-full w-full border-0" referrerPolicy="no-referrer-when-downgrade" />
+      )}
+    </div>
+  );
+};
 
 /** Opens the place in Google Maps (the app, on a phone) to get directions. */
 const mapLinkUrl = (a: CompanyAddress) =>
@@ -188,12 +219,10 @@ const ContactPage = () => {
               Stacked below lg (fixed height); beside the card from lg, as tall as the card. */}
           {address && (
             <div className="overflow-hidden rounded-3xl border border-border bg-card/55 shadow-card">
-              <iframe
+              <MapFrame
                 title={`Localização da Metricaz – ${address.label}`}
                 src={mapEmbedUrl(address)}
-                className="block h-[360px] w-full border-0 md:h-[440px] lg:h-full lg:min-h-[440px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[360px] w-full md:h-[440px] lg:h-full lg:min-h-[440px]"
               />
             </div>
           )}

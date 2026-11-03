@@ -9,6 +9,14 @@ import { HttpStatus, HttpStatusContext } from "@/lib/http-status";
 import { PageMeta, PageMetaContext } from "@/lib/page-meta";
 import { createQueryClient } from "@/lib/query-client";
 import { ROUTER_FUTURE } from "@/lib/router";
+import interFont from "@/assets/fonts/inter-latin-wght-normal.woff2?url";
+import poppinsBold from "@/assets/fonts/poppins-latin-700-normal.woff2?url";
+import poppinsItalic from "@/assets/fonts/poppins-latin-600-italic.woff2?url";
+
+// Fonts of the first screen (body text, titles, the italic accent): downloaded right away, in parallel.
+const fontPreloads = [interFont, poppinsBold, poppinsItalic]
+  .map((href) => `<link rel="preload" href="${href}" as="font" type="font/woff2" crossorigin />`)
+  .join("\n    ");
 
 export type RenderResult = {
   /** Writes the page's HTML (everything already loaded) into a Node stream. */
@@ -36,6 +44,7 @@ const renderHead = (meta: PageMeta, options: SiteOption[], siteUrl: string, url:
   const pageUrl = status === 200 ? escapeHtml(siteUrl + new URL(url, siteUrl).pathname) : "";
   const image = meta.image ? escapeHtml(new URL(meta.image, siteUrl).href) : "";
   return [
+    fontPreloads,
     title && `<title>${title}</title>`,
     title && `<meta property="og:title" content="${title}" />`,
     title && `<meta name="twitter:title" content="${title}" />`,
