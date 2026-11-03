@@ -10,6 +10,19 @@ import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { useWhatsAppSettings } from "@/hooks/useWhatsAppSettings";
 import { OptionText } from "@/components/site/OptionText";
 import { contactSchema } from "@/lib/structured-data";
+import type { CompanyAddress } from "@/lib/api-types";
+
+/** The address in one line, the way a map search understands it. */
+const addressQuery = (a: CompanyAddress) =>
+  [a.street, a.district, a.city, a.state, a.postal_code, a.country].filter(Boolean).join(", ");
+
+/** The map pasted in the admin; without one, Google Maps finds the place from the address itself. */
+const mapEmbedUrl = (a: CompanyAddress) =>
+  a.map_url || `https://www.google.com/maps?q=${encodeURIComponent(addressQuery(a))}&output=embed`;
+
+/** Opens the place in Google Maps (the app, on a phone) to get directions. */
+const mapLinkUrl = (a: CompanyAddress) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressQuery(a))}`;
 
 const ContactPage = () => {
   const { settings } = useWhatsAppSettings();
@@ -116,6 +129,14 @@ const ContactPage = () => {
                     <p className="text-sm text-muted-foreground">
                       {[address.district, `${address.city}, ${address.state}`, address.postal_code].filter(Boolean).join(' · ')}
                     </p>
+                    <a
+                      href={mapLinkUrl(address)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      Ver rotas no Google Maps<span className="sr-only"> – {address.label}</span> ↗
+                    </a>
                   </div>
                 </div>
               )}
@@ -163,12 +184,14 @@ const ContactPage = () => {
             )}
           </div>
 
-          {address?.map_url && (
+          {/* Every address gets a map, including ones added later without a pasted map link.
+              Stacked below lg (fixed height); beside the card from lg, as tall as the card. */}
+          {address && (
             <div className="overflow-hidden rounded-3xl border border-border bg-card/55 shadow-card">
               <iframe
                 title={`Localização da Metricaz – ${address.label}`}
-                src={address.map_url}
-                className="h-[420px] w-full border-0 md:h-full"
+                src={mapEmbedUrl(address)}
+                className="block h-[360px] w-full border-0 md:h-[440px] lg:h-full lg:min-h-[440px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
