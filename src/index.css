@@ -214,6 +214,7 @@
   font-family: 'Poppins', 'Inter', sans-serif;
   font-weight: 400;
   letter-spacing: -0.03em;
+  scroll-margin-top: 6rem; /* #anchor links land below the fixed nav */
 }
 
 .case-content h2 {
