@@ -41,10 +41,11 @@ const renderHead = (meta: PageMeta, options: SiteOption[], siteUrl: string, url:
   const siteName = escapeHtml(option("seo.site_name"));
   const title = escapeHtml(meta.title || option("seo.site_name"));
   const description = escapeHtml(meta.description ?? "");
-  const pageUrl = status === 200 ? escapeHtml(siteUrl + new URL(url, siteUrl).pathname) : "";
+  const pageUrl = status === 200 && !meta.noindex ? escapeHtml(siteUrl + new URL(url, siteUrl).pathname) : "";
   const image = meta.image ? escapeHtml(new URL(meta.image, siteUrl).href) : "";
   return [
     fontPreloads,
+    meta.noindex && `<meta name="robots" content="noindex, follow" />`,
     title && `<title>${title}</title>`,
     title && `<meta property="og:title" content="${title}" />`,
     title && `<meta name="twitter:title" content="${title}" />`,

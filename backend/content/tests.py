@@ -557,6 +557,30 @@ class BlogApiTests(ApiTestCase):
         Post.objects.update(is_active=False)
         self.assertEqual(self.client.get("/api/posts/").json(), [])
 
+    def test_search_finds_words_in_title_subtitle_and_text(self):
+        Post.objects.create(
+            title="Guia de GTM", slug="gtm", subtitle="Tags sem depender de TI", featured_image="blog/x.png",
+            content_html='<p>Use o <a href="https://tagmanager.google.com">Tag Manager</a> com Consent Mode e An&aacute;lise de ações.</p>',
+            published_at="2026-09-01",
+        )
+        Post.objects.create(
+            title="Rascunho de GTM", slug="rascunho", featured_image="blog/x.png", content_html="<p>x</p>",
+            published_at="2026-09-02", is_active=False,
+        )
+
+        def search(q):
+            return [p["slug"] for p in self.client.get("/api/posts/", {"q": q}).json()]
+
+        self.assertEqual(search("gtm"), ["gtm"])  # any case; unpublished posts never show up
+        self.assertEqual(search("depender"), ["gtm"])  # subtitle
+        self.assertEqual(search("consent"), ["gtm", "consent-mode"])  # text and title
+        self.assertEqual(search("consent manager"), ["gtm"])  # every word must be there
+        self.assertEqual(search("tagmanager"), [])  # only inside a link's address, not in the text
+        self.assertEqual(search("analise acoes"), ["gtm"])  # accents don't matter, either way
+        self.assertEqual(search("ANÁLISE Ações"), ["gtm"])
+        self.assertEqual(search("dependêr"), ["gtm"])
+        self.assertEqual(search("   "), [])
+
     def test_staff_creates_post_with_ids(self):
         self.login()
         response = self.client.post(

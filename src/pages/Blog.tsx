@@ -5,6 +5,7 @@ import { Footer } from '@/components/site/Footer';
 import { OptionText } from '@/components/site/OptionText';
 import { usePosts } from '@/hooks/usePosts';
 import { PostGrid } from '@/components/site/PostGrid';
+import { BlogSearchForm } from '@/components/site/BlogSearchForm';
 import { collectionSchema } from '@/lib/structured-data';
 
 const BlogPage = () => {
@@ -42,21 +43,26 @@ const BlogPage = () => {
         </div>
       </section>
 
-      {categories.length > 1 && (
-        <nav aria-label="Categorias do blog" className="container-x pt-10">
-          <ul className="flex flex-wrap gap-2">
-            {categories.map((tag) => (
-              <li key={tag.id}>
-                <Link
-                  to={`/blog/categoria/${tag.slug}`}
-                  className="inline-flex rounded-full border border-border bg-card/55 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-                >
-                  {tag.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {posts.length > 0 && (
+        <div className="container-x flex flex-col gap-6 pt-10 lg:flex-row lg:items-center lg:justify-between">
+          {categories.length > 1 && (
+            <nav aria-label="Categorias do blog">
+              <ul className="flex flex-wrap gap-2">
+                {categories.map((tag) => (
+                  <li key={tag.id}>
+                    <Link
+                      to={`/blog/categoria/${tag.slug}`}
+                      className="inline-flex rounded-full border border-border bg-card/55 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                    >
+                      {tag.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          <BlogSearchForm className="lg:ml-auto" />
+        </div>
       )}
 
       {posts.length > 0 && (

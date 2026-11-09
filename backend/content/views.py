@@ -1,4 +1,8 @@
+import unicodedata
+from html import unescape
+
 from django.http import HttpResponse
+from django.utils.html import strip_tags
 from django.utils.dateparse import parse_datetime
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -259,18 +263,48 @@ class SocialLinkViewSet(OrderedViewSet):
     serializer_class = SocialLinkSerializer
 
 
+SEARCH_MAX_LENGTH = 100
+
+
+def search_normalize(text):
+    """Lowercase without accents: "Análise" and "analise" compare equal (also ç → c)."""
+    decomposed = unicodedata.normalize("NFKD", text)
+    return "".join(char for char in decomposed if not unicodedata.combining(char)).casefold()
+
+
+def search_posts(queryset, text):
+    """
+    Posts whose title, subtitle or text contain every word of `text`, ignoring case and accents.
+    Compared in Python (the database would tell "análise" from "analise"), on the article's text
+    without markup, so a word only found inside an HTML tag or attribute (e.g. "href") does not count.
+    Fine for a blog of up to a few hundred posts.
+    """
+    words = search_normalize(text[:SEARCH_MAX_LENGTH]).split()
+    if not words:
+        return queryset.none()
+    matches = []
+    for post in queryset.select_related(None).only("pk", "title", "subtitle", "content_html"):
+        searchable = search_normalize(f"{post.title} {post.subtitle} {unescape(strip_tags(post.content_html))}")
+        if all(word in searchable for word in words):
+            matches.append(post.pk)
+    return queryset.filter(pk__in=matches)
+
+
 class PostViewSet(OrderedViewSet):
-    """Blog posts, newest first. Extra filters: ?tag=<tag slug>, ?author=<author slug>."""
+    """Blog posts, newest first. Extra filters: ?tag=<tag slug>, ?author=<author slug>, ?q=<search words>."""
 
     serializer_class = PostSerializer
     slug_filter = True
 
     def get_queryset(self):
         queryset = super().get_queryset().select_related("author", "tag")
-        if tag := self.request.query_params.get("tag"):
+        params = self.request.query_params
+        if tag := params.get("tag"):
             queryset = queryset.filter(tag__slug=tag)
-        if author := self.request.query_params.get("author"):
+        if author := params.get("author"):
             queryset = queryset.filter(author__slug=author)
+        if "q" in params:
+            queryset = search_posts(queryset, params["q"])
         return queryset
 
 
