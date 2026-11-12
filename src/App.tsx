@@ -2,8 +2,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, ReactElement, ReactNode, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SiteOptionsProvider } from "@/components/SiteOptionsProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -77,10 +75,8 @@ type AppProps = {
 
 const App = ({ queryClient, router }: AppProps) => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
       <AuthProvider>
         <SiteOptionsProvider>
-        <Toaster />
         <Sonner />
         {router(
           <>
@@ -122,7 +118,6 @@ const App = ({ queryClient, router }: AppProps) => (
         )}
         </SiteOptionsProvider>
       </AuthProvider>
-    </TooltipProvider>
   </QueryClientProvider>
 );
 

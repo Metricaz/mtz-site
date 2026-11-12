@@ -1,12 +1,20 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <!-- Google Tag Manager --><script>
+    <!-- Google Tag Manager on the visitor's first interaction (scroll, touch, click, key) or 4 s after the page
+         loads, whichever comes first: its tags (consent banner included) stay out of the first seconds of the page
+         (PageSpeed TBT). dataLayer exists from the start, so earlier pushes wait in line. -->
+    <script>
+window.dataLayer=window.dataLayer||[];
+(function(){var done=false,ev=['scroll','pointerdown','keydown','touchstart'];
+function gtm(){if(done)return;done=true;ev.forEach(function(e){removeEventListener(e,gtm,true)});
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://sgtm.metricaz.com/cWjAuCaQ/'+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','');
+})(window,document,'script','dataLayer','');}
+ev.forEach(function(e){addEventListener(e,gtm,{capture:true,passive:true,once:true})});
+addEventListener('load',function(){setTimeout(gtm,4000)});})();
 </script><!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
