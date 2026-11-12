@@ -5,6 +5,10 @@ interface UsePostsOptions {
   limit?: number;
   slug?: string;
   tag?: string;
+  /** Author slug. */
+  author?: string;
+  /** Search words (title, subtitle and text). */
+  q?: string;
   enabled?: boolean;
 }
 
@@ -12,7 +16,7 @@ interface UsePostsOptions {
 export const usePosts = (options?: UsePostsOptions) => {
   const posts = useApiList<Post>(
     '/posts/',
-    { limit: options?.limit, slug: options?.slug, tag: options?.tag },
+    { limit: options?.limit, slug: options?.slug, tag: options?.tag, author: options?.author, q: options?.q },
     options?.enabled ?? true,
   );
   return { posts };

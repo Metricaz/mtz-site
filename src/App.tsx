@@ -2,8 +2,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, ReactElement, ReactNode, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SiteOptionsProvider } from "@/components/SiteOptionsProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -22,6 +20,9 @@ const ServicePage = lazy(() => import("./pages/ServicePage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const BlogPage = lazy(() => import("./pages/Blog"));
 const BlogPostPage = lazy(() => import("./pages/BlogPost"));
+const BlogSearchPage = lazy(() => import("./pages/BlogSearch"));
+const BlogCategoryPage = lazy(() => import("./pages/BlogCategory"));
+const AuthorPage = lazy(() => import("./pages/AuthorPage"));
 const InstitutionalPage = lazy(() => import("./pages/InstitutionalPage"));
 
 const MetricazPrefixRedirect = () => {
@@ -74,10 +75,8 @@ type AppProps = {
 
 const App = ({ queryClient, router }: AppProps) => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
       <AuthProvider>
         <SiteOptionsProvider>
-        <Toaster />
         <Sonner />
         {router(
           <>
@@ -93,7 +92,10 @@ const App = ({ queryClient, router }: AppProps) => (
                 <Route path="/cases" element={<CasesPage />} />
                 <Route path="/cases/:slug" element={<CasePage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/busca" element={<BlogSearchPage />} />
+                <Route path="/blog/categoria/:slug" element={<BlogCategoryPage />} />
                 <Route path="/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/autor/:slug" element={<AuthorPage />} />
                 <Route path="/dashboard" element={<Navigate to="/dashboard/sectors" replace />} />
                 <Route
                   path="/dashboard/:section"
@@ -116,7 +118,6 @@ const App = ({ queryClient, router }: AppProps) => (
         )}
         </SiteOptionsProvider>
       </AuthProvider>
-    </TooltipProvider>
   </QueryClientProvider>
 );
 

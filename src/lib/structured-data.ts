@@ -1,4 +1,4 @@
-import { CompanyAddress, SocialLink } from "@/lib/api-types";
+import { Author, CompanyAddress, SocialLink } from "@/lib/api-types";
 
 /**
  * Structured data (schema.org JSON-LD): tells search engines and AI assistants who Metricaz is and
@@ -118,11 +118,26 @@ type ArticleData = {
   datePublished?: string;
   dateModified?: string;
   /** Post author; without one (cases) the article is by Metricaz. */
-  author?: { name: string; mini_bio: string } | null;
+  author?: Author | null;
 };
 
-export const articleSchema = ({ siteUrl, pageUrl, absolute }: SchemaContext, article: ArticleData): SchemaNode =>
+/** Blog author, with the author page and LinkedIn so search engines and AIs can tell who wrote it. */
+export const personSchema = ({ siteUrl, absolute }: SchemaContext, author: Author): SchemaNode =>
   compact({
+    "@type": "Person",
+    "@id": author.slug ? `${siteUrl}/autor/${author.slug}#person` : undefined,
+    name: author.name,
+    jobTitle: author.role,
+    description: author.mini_bio,
+    image: author.photo ? absolute(author.photo) : undefined,
+    url: author.slug ? absolute(`/autor/${author.slug}`) : undefined,
+    sameAs: author.linkedin_url ? [author.linkedin_url] : undefined,
+    worksFor: { "@id": organizationId(siteUrl) },
+  });
+
+export const articleSchema = (context: SchemaContext, article: ArticleData): SchemaNode => {
+  const { siteUrl, pageUrl, absolute } = context;
+  return compact({
     "@type": article.type,
     headline: article.headline,
     description: article.description,
@@ -131,8 +146,61 @@ export const articleSchema = ({ siteUrl, pageUrl, absolute }: SchemaContext, art
     dateModified: article.dateModified,
     inLanguage: "pt-BR",
     mainEntityOfPage: pageUrl,
-    author: article.author
-      ? compact({ "@type": "Person", name: article.author.name, description: article.author.mini_bio })
-      : { "@id": organizationId(siteUrl) },
+    author: article.author ? personSchema(context, article.author) : { "@id": organizationId(siteUrl) },
     publisher: { "@id": organizationId(siteUrl) },
   });
+};
+
+/** FAQ shown on the page (FAQPage only describes questions that are visible there). */
+export const faqSchema = (items: { question: string; answer: string }[]): SchemaNode[] =>
+  items.length
+    ? [
+        {
+          "@type": "FAQPage",
+          mainEntity: items.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
+          })),
+        },
+      ]
+    : [];
+
+/**
+ * Listing pages (/servicos, /cases, /blog): the page plus the ordered list of what it links to,
+ * so search engines and AI assistants see the whole collection. The blog is typed as a Blog.
+ */
+export const collectionSchema = (
+  { siteUrl, pageUrl, absolute }: SchemaContext,
+  { type = "CollectionPage", name, items }: { type?: "CollectionPage" | "Blog"; name: string; items: { name: string; path: string }[] },
+): SchemaNode =>
+  compact({
+    "@type": type,
+    name,
+    url: pageUrl,
+    inLanguage: "pt-BR",
+    isPartOf: { "@id": websiteId(siteUrl) },
+    publisher: type === "Blog" ? { "@id": organizationId(siteUrl) } : undefined,
+    mainEntity: items.length
+      ? {
+          "@type": "ItemList",
+          numberOfItems: items.length,
+          itemListElement: items.map((item, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: item.name,
+            url: absolute(item.path),
+          })),
+        }
+      : undefined,
+  });
+
+/** Quem Somos: the page is about the organization described in the Organization node. */
+export const aboutSchema = ({ siteUrl, pageUrl }: SchemaContext, name: string): SchemaNode => ({
+  "@type": "AboutPage",
+  name,
+  url: pageUrl,
+  inLanguage: "pt-BR",
+  about: { "@id": organizationId(siteUrl) },
+  isPartOf: { "@id": websiteId(siteUrl) },
+});

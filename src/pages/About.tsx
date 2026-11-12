@@ -11,6 +11,7 @@ import { useSiteImage } from "@/hooks/useSiteImage";
 import { useSiteOptions } from "@/hooks/useSiteOptions";
 import { AboutHighlight, AboutPillar } from "@/lib/api-types";
 import { buildStats, SHOW_COMPANY_NUMBERS } from "@/lib/stats";
+import { aboutSchema } from "@/lib/structured-data";
 
 // Numbers grid: numbers from "Opções do site" (value = number, text = its label).
 const ABOUT_STATS = [
@@ -33,7 +34,7 @@ const About = () => {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="about" crumb="Quem Somos" />
+      <OptionPageHead page="about" crumb="Quem Somos" schema={(context) => aboutSchema(context, "Quem Somos")} />
       <Nav useHomeSectionLinks />
 
       <section className="relative overflow-hidden border-b border-border bg-ink-deep pb-16 pt-28 md:pb-20 md:pt-36">

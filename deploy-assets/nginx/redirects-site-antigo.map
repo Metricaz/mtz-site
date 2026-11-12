@@ -40,6 +40,10 @@
 ~^/(services-two|services-three|service-four)/?$    /servicos;
 ~^/cases-two/?$                                     /cases;
 ~^/(news-old|blog-carousel)/?$                      /blog;
+~^/testimonial/[^/]+/?$                             /;
+
+# Technical address of the home (found by Google, 11/2026)
+~^/index\.html$                                     /;
 
 # Yoast sitemaps (Search Console may still have the old index registered)
 ~^/(sitemap_index|[a-z_]+-sitemap)\.xml$    /sitemap.xml;

@@ -10,6 +10,7 @@ from .models import (
     ContactSubmission,
     ContentImage,
     EngagementModel,
+    FAQItem,
     Lead,
     MethodStep,
     NewsletterSubscriber,
@@ -77,11 +78,27 @@ class TestimonialAdmin(OrderedAdmin):
     search_fields = ("name", "company", "text")
 
 
+class FAQItemInline(admin.StackedInline):
+    model = FAQItem
+    extra = 0
+    fields = ("question", "answer", "order_position", "is_active")
+    verbose_name_plural = "perguntas frequentes deste serviço"
+
+
 @admin.register(Service)
 class ServiceAdmin(OrderedAdmin):
     list_display = ("title", "slug", "icon_name", "order_position", "is_active")
     search_fields = ("title", "slug")
     prepopulated_fields = {"slug": ("title",)}
+    filter_horizontal = ("related_cases", "related_posts")
+    inlines = [FAQItemInline]
+
+
+@admin.register(FAQItem)
+class FAQItemAdmin(OrderedAdmin):
+    list_display = ("question", "service", "order_position", "is_active")
+    list_filter = ("is_active", ("service", admin.EmptyFieldListFilter), "service")
+    search_fields = ("question", "answer")
 
 
 @admin.register(Case)
@@ -164,13 +181,16 @@ class SocialLinkAdmin(OrderedAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at")
-    search_fields = ("name", "mini_bio")
+    list_display = ("name", "role", "slug", "created_at")
+    search_fields = ("name", "role", "mini_bio")
+    prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "role", "photo", "linkedin_url", "mini_bio")
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "slug")
+    fields = ("name", "slug", "description")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
 

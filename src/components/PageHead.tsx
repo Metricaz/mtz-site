@@ -30,6 +30,8 @@ type PageHeadProps = {
   breadcrumb?: Crumb[];
   /** This page's own schema.org nodes (Service, BlogPosting...), see lib/structured-data. */
   schema?: (context: SchemaContext) => SchemaNode | SchemaNode[];
+  /** Keep this page out of search engines (search results). */
+  noindex?: boolean;
 };
 
 /** Sets a <meta>/<link> tag in document.head, creating it if needed; removes it when there is no value. */
@@ -52,7 +54,7 @@ const setHeadTag = (tag: "meta" | "link", match: Record<string, string>, attr: s
  * Title, description and link preview of the page. On the server it fills the <head> (entry-server);
  * in the browser it updates it on every navigation (tab title, and the page title GA4 records).
  */
-export const PageHead = ({ title, name, description = "", image, type = "website", breadcrumb, schema }: PageHeadProps) => {
+export const PageHead = ({ title, name, description = "", image, type = "website", breadcrumb, schema, noindex = false }: PageHeadProps) => {
   const meta = useContext(PageMetaContext);
   const { pathname } = useLocation();
   const { options } = useSiteOptions();
@@ -67,7 +69,7 @@ export const PageHead = ({ title, name, description = "", image, type = "website
   const imageUrl = image || defaultImage?.image || "";
 
   if (meta) {
-    Object.assign(meta, { title: fullTitle, description, image: imageUrl, type });
+    Object.assign(meta, { title: fullTitle, description, image: imageUrl, type, noindex });
     // Structured data only goes in the HTML from the server: search engines and AI crawlers read it there.
     const siteUrl = meta.siteUrl ?? "";
     const context: SchemaContext = {
@@ -96,8 +98,9 @@ export const PageHead = ({ title, name, description = "", image, type = "website
     setHeadTag("meta", { name: "twitter:title" }, "content", fullTitle);
     setHeadTag("meta", { name: "twitter:description" }, "content", description);
     setHeadTag("meta", { name: "twitter:image" }, "content", absoluteImage);
-    setHeadTag("link", { rel: "canonical" }, "href", url);
-  }, [fullTitle, description, imageUrl, type]);
+    setHeadTag("link", { rel: "canonical" }, "href", noindex ? "" : url);
+    setHeadTag("meta", { name: "robots" }, "content", noindex ? "noindex, follow" : "");
+  }, [fullTitle, description, imageUrl, type, noindex]);
 
   return null;
 };

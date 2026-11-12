@@ -1,14 +1,15 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from . import views
 
-router = DefaultRouter()
+router = SimpleRouter()  # no browsable API root listing the routes at /api/
 router.register("sectors", views.SectorViewSet, basename="sector")
 router.register("companies", views.CompanyViewSet, basename="company")
 router.register("team", views.TeamMemberViewSet, basename="team-member")
 router.register("testimonials", views.TestimonialViewSet, basename="testimonial")
 router.register("services", views.ServiceViewSet, basename="service")
+router.register("faq", views.FAQItemViewSet, basename="faq-item")
 router.register("cases", views.CaseViewSet, basename="case")
 router.register("pages", views.PageViewSet, basename="page")
 router.register("addresses", views.CompanyAddressViewSet, basename="company-address")

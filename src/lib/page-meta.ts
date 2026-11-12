@@ -6,9 +6,11 @@ export type PageMeta = {
   description?: string;
   /** Link preview image (WhatsApp, LinkedIn...): /media/... or an absolute URL. */
   image?: string | null;
-  type?: "website" | "article";
+  type?: "website" | "article" | "profile";
   /** Public address of the site (https://host), set by entry-server before rendering. */
   siteUrl?: string;
+  /** Kept out of search engines (e.g. search results): robots "noindex, follow", no canonical or structured data. */
+  noindex?: boolean;
   /** schema.org nodes for the page's JSON-LD (see lib/structured-data). */
   jsonLd?: Record<string, unknown>[];
 };

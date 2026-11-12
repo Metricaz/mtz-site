@@ -1,13 +1,10 @@
-import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { getServiceIcon } from '@/lib/service-icons';
 import { useServices } from '@/hooks/useServices';
 import { OptionText } from '@/components/site/OptionText';
 
 export const Services = () => {
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const { services } = useServices({ limit: 4 });
   const items = services;
 
@@ -45,8 +42,6 @@ export const Services = () => {
               <Link
                 key={service.id}
                 to={`/servicos/${service.slug}`}
-                onMouseEnter={() => setHoveredId(service.id)}
-                onMouseLeave={() => setHoveredId(null)}
                 className={`group relative flex flex-col items-center px-8 py-16 text-center transition-all duration-300 hover:bg-card md:px-10 md:py-20 ${
                   i !== items.length - 1 ? 'border-r border-border' : ''
                 }`}
@@ -61,24 +56,13 @@ export const Services = () => {
                   {service.excerpt}
                 </p>
 
-                <motion.div
-                  initial={false}
-                  animate={{
-                    width: hoveredId === service.id ? 145 : 40,
-                  }}
-                  transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground"
-                >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredId === service.id ? 1 : 0 }}
-                    transition={{ duration: 0.15, delay: hoveredId === service.id ? 0.1 : 0 }}
-                    className="whitespace-nowrap text-sm font-semibold"
-                  >
+                {/* Grows into "Saiba Mais" on hover/focus; plain CSS (no animation library on the home page). */}
+                <div className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary text-primary-foreground transition-[width] duration-300 ease-in-out group-hover:w-[145px] group-focus-visible:w-[145px]">
+                  <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:mr-2 group-hover:max-w-[100px] group-hover:opacity-100 group-focus-visible:mr-2 group-focus-visible:max-w-[100px] group-focus-visible:opacity-100">
                     Saiba Mais
-                  </motion.span>
+                  </span>
                   <ArrowRight className="h-5 w-5 flex-shrink-0" strokeWidth={2} />
-                </motion.div>
+                </div>
               </Link>
             );
           })}

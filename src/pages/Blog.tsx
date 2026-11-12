@@ -1,18 +1,31 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { Nav } from '@/components/site/Nav';
 import { OptionPageHead } from '@/components/PageHead';
 import { Footer } from '@/components/site/Footer';
 import { OptionText } from '@/components/site/OptionText';
 import { usePosts } from '@/hooks/usePosts';
-import { formatShortDate } from '@/lib/dates';
+import { PostGrid } from '@/components/site/PostGrid';
+import { BlogSearchForm } from '@/components/site/BlogSearchForm';
+import { collectionSchema } from '@/lib/structured-data';
 
 const BlogPage = () => {
   const { posts } = usePosts();
+  // Categories that have published posts, each with its own page (/blog/categoria/<slug>).
+  const categories = [...new Map(posts.flatMap((post) => (post.tag ? [[post.tag.id, post.tag] as const] : []))).values()];
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <OptionPageHead page="blog" crumb="Blog" />
+      <OptionPageHead
+        page="blog"
+        crumb="Blog"
+        schema={(context) =>
+          collectionSchema(context, {
+            type: "Blog",
+            name: "Blog",
+            items: posts.map((post) => ({ name: post.title, path: `/blog/${post.slug}` })),
+          })
+        }
+      />
       <Nav useHomeSectionLinks />
 
       {/* Same header copy as the home "Conteúdo" section (keys content.eyebrow / content.title). */}
@@ -31,48 +44,31 @@ const BlogPage = () => {
       </section>
 
       {posts.length > 0 && (
+        <div className="container-x flex flex-col gap-6 pt-10 lg:flex-row lg:items-center lg:justify-between">
+          {categories.length > 1 && (
+            <nav aria-label="Categorias do blog">
+              <ul className="flex flex-wrap gap-2">
+                {categories.map((tag) => (
+                  <li key={tag.id}>
+                    <Link
+                      to={`/blog/categoria/${tag.slug}`}
+                      className="inline-flex rounded-full border border-border bg-card/55 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                    >
+                      {tag.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          <BlogSearchForm className="lg:ml-auto" />
+        </div>
+      )}
+
+      {posts.length > 0 && (
         <section className="py-12 md:py-16">
           <div className="container-x">
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {posts.map((post) => (
-                <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card/55 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-card"
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-card">
-                    <img
-                      src={post.featured_image}
-                      alt={post.featured_image_alt || post.title}
-                      width={1024}
-                      height={768}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <div className="flex items-center justify-between gap-2 text-xs">
-                      {post.tag && (
-                        <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
-                          <span className="text-primary">✱</span>
-                          {post.tag.name}
-                        </span>
-                      )}
-                      <span className="text-muted-foreground">📅 {formatShortDate(post.published_at)}</span>
-                    </div>
-                    <h2 className="mt-4 text-xl font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
-                      {post.title}
-                    </h2>
-                    {post.subtitle && <p className="mt-3 flex-1 text-sm leading-7 text-muted-foreground">{post.subtitle}</p>}
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                      Ler post
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <PostGrid posts={posts} />
           </div>
         </section>
       )}
