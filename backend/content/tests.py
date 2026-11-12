@@ -377,6 +377,10 @@ class SanitizeTests(TestCase):
         )
         self.assertEqual(sanitize_html(html), html)
 
+    def test_heading_ids_are_kept_for_anchor_links(self):
+        html = '<h2 id="anuncios">A</h2><h3 id="b">B</h3><p id="x">t</p>'
+        self.assertEqual(sanitize_html(html), '<h2 id="anuncios">A</h2><h3 id="b">B</h3><p>t</p>')
+
     def test_links_get_safe_rel(self):
         self.assertEqual(
             sanitize_html('<a href="https://metricaz.com" target="_blank">m</a>'),
@@ -817,6 +821,21 @@ class FoundingYearMigrationTests(ApiTestCase):
         SiteOption.objects.filter(key="company.founding_year").update(value="2015")
         importlib.import_module("content.migrations.0016_founding_year").forwards(apps, None)
         self.assertEqual(SiteOption.objects.get(key="company.founding_year").value, "2015")
+
+
+class PrivacyAdsSectionMigrationTests(ApiTestCase):
+    def test_section_goes_in_once_before_the_changes_section(self):
+        migration = importlib.import_module("content.migrations.0018_privacy_ads_section")
+        migration.forwards(apps, None)  # the test database already ran it once
+        html = self.client.get("/api/pages/?slug=politica-de-privacidade").json()[0]["content_html"]
+        self.assertEqual(html.count('<h2 id="anuncios">'), 1)
+        self.assertLess(html.index('id="anuncios"'), html.index("Alterações desta política"))
+        self.assertIn("Última atualização: 3 de novembro de 2026.", html)
+
+    def test_edited_page_without_the_anchor_is_left_alone(self):
+        Page.objects.filter(slug="politica-de-privacidade").update(content_html="<p>Texto editado</p>")
+        importlib.import_module("content.migrations.0018_privacy_ads_section").forwards(apps, None)
+        self.assertEqual(Page.objects.get(slug="politica-de-privacidade").content_html, "<p>Texto editado</p>")
 
 
 class PageHeadingsMigrationTests(ApiTestCase):

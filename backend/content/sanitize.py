@@ -2,7 +2,8 @@
 HTML sanitizing for rich text (services and cases), which the site renders as raw HTML.
 
 The allowlist covers the rich text the site renders (headings, paragraphs, lists, quotes, links, images): anything else
-— <script>, event handlers (onclick…), javascript: links, styles, iframes — is removed.
+— <script>, event handlers (onclick…), javascript: links, styles, iframes — is removed. Headings keep their id, so a
+link can point to a section (/politica-de-privacidade#anuncios).
 """
 
 import nh3
@@ -15,6 +16,9 @@ ALLOWED_TAGS = {
 }
 
 ALLOWED_ATTRIBUTES = {
+    "h2": {"id"},
+    "h3": {"id"},
+    "h4": {"id"},
     "a": {"href", "target"},
     "img": {"src", "alt", "title", "data-image-id"},
     "ol": {"start"},

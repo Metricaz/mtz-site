@@ -145,6 +145,7 @@ ICONS = [
 
 RICH_TEXT_HELP = (
     'HTML. Imagens são referenciadas por <img data-image-id="ID"> (ID de uma Imagem de conteúdo). '
+    'Títulos aceitam id, para links direto à seção: <h2 id="anuncios"> → /<slug>#anuncios. '
     "Scripts, estilos e atributos fora da lista permitida são removidos ao salvar."
 )
 

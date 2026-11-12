@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { EditorContent, useEditor, type Editor } from '@tiptap/react';
+import { EditorContent, Extension, useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import {
@@ -50,7 +50,26 @@ const ContentImageNode = Image.extend({
   },
 });
 
-/** h1 → h2 and h5/h6 → h4 (instead of plain paragraphs); images from elsewhere are dropped (upload them instead). */
+/** Headings keep their id (links to a section, e.g. #anuncios); TipTap would drop it on the next save. */
+const HeadingId = Extension.create({
+  name: 'headingId',
+  addGlobalAttributes() {
+    return [
+      {
+        types: ['heading'],
+        attributes: {
+          id: {
+            default: null,
+            parseHTML: (element) => element.getAttribute('id'),
+            renderHTML: (attributes) => (attributes.id ? { id: attributes.id } : {}),
+          },
+        },
+      },
+    ];
+  },
+});
+
+/** h1 → h2 and h5/h6 → h4 (instead of plain paragraphs); images from elsewhere and pasted ids are dropped. */
 const normalizePastedHtml = (html: string) => {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const rename = (from: string, to: string) =>
@@ -62,6 +81,7 @@ const normalizePastedHtml = (html: string) => {
   rename('h1', 'h2');
   rename('h5, h6', 'h4');
   doc.body.querySelectorAll('img:not([data-image-id])').forEach((element) => element.remove());
+  doc.body.querySelectorAll('[id]').forEach((element) => element.removeAttribute('id')); // Google Docs ids (h.xyz…)
   return doc.body.innerHTML;
 };
 
@@ -115,6 +135,7 @@ export const RichTextEditor = ({ value, onChange, onError, disabled }: RichTextE
         link: { openOnClick: false, autolink: true },
       }),
       ContentImageNode.configure({ allowBase64: false }),
+      HeadingId,
     ],
     content: value,
     editorProps: {
