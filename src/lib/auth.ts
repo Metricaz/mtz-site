@@ -10,7 +10,7 @@ export const getCookie = (name: string) => {
 
 /** Logged-in dashboard user, or null. Also makes Django set the CSRF cookie. */
 export const fetchSessionUser = async () => {
-  const response = await fetch(SESSION_URL, { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+  const response = await fetch(SESSION_URL, { credentials: 'same-origin', headers: { Accept: 'application/json', 'X-MTZ-Client': 'web' } });
   if (!response.ok) {
     throw new Error(`Falha ao verificar a sessão (HTTP ${response.status})`);
   }

@@ -161,6 +161,9 @@ LOGOUT_REDIRECT_URL = '/dashboard/login/'
 # API (Django REST Framework): Django session auth; anyone reads, only staff writes.
 
 REST_FRAMEWORK = {
+    # JSON only in production: DRF's browsable HTML API (forms, links to every route) only while developing.
+    'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer']
+    + (['rest_framework.renderers.BrowsableAPIRenderer'] if DEBUG else []),
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication'],
     'DEFAULT_PERMISSION_CLASSES': ['content.permissions.IsStaffOrReadOnly'],
     # Rate limits identify the visitor by the last X-Forwarded-For entry, the one nginx appends (the real IP).

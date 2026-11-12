@@ -39,7 +39,8 @@ const request = async <T>(
   path: string,
   options: { query?: Query; body?: unknown } = {},
 ) => {
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  // X-MTZ-Client: nginx only lets /api answer our own pages (Sec-Fetch-Site, or this header on old browsers).
+  const headers: Record<string, string> = { Accept: 'application/json', 'X-MTZ-Client': 'web' };
   // FormData (file uploads) sets its own multipart Content-Type with the boundary.
   const isForm = options.body instanceof FormData;
   if (options.body !== undefined && !isForm) headers['Content-Type'] = 'application/json';
